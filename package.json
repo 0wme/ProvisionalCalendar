@@ -21,7 +21,6 @@
         "vue-tsc": "^2.0.24"
     },
     "dependencies": {
-        "lucide-vue-next": "^0.454.0",
-        "vue-router": "^4.4.5"
+        "lucide-vue-next": "^0.454.0"
     }
 }
