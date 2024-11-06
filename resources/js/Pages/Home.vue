@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3';
+import IconButton from '@/Components/IconButton.vue';
 </script>
 
 <template>
   <IconButton 
-    icon-class=""
-    label="J'aime"
-    @click="handleClick"
+    iconClass="Search"
   />
 </template>
