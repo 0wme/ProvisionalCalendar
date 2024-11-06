@@ -5,6 +5,6 @@ import { Head } from '@inertiajs/vue3';
 <template>
     <Head title="Calendrier prévisionnel" />
     <div class="container">
-        <h1 class="text-center">Hello world!</h1>
+        <h1 class="text-center">Helloo world!</h1>
     </div>
 </template>
