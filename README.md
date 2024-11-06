@@ -1,4 +1,4 @@
-# Provisionnal Calendar
+# Calendrier prévisionnel
 
 Application de gestion de calendrier provisoire développée avec Laravel et Vue.js.
 
@@ -120,3 +120,19 @@ sail npm install
 sail npm run dev
 ```
 
+## Liens utiles
+
+- [PHP Documentation](https://www.php.net/)
+- [Composer Documentation](https://getcomposer.org/)
+- [Laravel Documentation](https://laravel.com/)
+- [PHPUnit Documentation](https://phpunit.de/)
+
+- [Inertia.js Documentation](https://inertiajs.com/)
+- [Ziggy Documentation](https://github.com/tighten/ziggy)
+
+- [Node.js Documentation](https://nodejs.org/)
+- [Vue.js Documentation](https://vuejs.org/)
+- [Vue Test Utils Documentation](https://test-utils.vuejs.org/)
+- [Tailwind CSS Documentation](https://tailwindcss.com/)
+
+- [Docker Documentation](https://www.docker.com/)
