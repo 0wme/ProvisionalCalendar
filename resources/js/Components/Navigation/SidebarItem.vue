@@ -63,6 +63,6 @@
   }
   
   .spacer {
-    margin-top: 40px; /* Ajoute un espace entre Service et Déconnexion */
+    margin-top: 40px;
   }
   </style>
