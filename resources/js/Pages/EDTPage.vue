@@ -2,7 +2,7 @@
     <div class="page-content">
       <Sidebar />
       <div class="main-content">
-        <<!-- Contenu de la page EDT -->>
+        <h1>EDT Page</h1>
       </div>
     </div>
   </template>
@@ -12,5 +12,5 @@
   </script>
   
   <style scoped>
-  /* Styles identiques */
-  </style>
+
+</style>
