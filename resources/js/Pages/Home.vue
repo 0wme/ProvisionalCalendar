@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3';
-import SearchBar from '@/Components/SearchBar.vue';
 </script>
 
 <template>
