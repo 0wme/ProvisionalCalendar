@@ -5,7 +5,7 @@ import SearchBar from '@/Components/SearchBar.vue';
 
 <template>
     <Head title="Calendrier prévisionnel" />
-    <div class="flex justify-center items-center h-screen">
-        <SearchBar placeholder="test" hasAdd hasImport small />
+    <div class="container">
+        <h1 class="text-center">Helloo world!</h1>
     </div>
 </template>
