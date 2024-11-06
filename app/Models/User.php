@@ -16,6 +16,7 @@ class User extends Authenticatable
         'password',
         'firstname',
         'lastname',
+        'role_id'
     ];
 
     protected $hidden = [
@@ -26,4 +27,14 @@ class User extends Authenticatable
     protected $casts = [
         'password' => 'hashed',
     ];
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
+
+    // Constantes pour les rôles
+    const ROLE_ADMIN = 'admin';
+    const ROLE_READER = 'reader';
+    const ROLE_EXTENDED_READER = 'extended_reader';
 }
