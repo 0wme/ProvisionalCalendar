@@ -3,7 +3,7 @@
       <HeaderMenu />
       <Sidebar />
       <div class="main-content">
-        <!-- Contenu de la page Calendrier Prévisionnel -->
+        <h1>Groupes Page</h1>
       </div>
     </div>
   </template>
