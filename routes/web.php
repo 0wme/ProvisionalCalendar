@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', function () {
-    return Inertia::render('TeachersTeachingsPageContent');
+    return Inertia::render('LoginPage');
 });
 
 Route::post('/login', [AuthController::class, 'login'])->name('login');
