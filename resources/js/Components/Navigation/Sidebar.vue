@@ -12,8 +12,7 @@
         />
       </ul>
       <button class="toggle-button" @click="toggleSidebar">
-        <span v-if="isCollapsed">></span>
-        <span v-else><</span>
+        <component :is="isCollapsed ? ChevronRight : ChevronLeft" class="toggle-icon" />
       </button>
     </div>
   </template>
@@ -21,7 +20,7 @@
   <script setup lang="ts">
   import { ref, onMounted } from 'vue';
   import SidebarItem from './SidebarItem.vue';
-  import { Calendar, Clock, Settings, Power } from 'lucide-vue-next';
+  import { Calendar, Clock, Settings, Power, ChevronLeft, ChevronRight } from 'lucide-vue-next';
   
   const items = [
     { icon: Calendar, label: 'Calendrier Prévisionnel', route: '/admin-calendar' },
@@ -55,47 +54,52 @@
   </script>
   
   <style scoped>
-.sidebar {
-  width: 110px;
-  background-color: #ffffff;
-  padding: 10px;
-  position: fixed;
-  left: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  border-radius: 15px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: width 0.3s;
-}
-
-.sidebar.collapsed {
-  width: 0;
-  padding: 0;
-}
-
-.toggle-button {
-  position: absolute;
-  right: -25px;
-  top: 50%;
-  transform: translateY(-50%);
-  background: #e7e7e7;
-  border: 2px solid #e7e7e7;
-  border-radius: 50%;
-  width: 30px;
-  height: 30px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
-}
-
-ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-</style>
+  .sidebar {
+    width: 110px;
+    background-color: #ffffff;
+    padding: 10px;
+    position: fixed;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: width 0.3s;
+  }
+  
+  .sidebar.collapsed {
+    width: 0;
+    padding: 0;
+  }
+  
+  .toggle-button {
+    position: absolute;
+    right: -25px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f0f0f0;
+  }
+  
+  .toggle-icon {
+    width: 24px;
+    height: 24px;
+  }
+  
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  </style>
