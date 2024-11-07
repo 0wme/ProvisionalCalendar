@@ -4,6 +4,7 @@ import Icon from '@/Components/Icon.vue';
 defineProps<{
   iconClass: string,
   bgColor?: string,
+  iconColor?: string,
   small?: boolean,
   hasShadow?: boolean
 }>()
@@ -18,6 +19,6 @@ defineProps<{
     ]"
     :style="{ 'background-color': bgColor }"
   >
-    <Icon :name="iconClass" :size="small ? 16 : 24" stroke-width="2" />
+    <Icon :name="iconClass" :size="small ? 16 : 24" :color="iconColor" stroke-width="2" />
   </button>
 </template>
