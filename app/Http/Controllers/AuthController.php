@@ -22,7 +22,7 @@ class AuthController extends Controller
         }
 
         return back()->withErrors([
-            'username' => 'Les identifiants fournis ne correspondent pas à nos enregistrements.',
+            'username' => 'Identifiant ou mot de passe incorrect.',
         ]);
     }
 
