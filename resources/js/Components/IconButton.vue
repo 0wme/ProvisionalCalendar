@@ -8,43 +8,8 @@ const props = defineProps<{
 
 <template>
   <button 
-    class="icon-button"
+    class="flex justify-center items-center w-20 h-20 rounded-[20px] cursor-pointer bg-pink-200 text-black hover:brightness-75"
     >
-    <Icon :name="iconClass" />
+    <Icon :name="iconClass" class="text-4xl"  />
   </button>
 </template>
-
-<style scoped>
-.icon-button {
-  display: flex;
-  justify-content: center;
-  justify-content: center;
-  align-items: center;
-  width: 80px;
-  height: 80px;
-  padding: 0;
-  width: 80px;
-  height: 80px;
-  padding: 0;
-  border: none;
-  margin: 100px;
-  border-radius: 20px;
-  margin: 100px;
-  border-radius: 20px;
-  cursor: pointer;
-  background-color: #ffc0cb;
-  color: black;
-  background-color: #ffc0cb;
-  color: black;
-}
-
-.icon-button:hover {
-  filter: brightness(0.8);
-  filter: brightness(0.8);
-}
-
-.icon {
-  font-size: 35px;
-  font-size: 35px;
-}
-</style>
