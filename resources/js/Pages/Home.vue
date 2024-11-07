@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3';
-import IconButton from '@/Components/IconButton.vue';
+import SearchBar from '@/Components/SearchBar.vue';
 </script>
 
 <template>
-  <IconButton 
-    iconClass="Pen"
-  />
+    <Head title="Calendrier prévisionnel" />
+    <div class="container">
+        <SearchBar placeholder="test" />
+    </div>
 </template>
