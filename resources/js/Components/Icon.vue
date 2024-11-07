@@ -1,19 +1,16 @@
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue';
 import * as icons from "lucide-vue-next";
 
-const props = defineProps({
-  name: {
-    type: String,
-    required: true
-  },
-  size: Number,
-  color: String,
-  strokeWidth: Number,
-  defaultClass: String
-})
+const props = defineProps<{
+  name: string,
+  size: number,
+  color: string,
+  strokeWidth: number,
+  defaultClass: string
+}>()
 
-const icon = computed(() => icons[props.name]);
+const icon = computed(() => icons[props.name as keyof typeof icons]);
 </script>
 
 <template>
