@@ -20,14 +20,14 @@
   import { ref, onMounted } from 'vue';
   import HeaderMenuItem from './HeaderMenuItem.vue';
   import { User, Book, Calendar, AlertCircle, Settings, ChevronUp, ChevronDown } from 'lucide-vue-next';
-  
-  const items = [
+
+const items = [
     { icon: User, label: 'Groupes', route: '/groupes' },
     { icon: Book, label: 'Enseignants/Enseignements', route: '/enseignants' },
     { icon: Calendar, label: 'Calendrier Prévisionnel', route: '/admin-calendar' },
     { icon: AlertCircle, label: 'Alertes', route: '/alertes' },
     { icon: Settings, label: 'Configurations', route: '/configurations' },
-  ];
+];
   
   const activeItem = ref<string>('');
   const isCollapsed = ref(false);
