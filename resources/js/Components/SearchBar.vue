@@ -1,3 +1,24 @@
+<!--
+/**
+ * @component SearchBar
+ * @description Barre de recherche réutilisable avec une icône de recherche et des options pour ajouter des boutons d'import et d'ajout
+ *
+ * @example
+ * <SearchBar 
+ *   placeholder="Rechercher un élément..."
+ *   hasImport
+ *   hasAdd
+ *   @importClick="handleImport"
+ *   @addClick="handleAdd"
+ * />
+ *
+ * @example Version compacte
+ * <SearchBar 
+ *   placeholder="Rechercher..."
+ *   small
+ * />
+ */
+-->
 <script setup lang="ts">
 import Icon from '@/Components/Icon.vue';
 import IconButton from '@/Components/IconButton.vue';
