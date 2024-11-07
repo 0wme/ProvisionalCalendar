@@ -6,8 +6,8 @@
           :key="item.label"
           :icon="item.icon"
           :label="item.label"
-          :isActive="activeItem === item.label"
-          @activate="setActiveItem(item.label)"
+          :isActive="activeHeaderMenuItem === item.label"
+          @activate="setActiveHeaderMenuItem(item.label)"
         />
       </ul>
       <button class="toggle-button" @click="toggleSidebar">
@@ -20,20 +20,20 @@
   import { ref, onMounted } from 'vue';
   import HeaderMenuItem from './HeaderMenuItem.vue';
   import { User, Book, Calendar, AlertCircle, Settings, ChevronUp, ChevronDown } from 'lucide-vue-next';
-
-const items = [
+  
+  const items = [
     { icon: User, label: 'Groupes', route: '/groupes' },
     { icon: Book, label: 'Enseignants/Enseignements', route: '/enseignants' },
     { icon: Calendar, label: 'Calendrier Prévisionnel', route: '/admin-calendar' },
     { icon: AlertCircle, label: 'Alertes', route: '/alertes' },
     { icon: Settings, label: 'Configurations', route: '/configurations' },
-];
+  ];
   
-  const activeItem = ref<string>('');
+  const activeHeaderMenuItem = ref<string>('');
   const isCollapsed = ref(false);
   
-  function setActiveItem(label: string) {
-    activeItem.value = label;
+  function setActiveHeaderMenuItem(label: string) {
+    activeHeaderMenuItem.value = label;
     const item = items.find(i => i.label === label);
     if (item && item.route) {
       window.location.href = item.route;
@@ -48,27 +48,27 @@ const items = [
     const currentPath = window.location.pathname;
     const currentItem = items.find(item => currentPath === item.route);
     if (currentItem) {
-      activeItem.value = currentItem.label;
+      activeHeaderMenuItem.value = currentItem.label;
     }
   });
   </script>
   
   <style scoped>
-.header-menu {
-  width: 800px;
-  background-color: #ffffff;
-  padding: 10px;
-  position: fixed;
-  top: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  border-radius: 15px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: max-height 0.3s ease; 
-}
+  .header-menu {
+    width: 800px;
+    background-color: #ffffff;
+    padding: 10px;
+    position: fixed;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: max-height 0.3s ease;
+  }
   
   .header-menu.collapsed {
     height: 0;
@@ -107,4 +107,3 @@ const items = [
     width: 100%;
   }
   </style>
-  

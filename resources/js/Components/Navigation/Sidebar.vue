@@ -7,8 +7,8 @@
           :icon="item.icon"
           :label="item.label"
           :isSpacer="item.isSpacer"
-          :isActive="activeItem === item.label"
-          @activate="setActiveItem(item.label)"
+          :isActive="activeSidebarItem === item.label"
+          @activate="setActiveSidebarItem(item.label)"
         />
       </ul>
       <button class="toggle-button" @click="toggleSidebar">
@@ -29,11 +29,11 @@
     { icon: Power, label: 'Déconnexion', isSpacer: true },
   ];
   
-  const activeItem = ref<string>('');
+  const activeSidebarItem = ref<string>('Calendrier Prévisionnel');
   const isCollapsed = ref(false);
   
-  function setActiveItem(label: string) {
-    activeItem.value = label;
+  function setActiveSidebarItem(label: string) {
+    activeSidebarItem.value = label;
     const item = items.find(i => i.label === label);
     if (item && item.route) {
       window.location.href = item.route;
@@ -48,7 +48,7 @@
     const currentPath = window.location.pathname;
     const currentItem = items.find(item => currentPath === item.route);
     if (currentItem) {
-      activeItem.value = currentItem.label;
+      activeSidebarItem.value = currentItem.label;
     }
   });
   </script>
