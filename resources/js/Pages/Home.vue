@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3';
-import IconButton from '@/Components/IconButton.vue';
+import SearchBar from '@/Components/SearchBar.vue';
 </script>
 
 <template>
