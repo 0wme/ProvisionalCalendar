@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import Icon from '@/Components/Icon.vue';
 
-const props = defineProps<{
+defineProps<{
   iconClass: string,
   bgColor?: string,
   small?: boolean,
@@ -11,15 +11,13 @@ const props = defineProps<{
 
 <template>
   <button 
-    :class="['icon-button flex justify-center items-center cursor-pointer text-black hover:brightness-75', small ? 'p-2 rounded-full' : 'p-4 rounded-xl', { 'shadow-md': props.hasShadow }]"
-    :style="{ '--bg-color': props.bgColor }"
+    :class="[
+      'icon-button flex justify-center items-center cursor-pointer text-black hover:brightness-75',
+      small ? 'p-2 rounded-full' : 'p-4 rounded-xl',
+      { 'shadow-md': hasShadow }
+    ]"
+    :style="{ 'background-color': bgColor }"
   >
-    <Icon :name="iconClass" :size="small ? 16 : 24" />
+    <Icon :name="iconClass" :size="small ? 16 : 24" stroke-width="2" />
   </button>
 </template>
-
-<style scoped>
-.icon-button {
-  background-color: var(--bg-color);
-}
-</style>
