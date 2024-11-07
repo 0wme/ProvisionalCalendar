@@ -5,6 +5,6 @@ import IconButton from '@/Components/IconButton.vue';
 
 <template>
   <IconButton 
-    iconClass="Search"
+    iconClass="Pen"
   />
 </template>
