@@ -13,13 +13,13 @@ console.log(props.message);
 </script>
 
 <template>
-    <Head title="Calendrier Prévisionnel Administrateur" />
+    <Head title="Calendrier Prévisionnel Lecteur Privilégié" />
     <div class="page-content">
-        <HeaderMenu />
         <Sidebar />
         <div class="main-content">
-            
-            
+            <div v-if="message" class="welcome-message">
+                {{ message }}
+            </div>
         </div>
     </div>
 </template>

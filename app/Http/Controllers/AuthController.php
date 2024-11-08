@@ -17,27 +17,42 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
+            $user = Auth::user();
             
-            return redirect()->route('result');
+            // Redirection basée sur le rôle avec chemins directs
+            $route = match ($user->role->name) {
+                'admin' => '/admin/calendar',
+                'reader' => '/reader/calendar',
+                'extended_reader' => '/extended/calendar',
+                default => '/'
+            };
+
+            return redirect($route)->with([
+                'message' => "Vous êtes connecté en tant que {$user->firstname} {$user->lastname}",
+                'role' => $user->role->name
+            ]);
         }
 
         return back()->withErrors([
-            'username' => 'Identifiant ou mot de passe incorrect.',
+            'username' => 'Identifiants incorrects.',
         ]);
     }
 
-    public function result()
+    public function checkRole(Request $request, string $requiredRole)
     {
         $user = Auth::user();
-        $message = match ($user->role->name) {
-            'admin' => 'Bienvenue administrateur !',
-            'reader' => 'Bienvenue lecteur basique !',
-            'extended_reader' => 'Bienvenue lecteur privilégié !',
-            default => 'Bienvenue !',
-        };
-
-        return Inertia::render('Result', [
-            'message' => $message
-        ]);
+        if (!$user || $user->role->name !== $requiredRole) {
+            return redirect('/')->with('error', 'Accès non autorisé.');
+        }
+        return true;
     }
-} 
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        
+        return redirect('/');
+    }
+}
