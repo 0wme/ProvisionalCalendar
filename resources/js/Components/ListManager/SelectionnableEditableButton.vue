@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import SelectionnableButton from './SelectionnableButton.vue';
 import IconButton from '@/Components/IconButton.vue';
+import { Item } from '@/types/models';
 
 const props = defineProps<{
-    item: any,
-    selected: boolean
+    item: Item,
+    selected?: boolean
 }>()
 
 const emit = defineEmits(['select']);

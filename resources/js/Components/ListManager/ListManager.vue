@@ -3,17 +3,7 @@ import { ref, computed, defineEmits, onMounted, onUnmounted } from 'vue';
 import Filter from '@/Components/Filter.vue';
 import SearchBar from '@/Components/SearchBar.vue';
 import SelectionnableEditableButton from './SelectionnableEditableButton.vue';
-
-interface Period {
-    id: number;
-    name: string;
-}
-
-interface Item {
-    id: number;
-    name: string;
-    period: Period;
-}
+import { Period, Item } from '@/types/models';
 
 const props = defineProps<{
   title: string;
@@ -33,7 +23,7 @@ const searchValue = ref('');
 
 const listManagerItemsHeight = ref('0px');
 const visibleItems = computed(() => {
-    if (props.hasFilter) 
+    if (props.periods) 
         return props.items
             .filter(item => item.period.id === selectedPeriodId.value)
             .filter(item => item.name.toLowerCase().includes(searchValue.value.toLowerCase()));
@@ -59,7 +49,7 @@ const listManager = ref<HTMLElement | null>(null)
 const updateHeight = () => {
   const elements = listManager.value?.querySelectorAll(':scope > :not(.list-manager-items)');
   const elementsHeight = Array.from(elements || []).reduce((acc, el) => acc + el.clientHeight, 0);
-  listManagerItemsHeight.value = `${listManager.value?.clientHeight - elementsHeight - (props.hasFilter ? 96 : 80)}px`;
+  listManagerItemsHeight.value = `${listManager.value?.clientHeight - elementsHeight - (props.periods ? 96 : 80)}px`;
 }
 
 onMounted(() => {
@@ -83,7 +73,7 @@ onUnmounted(() => {
     />
 
     <Filter
-        v-if="hasFilter"
+        v-if="periods"
         class="w-52"
         hasBorder
         :selectedItemName="periods[selectedPeriodId].name"
