@@ -1,18 +1,27 @@
 <!--
 /**
  * @component Popup
- * @description Composant de popup modal pour ajouter une promotion avec confirmation de fermeture
+ * @description Composant modal réutilisable pour afficher un formulaire ou du contenu avec confirmation de fermeture
+ * 
+ * @props {string} title - Titre du popup (défaut: 'Ajouter une promotion')
+ * @props {string} width - Classe Tailwind pour la largeur (défaut: 'w-96')
+ * @props {string} bgColor - Classe Tailwind pour la couleur de fond (défaut: 'bg-white')
+ * @props {string} inputLabel - Label du champ de saisie (défaut: 'Nom')
+ * @props {string} inputPlaceholder - Texte placeholder de l'input (défaut: 'Ex : BUT 1')
+ * @props {string} buttonText - Texte du bouton principal (défaut: 'Ajouter')
+ * @props {string} buttonColor - Classe Tailwind pour la couleur du bouton (défaut: 'bg-green-500')
  * 
  * @example
- * // Popup standard
- * <Popup />
- * 
- * // Popup avec gestion de la fermeture
  * <Popup 
- *   @close="handleClose"
+ *   title="Nouvelle promotion"
+ *   width="w-[500px]"
+ *   bg-color="bg-gray-50"
+ *   input-label="Promotion"
+ *   button-text="Créer"
+ *   button-color="bg-blue-500"
  * />
  */
- -->
+-->
 
 <script setup lang="ts">
 import Icon from '@/Components/Icon.vue';
@@ -20,19 +29,34 @@ import IconButton from '@/Components/IconButton.vue';
 import PopupClose from '@/Components/PopupClose.vue';
 import { ref } from 'vue';
 
+interface Props {
+  title?: string;
+  width?: string;
+  bgColor?: string;
+  inputLabel?: string;
+  inputPlaceholder?: string;
+  buttonText?: string;
+  buttonColor?: string;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  title: 'Ajouter une promotion',
+  width: 'w-96',
+  bgColor: 'bg-white',
+  inputLabel: 'Nom',
+  inputPlaceholder: 'Ex : BUT 1',
+  buttonText: 'Ajouter',
+  buttonColor: 'bg-green-500'
+});
+
 /**
  * États du composant
- * @property {Ref<boolean>} showPopup - Contrôle l'affichage de la popup principale
- * @property {Ref<boolean>} showConfirmation - Contrôle l'affichage de la popup de confirmation
  */
 const showPopup = ref(true);
 const showConfirmation = ref(false);
 
 /**
- * Méthodes de gestion des popups
- * @method handleClose - Affiche la popup de confirmation
- * @method confirmClose - Ferme les deux popups
- * @method cancelClose - Ferme uniquement la popup de confirmation
+ * Gestion des actions de fermeture
  */
 const handleClose = () => {
   showConfirmation.value = true;
@@ -49,28 +73,16 @@ const cancelClose = () => {
 </script>
 
 <template>
-  <!-- 
-    Popup principale:
-    - relative: pour le positionnement
-    - v-if: contrôle l'affichage
-  -->
   <div v-if="showPopup" class="relative">
-    <!-- 
-      Container principal:
-      - rounded-[20px]: coins arrondis
-      - p-6: padding interne
-      - w-96: largeur fixe
-      - bg-white: fond blanc
-    -->
-    <div class="rounded-[20px] p-6 w-96 bg-white">
-      <!-- 
-        En-tête de la popup:
-        - flex justify-between: espacement entre titre et bouton
-        - items-center: alignement vertical
-        - mb-6: marge bas
-      -->
+    <!-- Container principal -->
+    <div :class="[
+      'rounded-[20px] p-6',
+      width,
+      bgColor
+    ]">
+      <!-- En-tête -->
       <div class="flex justify-between items-center mb-6">
-        <label class="text-2xl font-bold">Ajouter une promotion</label>
+        <label class="text-2xl font-bold">{{ title }}</label>
         <IconButton 
           icon-class="X"
           bg-color="#FF3B30"
@@ -80,30 +92,24 @@ const cancelClose = () => {
         />    
       </div>
 
-      <!-- 
-        Contenu du formulaire:
-        - flex flex-col: disposition verticale
-        - gap-4: espacement entre éléments
-      -->
+      <!-- Formulaire -->
       <div class="flex flex-col gap-4">
-        <label class="text-lg font-medium">Nom</label>
+        <label class="text-lg font-medium">{{ inputLabel }}</label>
         <input 
           type="text" 
           class="border border-gray-300 rounded-lg p-2"
-          placeholder="Ex : BUT 1"
+          :placeholder="inputPlaceholder"
         />
-        <button class="bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 mt-2">
-          Ajouter
+        <button :class="[
+          buttonColor,
+          'text-white py-2 px-4 rounded-lg hover:brightness-90 mt-2'
+        ]">
+          {{ buttonText }}
         </button>
       </div>
     </div>
 
-    <!-- 
-      Popup de confirmation:
-      - fixed inset-0: couvre tout l'écran
-      - bg-black bg-opacity-50: overlay semi-transparent
-      - flex items-center justify-center: centrage
-    -->
+    <!-- Popup de confirmation -->
     <div 
       v-if="showConfirmation" 
       class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
