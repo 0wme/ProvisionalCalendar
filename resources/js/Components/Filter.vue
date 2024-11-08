@@ -19,32 +19,19 @@
 -->
 <script setup lang="ts">
 import IconButton from './IconButton.vue';
-import { ref } from 'vue';
 
-const emit = defineEmits(['change']);
+const emit = defineEmits(['previous', 'next']);
 
 const props = defineProps<{
-    items: string[],
+    selectedItemName: string,
     hasBorder: boolean
 }>()
-
-const selectedItemId = ref(0);
-
-const handleNext = () => {
-    selectedItemId.value = selectedItemId.value < (props.items.length - 1) ? (selectedItemId.value + 1) : 0;
-    emit('change', selectedItemId.value);
-}
-
-const handlePrevious = () => {
-    selectedItemId.value = selectedItemId.value === 0 ? props.items.length - 1 : (selectedItemId.value - 1);
-    emit('change', selectedItemId.value);
-}
 </script>
 
 <template>
     <div :class="['flex items-center justify-between gap-2', { 'border border-black rounded-xl p-1 shadow-lg bg-gray-100': props.hasBorder }]">
-        <IconButton iconClass="ChevronLeft" bgColor="#FFD8E4" small @click="handlePrevious" />
-        <p>{{ props.items[selectedItemId] }}</p>
-        <IconButton iconClass="ChevronRight" bgColor="#FFD8E4" small @click="handleNext" />
+        <IconButton iconClass="ChevronLeft" bgColor="#FFD8E4" small @click="emit('previous')" />
+        <p>{{ selectedItemName }}</p>
+        <IconButton iconClass="ChevronRight" bgColor="#FFD8E4" small @click="emit('next')" />
     </div>
 </template>
