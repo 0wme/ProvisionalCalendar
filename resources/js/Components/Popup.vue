@@ -1,30 +1,4 @@
-<!--
-/**
- * @component Popup
- * @description Composant modal réutilisable pour afficher un formulaire ou du contenu avec confirmation de fermeture
- * 
- * @props {string} title - Titre du popup (défaut: 'Ajouter une promotion')
- * @props {string} width - Classe Tailwind pour la largeur (défaut: 'w-96')
- * @props {string} bgColor - Classe Tailwind pour la couleur de fond (défaut: 'bg-white')
- * @props {string} inputLabel - Label du champ de saisie (défaut: 'Nom')
- * @props {string} inputPlaceholder - Texte placeholder de l'input (défaut: 'Ex : BUT 1')
- * @props {string} buttonText - Texte du bouton principal (défaut: 'Ajouter')
- * @props {string} buttonColor - Classe Tailwind pour la couleur du bouton (défaut: 'bg-green-500')
- * 
- * @example
- * <Popup 
- *   title="Nouvelle promotion"
- *   width="w-[500px]"
- *   bg-color="bg-gray-50"
- *   input-label="Promotion"
- *   button-text="Créer"
- *   button-color="bg-blue-500"
- * />
- */
--->
-
 <script setup lang="ts">
-import Icon from '@/Components/Icon.vue';
 import IconButton from '@/Components/IconButton.vue';
 import PopupClose from '@/Components/PopupClose.vue';
 import { ref } from 'vue';
@@ -33,31 +7,25 @@ interface Props {
   title?: string;
   width?: string;
   bgColor?: string;
-  inputLabel?: string;
-  inputPlaceholder?: string;
   buttonText?: string;
   buttonColor?: string;
+  showDeleteButton?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  title: 'Ajouter une promotion',
+  title: 'Popup',
   width: 'w-96',
   bgColor: 'bg-white',
-  inputLabel: 'Nom',
-  inputPlaceholder: 'Ex : BUT 1',
-  buttonText: 'Ajouter',
-  buttonColor: 'bg-green-500'
+  buttonText: 'Valider',
+  buttonColor: 'bg-green-500',
+  showDeleteButton: false
 });
 
-/**
- * États du composant
- */
+const emit = defineEmits(['close', 'submit', 'delete']);
+
 const showPopup = ref(true);
 const showConfirmation = ref(false);
 
-/**
- * Gestion des actions de fermeture
- */
 const handleClose = () => {
   showConfirmation.value = true;
 };
@@ -65,6 +33,7 @@ const handleClose = () => {
 const confirmClose = () => {
   showPopup.value = false;
   showConfirmation.value = false;
+  emit('close');
 };
 
 const cancelClose = () => {
@@ -73,12 +42,20 @@ const cancelClose = () => {
 </script>
 
 <template>
-  <div v-if="showPopup" class="relative">
-    <!-- Container principal -->
+  <div v-if="showPopup" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+    <!-- Popup de confirmation -->
+    <PopupClose 
+      v-if="showConfirmation"
+      class="absolute z-50"
+      @confirm="confirmClose"
+      @cancel="cancelClose"
+    />
+
     <div :class="[
-      'rounded-[20px] p-6',
+      'relative rounded-[20px] p-6',
       width,
-      bgColor
+      bgColor,
+      { 'opacity-50': showConfirmation }
     ]">
       <!-- En-tête -->
       <div class="flex justify-between items-center mb-6">
@@ -92,32 +69,40 @@ const cancelClose = () => {
         />    
       </div>
 
-      <!-- Formulaire -->
+      <!-- Contenu personnalisable -->    
       <div class="flex flex-col gap-4">
-        <label class="text-lg font-medium">{{ inputLabel }}</label>
-        <input 
-          type="text" 
-          class="border border-gray-300 rounded-lg p-2"
-          :placeholder="inputPlaceholder"
-        />
-        <button :class="[
-          buttonColor,
-          'text-white py-2 px-4 rounded-lg hover:brightness-90 mt-2'
-        ]">
-          {{ buttonText }}
-        </button>
-      </div>
-    </div>
+        <slot name="content"></slot>
 
-    <!-- Popup de confirmation -->
-    <div 
-      v-if="showConfirmation" 
-      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
-    >
-      <PopupClose 
-        @confirm="confirmClose"
-        @cancel="cancelClose"
-      />
+        <!-- Boutons d'action personnalisables -->
+        <div class="flex gap-4 mt-4">
+          <slot name="actions">
+            <template v-if="showDeleteButton">
+              <button 
+                class="w-full bg-red-500 text-white py-2 px-4 rounded-lg hover:brightness-90"
+                @click="$emit('delete')"
+              >
+                Supprimer
+              </button>
+              <button 
+                class="w-full bg-green-500 text-white py-2 px-4 rounded-lg hover:brightness-90"
+                @click="$emit('submit')"
+              >
+                Sauvegarder
+              </button>
+            </template>
+            <button 
+              v-else
+              :class="[
+                buttonColor,
+                'w-full text-white py-2 px-4 rounded-lg hover:brightness-90'
+              ]"
+              @click="$emit('submit')"
+            >
+              {{ buttonText }}
+            </button>
+          </slot>
+        </div>
+      </div>
     </div>
   </div>
 </template>
