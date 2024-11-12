@@ -4,10 +4,13 @@
     <Sidebar />
     <div class="main-content">
       <!-- Contenu de la page Enseignants/Enseignements -->
-      <TeachersListManager 
-        title="Liste des Enseignants" 
-        :teachers="teachers" 
-        @select="handleTeacherSelect" 
+      <TeachersListManager
+        title="Liste des Enseignants"
+        :teachers
+      />
+      <TeachingsListManager
+        title="Liste des Enseignements"
+        :teachings
       />
     </div>
   </div>
@@ -18,19 +21,19 @@ import Sidebar from '../Components/Navigation/Sidebar.vue';
 import HeaderMenu from '../Components/Navigation/HeaderMenu.vue';
 import TeachersListManager from '../Components/Features/ListManager/TeachersListManager.vue';
 import { ref } from 'vue';
-import { Teacher } from '../types/models';
-
-// Exemple de liste d'enseignants
+import { Teacher } from '@/types/model';
+import TeachingsListManager from '../Components/Features/ListManager/TeachingsListManager.vue';
+import { Teaching } from '@/types/model';
 const teachers = ref<Teacher[]>([
-  { id: 1, firstname: 'John', lastname: 'Doe', code: 'T001' },
-  { id: 2, firstname: 'Jane', lastname: 'Smith', code: 'T002' },
+  { id: 1, name: 'John Doe', firstname: 'John', lastname: 'Doe', code: 'T001' },
+  { id: 2, name: 'Jane Smith', firstname: 'Jane', lastname: 'Smith', code: 'T002' },
   // ... autres enseignants
 ]);
-
-// Fonction pour gérer la sélection d'un enseignant
-const handleTeacherSelect = (teacher: Teacher) => {
-    console.log('Enseignant sélectionné:', teacher);
-}
+const teachings = ref<Teaching[]>([
+  { id: 1, name: 'Math', code: 'T001' },
+  { id: 2, name: 'Science', code: 'T002' },
+  // ... autres enseignements
+]);
 </script>
 
 <style scoped>
