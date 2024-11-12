@@ -21,6 +21,8 @@ return new class extends Migration
             $table->decimal('td_hours_continued', 5, 2)->nullable();
             $table->decimal('cm_hours_initial', 5, 2);
             $table->decimal('cm_hours_continued', 5, 2)->nullable();
+            $table->integer('semestre')->nullable();
+            $table->integer('trimestre')->nullable();
             $table->timestamps();
         });
     }
