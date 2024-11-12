@@ -33,6 +33,11 @@ class User extends Authenticatable
         return $this->belongsTo(Role::class);
     }
 
+    public function teacher()
+    {
+        return $this->hasOne(Teacher::class);
+    }
+
     // Constantes pour les rôles
     const ROLE_ADMIN = 'admin';
     const ROLE_READER = 'reader';
