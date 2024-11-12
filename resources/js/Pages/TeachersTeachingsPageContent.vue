@@ -5,7 +5,6 @@
     <div class="main-content">
       <!-- Contenu de la page Enseignants/Enseignements -->
       <TeachersListManager />
-      <TeachingsListManager />
     </div>
   </div>
 </template>
@@ -14,7 +13,6 @@
 import Sidebar from '../Components/Navigation/Sidebar.vue';
 import HeaderMenu from '../Components/Navigation/HeaderMenu.vue';
 import TeachersListManager from '../Components/Features/ListManager/TeachersListManager.vue';
-import TeachingsListManager from '../Components/Features/ListManager/TeachingsListManager.vue';
 </script>
 
 <style scoped>
