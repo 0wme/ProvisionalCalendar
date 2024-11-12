@@ -1,28 +1,12 @@
 <script setup lang="ts">
-import SelectionnableButton from './SelectionnableButton.vue';
-import IconButton from '@/Components/IconButton.vue';
-import { Item } from '@/types/models';
-
-const props = defineProps<{
-    item: Item,
+defineProps<{
+    name: string,
     selected?: boolean
 }>()
-
-const emit = defineEmits(['select']);
-
-const handleEdit = () => {
-    // TODO: Ouverture de la popup
-    console.log('edit');
-}
-
-const handleSelect = () => {
-    emit('select', props.item.id);
-}
 </script>
 
 <template>
-    <div class="selectionnable-button-editable flex items-center gap-2">
-        <SelectionnableButton class="w-full" :name="item.name" :selected @click="handleSelect" />
-        <IconButton iconClass="Pencil" bgColor="#E8DEF8" @click="handleEdit" hasShadow />
-    </div>
+    <button :class="['selectionnable-button rounded-2xl p-4 shadow-lg text-left', selected ? 'bg-red-100 border border-red-600 border-2' : 'bg-gray-100']">
+        <p>{{ name }}</p>
+    </button>
 </template>
