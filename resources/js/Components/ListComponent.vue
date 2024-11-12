@@ -46,7 +46,7 @@ defineEmits(['update:modelValue'])
 <template>
   <div class="select-wrapper max-w-xs">
     <label 
-      v-if="label && showLabel" 
+      v-if="label" 
       :for="id" 
       class="block text-sm font-medium text-black font-bold mb-1"
     >
@@ -73,7 +73,7 @@ defineEmits(['update:modelValue'])
     </option>
   </select>
 
-    <p v-if="error && showError" class="mt-1 text-sm text-red-600 font-bold">
+    <p v-if="error" class="mt-1 text-sm text-red-600 font-bold">
       {{ error }}
     </p>
   </div>
