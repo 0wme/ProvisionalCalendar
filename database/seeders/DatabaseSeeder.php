@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             AcademicGroupSeeder::class,
             AcademicSubgroupSeeder::class,
             SlotSeeder::class,
+            AlertSeeder::class,
         ]);
     }
 } 
