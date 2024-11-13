@@ -14,8 +14,8 @@ defineProps<{
     <ListManager
         title="Enseignements"
         hasAdd
+        hasImport
         :periods
         :items="teachings"
-        style="width: 600px; height: 50vh;"
     />
 </template>

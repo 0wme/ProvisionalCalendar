@@ -20,7 +20,6 @@ const handleSelect = (teacher: Teacher) => {
         title="Enseignants"
         hasAdd
         :items="teachers"
-        style="width: 600px; height: 50vh;"
         @select="handleSelect"
     />
 </template>
