@@ -2,17 +2,39 @@
   <div class="page-content">
     <div class="main-content">
       <!-- Contenu de la page Enseignants/Enseignements -->
-      <button class="mode-button hover:brightness-75">Mode Enseignants</button>
+      <button 
+          class="mode-button" 
+          :style="{ backgroundColor: buttonClicked ? '#FF9898' : '#9A98FF' }" 
+          @click="toggleButton">
+          {{ buttonClicked ? 'Mode Enseignements' : 'Mode Enseignants' }}
+      </button>
       <div class="teachers-teachings-content">
-        <TeachersListManager class="teachers-list-manager"
-          title="Liste des Enseignants"
-          :teachers
-        />
-        <TeachingsListManager class="teachings-list-manager"
-          title="Liste des Enseignements"
-          :teachings
-          :periods
-        />
+        <TeachersListManager
+            v-if="!buttonClicked"
+            title="Liste des Enseignants"
+            :teachers
+            class="teachers-list-manager"
+          />
+          <TeachingsListManager
+            v-if="buttonClicked"
+            title="Liste des Enseignements"
+            :teachings
+            :periods
+            class="teachings-list-manager"
+          />
+          <TeachingsListManager
+            v-if="!buttonClicked"
+            title="Liste des Enseignements"
+            :teachings
+            :periods
+            class="teachings-list-manager"
+          />
+          <TeachersListManager
+            v-if="buttonClicked"
+            title="Liste des Enseignants"
+            :teachers
+            class="teachers-list-manager"
+          />
       </div>
     </div>
   </div>
@@ -46,6 +68,12 @@ const teachings = ref<Teaching[]>([
   { id: 2, name: 'Science', code: 'T002', period:periods.value[1]},
   // ... autres enseignements
 ]);
+
+const buttonClicked = ref(false);
+
+const toggleButton = () => {
+  buttonClicked.value = !buttonClicked.value;
+};
 </script>
 
 <style scoped>
@@ -78,16 +106,12 @@ const teachings = ref<Teaching[]>([
   background-color: #8a9eff;
   color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 15px;
   padding: 10px 20px;
   cursor: pointer;
   font-size: 16px;
   margin-top: 20px;
   margin-right: 20px;
   width: max-content;
-}
-
-.mode-button:hover {
-  brightness: 0.8;
 }
 </style>
