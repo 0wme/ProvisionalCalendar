@@ -13,6 +13,9 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             TeachingSeeder::class,
             TeacherTeachingSeeder::class,
+            AcademicPromotionSeeder::class,
+            AcademicGroupSeeder::class,
+            AcademicSubgroupSeeder::class,
         ]);
     }
 } 
