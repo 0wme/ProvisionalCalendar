@@ -16,6 +16,9 @@ class DatabaseSeeder extends Seeder
             AcademicPromotionSeeder::class,
             AcademicGroupSeeder::class,
             AcademicSubgroupSeeder::class,
+            YearSeeder::class,
+            WeekSeeder::class,
+            SlotSeeder::class,
         ]);
     }
 } 
