@@ -8,6 +8,7 @@ class AcademicPromotion extends Model
 {
     protected $fillable = [
         'name',
+        'year_id',
     ];
 
 }

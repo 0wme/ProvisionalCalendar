@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('academic_promotions', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->foreignId('year_id')->constrained('years');
             $table->timestamps();
         });
     }

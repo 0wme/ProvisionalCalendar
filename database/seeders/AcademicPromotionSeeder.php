@@ -14,13 +14,16 @@ class AcademicPromotionSeeder extends Seeder
     public function run(): void
     {
         AcademicPromotion::create([
-            'name' => 'BUT1'
+            'name' => 'BUT1',
+            'year_id' => 1,
         ]);
         AcademicPromotion::create([
-            'name' => 'BUT2'
+            'name' => 'BUT2',
+            'year_id' => 1,
         ]);
         AcademicPromotion::create([
-            'name' => 'BUT3'
+            'name' => 'BUT3',
+            'year_id' => 1,
         ]);
     }
 }

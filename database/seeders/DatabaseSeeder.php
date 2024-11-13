@@ -13,11 +13,11 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             TeachingSeeder::class,
             TeacherTeachingSeeder::class,
+            YearSeeder::class,
+            WeekSeeder::class,
             AcademicPromotionSeeder::class,
             AcademicGroupSeeder::class,
             AcademicSubgroupSeeder::class,
-            YearSeeder::class,
-            WeekSeeder::class,
             SlotSeeder::class,
         ]);
     }
