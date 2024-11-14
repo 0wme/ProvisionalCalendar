@@ -24,13 +24,13 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/calendrier-previsionnel/groupes', [GroupsController::class, 'show'])
         ->name('provisionnal_calendar.groups');
 
-    Route::get('/calendrier-previsionnel/teachers-teachings', [TeachersTeachingsController::class, 'show'])
+    Route::get('/calendrier-previsionnel/enseignants-enseignements', [TeachersTeachingsController::class, 'show'])
         ->name('provisionnal_calendar.teachers_teachings');
 
-    Route::get('/calendrier-previsionnel/editor', [ProvisionnalCalendarEditorController::class, 'show'])
+    Route::get('/calendrier-previsionnel/editeur', [ProvisionnalCalendarEditorController::class, 'show'])
         ->name('provisionnal_calendar.editor');
 
-    Route::get('/calendrier-previsionnel/settings', [ProvisionnalCalendarSettingsController::class, 'show'])
+    Route::get('/calendrier-previsionnel/configurations', [ProvisionnalCalendarSettingsController::class, 'show'])
         ->name('provisionnal_calendar.settings');
 
     // Route::get('/edt', [DashboardController::class, 'show'])

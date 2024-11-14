@@ -36,8 +36,6 @@ class RoleManager
                 break;
         }
 
-        return redirect()->route('index');
-
         switch ($userRole->level) {
             case 0:
                 return redirect()->route('provisionnal_calendar.groups');
@@ -46,6 +44,6 @@ class RoleManager
                 return redirect()->route('provisionnal_calendar');
         }
 
-        //return redirect()->route('login');
+        return redirect()->route('logout');
     }
 }
