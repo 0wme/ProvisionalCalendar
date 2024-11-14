@@ -1,28 +1,52 @@
 <template>
-    <div class="login-container">
-      <img src="@/../img/logo.png" alt="Logo" class="logo" />
-      <div class="login-form">
-        <h2>Se connecter</h2>
-        <form>
-          <div class="form-group">
-            <label for="username">Nom d'utilisateur</label>
-            <input type="text" id="username" placeholder="Nom d'utilisateur" />
+  <div class="login-container">
+    <img src="@/../img/logo.png" alt="Logo" class="logo" />
+    <div class="login-form">
+      <h2>Se connecter</h2>
+      <form @submit.prevent="submit">
+        <div class="form-group">
+          <label for="username">Nom d'utilisateur</label>
+          <input 
+            type="text" 
+            id="username" 
+            v-model="form.username"
+            placeholder="Nom d'utilisateur" 
+          />
+          <div v-if="form.errors.username" class="error-message">
+            {{ form.errors.username }}
           </div>
-          <div class="form-group">
-            <label for="password">Mot de passe</label>
-            <input type="password" id="password" placeholder="Mot de passe" />
-          </div>
-          <button type="submit" class="login-button">Se connecter</button>
-        </form>
-      </div>
+        </div>
+        <div class="form-group">
+          <label for="password">Mot de passe</label>
+          <input 
+            type="password" 
+            id="password" 
+            v-model="form.password"
+            placeholder="Mot de passe" 
+          />
+        </div>
+        <button type="submit" class="login-button" :disabled="form.processing">
+          Se connecter
+        </button>
+      </form>
     </div>
-  </template>
-  
-  <script setup lang="ts">
-    // Ici pour ton backend (redirection)
-  </script>
-  
-  <style scoped>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { useForm } from '@inertiajs/vue3';
+
+const form = useForm({
+  username: '',
+  password: ''
+});
+
+const submit = () => {
+  form.post('/login');
+};
+</script>
+
+<style scoped>
 .login-container {
   display: flex;
   flex-direction: column;
@@ -79,5 +103,16 @@
   
   .login-button:hover {
     background-color: #45a049;
+  }
+
+  .error-message {
+    color: #dc2626;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+  }
+
+  .login-button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
   }
   </style>
