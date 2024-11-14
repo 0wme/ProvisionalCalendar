@@ -2,9 +2,8 @@ import { MenuItem } from "@/types/models";
 
 const provisionnalCalendarMenuItems: MenuItem[] = [
     { iconClass: "User", label: 'Groupes', route: 'groupes' },
-    { iconClass: "Book", label: 'Enseignants/Enseignements', route: 'teachers' },
-    { iconClass: "Calendar", label: 'Calendrier Prévisionnel', route: 'admin-calendar' },
-    { iconClass: "AlertCircle", label: 'Alertes', route: 'alertes' },
+    { iconClass: "Book", label: 'Enseignants/Enseignements', route: 'enseignants-enseignements' },
+    { iconClass: "Calendar", label: 'Calendrier Prévisionnel', route: 'editeur' },
     { iconClass: "Settings", label: 'Configurations', route: 'configurations' },
 ];
 
