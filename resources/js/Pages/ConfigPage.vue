@@ -1,17 +1,12 @@
 <template>
-    <div class="page-content">
-      <HeaderMenu />
-      <Sidebar />
-      <div class="main-content">
+    <AdminLayout>
         <h1>Configurations Page</h1>
-      </div>
-    </div>
-  </template>
+    </AdminLayout>
+</template>
   
   <script setup lang="ts">
-  import Sidebar from '../Components/Navigation/Sidebar.vue';
-  import HeaderMenu from '../Components/Navigation/HeaderMenu.vue';
-  </script>
+import AdminLayout from '@/Layouts/AdminLayout.vue';
+</script>
   
   <style scoped>
   </style>

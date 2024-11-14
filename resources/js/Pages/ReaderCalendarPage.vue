@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import Sidebar from '../Components/Navigation/Sidebar.vue';
-import { Head } from '@inertiajs/vue3';
+import MainLayout from '@/Layouts/MainLayout.vue';
 
 const props = defineProps<{
     message?: string;
@@ -12,15 +11,12 @@ console.log(props.message);
 </script>
 
 <template>
-    <Head title="Calendrier Prévisionnel Lecteur" />
-    <div class="page-content">
-        <Sidebar />
-        <div class="main-content">
-            <div v-if="message" class="welcome-message">
-                {{ message }}
-            </div>
+    <MainLayout>
+        <div v-if="message" class="welcome-message">
+            {{ message }}
         </div>
-    </div>
+        <h1>Calendrier Prévisionnel Lecteur</h1>
+    </MainLayout>
 </template>
 
 <style scoped>
@@ -32,14 +28,5 @@ console.log(props.message);
     text-align: center;
     font-size: 1.1rem;
     color: #374151;
-}
-
-.page-content {
-    display: flex;
-}
-
-.main-content {
-    flex-grow: 1;
-    padding: 20px;
 }
 </style>

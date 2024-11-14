@@ -15,10 +15,11 @@ function toggleSidebar() {
 }
 
 const currentPath = ref(window.location.pathname.split('/')[1]);
+
 </script>
 
 <template>
-    <div :class="['sidebar bg-white rounded-xl shadow-lg p-5 ml-4 relative transition-all duration-300 w-min h-min my-auto', { closed }]">
+    <div :class="['sidebar bg-white shadow-lg p-5 pl-4 relative transition-all duration-300 w-min h-screen flex flex-col justify-between', { closed }]">
         <ul class="flex flex-col justify-center gap-8 h-min">
             <MenuItem
                 v-for="item in items"
@@ -26,13 +27,12 @@ const currentPath = ref(window.location.pathname.split('/')[1]);
                 :active="currentPath === item.route"
                 @click="$inertia.visit('/' + item.route)"
             />
-            <MenuItem
-                class="mt-16"
-                :item="{ iconClass: 'Power', label: 'Déconnexion', route: '/logout' }"
-                :active="false"
-                @click="$inertia.visit('/logout')"
-            />
         </ul>
+        <MenuItem
+            :item="{ iconClass: 'Power', label: 'Déconnexion', route: '/logout' }"
+            :active="false"
+            @click="$inertia.visit('/logout')"
+        />
         <IconButton
             class="toggle-button bg-gray-100 absolute right-0 top-1/2 translate-x-1/2 -translate-y-1/2 shadow-sm"
             :iconClass="closed ? 'ChevronRight' : 'ChevronLeft'"
@@ -44,6 +44,6 @@ const currentPath = ref(window.location.pathname.split('/')[1]);
 
 <style scoped>
 .sidebar.closed {
-    margin-left: -115px;
+    margin-left: -110px;
 }
 </style>
