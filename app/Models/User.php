@@ -28,6 +28,8 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
+    protected $with = ['role'];
+
     public function role()
     {
         return $this->belongsTo(Role::class);
@@ -39,7 +41,7 @@ class User extends Authenticatable
     }
 
     // Constantes pour les rôles
-    const ROLE_ADMIN = 'admin';
+    const ROLE_ADMIN = 'administrator';
     const ROLE_READER = 'reader';
     const ROLE_EXTENDED_READER = 'extended_reader';
 }

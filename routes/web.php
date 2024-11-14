@@ -1,62 +1,43 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\GroupsController;
+use App\Http\Controllers\IndexController;
+use App\Http\Controllers\ProvisionnalCalendarEditorController;
+use App\Http\Controllers\ProvisionnalCalendarSettingsController;
+use App\Http\Controllers\TeachersTeachingsController;
+use App\Http\Controllers\ProvisionnalCalendarReaderController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
-// Routes publiques
-Route::get('/', function () {
-    return Inertia::render('LoginPage');
-})->name('login');
+Route::get('/login', [AuthController::class, 'login'])->name('login');
+Route::post('/login', [AuthController::class, 'authenticate']);
 
-// Routes d'authentification
-Route::post('/login', [AuthController::class, 'login'])->name('auth.login');
-Route::post('/logout', [AuthController::class, 'logout'])->name('auth.logout');
+Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
-// Routes pour l'administrateur
-Route::middleware(['auth', 'check.role:admin'])->group(function () {
-    Route::get('/admin/calendar', function () {
-        return Inertia::render('AdminCalendarPage');
-    })->name('admin.calendar');
+Route::get('/', [IndexController::class, 'show'])->middleware(['auth'])->name('index');
 
-    Route::get('/groupes', function () {
-        return Inertia::render('GroupPage');
-    })->name('groupes');
+Route::get('/calendrier-previsionnel', [ProvisionnalCalendarReaderController::class, 'show'])
+    ->middleware(['auth', 'role:reader', 'role:extended_reader'])
+    ->name('provisionnal_calendar');
 
-    Route::get('/enseignants', function () {
-        return Inertia::render('TeachersTeachingsPageContent');
-    })->name('enseignants');
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/calendrier-previsionnel/groupes', [GroupsController::class, 'show'])
+        ->name('provisionnal_calendar.groups');
 
-    Route::get('/alertes', function () {
-        return Inertia::render('AlertPage');
-    })->name('alertes');
+    Route::get('/calendrier-previsionnel/teachers-teachings', [TeachersTeachingsController::class, 'show'])
+        ->name('provisionnal_calendar.teachers_teachings');
 
-    Route::get('/configurations', function () {
-        return Inertia::render('ConfigPage');
-    })->name('configurations');
-});
+    Route::get('/calendrier-previsionnel/editor', [ProvisionnalCalendarEditorController::class, 'show'])
+        ->name('provisionnal_calendar.editor');
 
-// Routes pour le lecteur standard
-Route::middleware(['auth', 'check.role:reader'])->group(function () {
-    Route::get('/reader/calendar', function () {
-        return Inertia::render('ReaderCalendarPage');
-    })->name('reader.calendar');
-});
+    Route::get('/calendrier-previsionnel/settings', [ProvisionnalCalendarSettingsController::class, 'show'])
+        ->name('provisionnal_calendar.settings');
 
-// Routes pour le lecteur privilégié
-Route::middleware(['auth', 'check.role:extended_reader'])->group(function () {
-    Route::get('/extended/calendar', function () {
-        return Inertia::render('ExtendedReaderCalendarPage');
-    })->name('extended.calendar');
-});
+    // Route::get('/edt', [DashboardController::class, 'show'])
+    //     ->name('edt');
 
-// Routes communes à tous les utilisateurs authentifiés
-Route::middleware('auth')->group(function () {
-    Route::get('/edt', function () {
-        return Inertia::render('ServicePage');
-    })->name('edt');
+    // Route::get('/service', [DashboardController::class, 'show'])
+    //     ->name('service');
 
-    Route::get('/service', function () {
-        return Inertia::render('ServicePage');
-    })->name('service');
+    Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 });

@@ -29,14 +29,14 @@ class UserFactory extends Factory
         ]);
     }
 
-    public function reader(): static
+    public function extendedReader(): static
     {
         return $this->state(fn (array $attributes) => [
             'role_id' => 2,
         ]);
     }
 
-    public function extendedReader(): static
+    public function reader(): static
     {
         return $this->state(fn (array $attributes) => [
             'role_id' => 3,
