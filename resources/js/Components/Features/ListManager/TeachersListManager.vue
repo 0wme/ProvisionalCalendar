@@ -29,24 +29,29 @@ const openPopup = () => {
 </script>
 
 <template>
-    <ListManager
-        title="Enseignants"
-        hasAdd
-        :items="teachers"
-        @select="handleSelect"
-        @add="openPopup"
-        @edit="handleEdit"
-    />
+    <div class="teachers-list-manager min-h-full w-full">
+        <ListManager
+            title="Enseignants"
+            class="w-full h-full"
+            hasAdd
+            :items="teachers"
+            @select="handleSelect"
+            @add="openPopup"
+            @edit="handleEdit"
+        />
     
-    <TeacherPopup 
-        v-if="showPopup" 
-        :is-editing="false"
-        @close="showPopup = false" 
-    />
+        <TeacherPopup 
+            class="z-50"
+            v-if="showPopup" 
+            :is-editing="false"
+            @close="showPopup = false" 
+        />
 
-    <TeacherPopup 
-        v-if="showPopupEdit" 
-        :is-editing="true"
-        @close="showPopupEdit = false" 
-    />
+        <TeacherPopup 
+            class="z-50"
+            v-if="showPopupEdit" 
+            :is-editing="true"
+            @close="showPopupEdit = false" 
+        />
+    </div>
 </template>

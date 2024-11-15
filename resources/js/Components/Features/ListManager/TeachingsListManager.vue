@@ -23,25 +23,30 @@ const handleEdit = (teaching: Teaching) => {
 </script>
 
 <template>
-    <ListManager
-        title="Enseignements"
-        hasAdd
-        hasImport
-        :periods
-        :items="teachings"
-        @add="openPopup"
-        @edit="handleEdit"
-    />
-    
-    <TeachingPopup 
-        v-if="showPopup" 
-        :is-editing="false"
-        @close="showPopup = false" 
-    />
+    <div class="teachings-list-manager min-h-full w-full">
+        <ListManager
+            title="Enseignements"
+            class="w-full h-full"
+            hasAdd
+            hasImport
+            :periods
+            :items="teachings"
+            @add="openPopup"
+            @edit="handleEdit"
+        />
+        
+        <TeachingPopup 
+            class="z-50"
+            v-if="showPopup" 
+            :is-editing="false"
+            @close="showPopup = false" 
+        />
 
-    <TeachingPopup 
-        v-if="showPopupEdit" 
-        :is-editing="true"
-        @close="showPopupEdit = false" 
-    />
+        <TeachingPopup 
+            class="z-50"
+            v-if="showPopupEdit" 
+            :is-editing="true"
+            @close="showPopupEdit = false" 
+            />
+    </div>
 </template>
