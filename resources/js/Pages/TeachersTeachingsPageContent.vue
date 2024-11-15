@@ -9,7 +9,7 @@
           {{ buttonClicked ? 'Mode Enseignements' : 'Mode Enseignants' }}
       </button>
       <div class="teachers-teachings-content">
-        <TeachersListManager
+          <TeachersListManager
             v-if="!buttonClicked"
             title="Liste des Enseignants"
             :teachers
@@ -91,14 +91,14 @@ const toggleButton = () => {
   padding: 20px;
   gap: 30px;
   width: 100%;
-  height: 100vh;
+  height: 100%;
 }
 
-.teachers-list-manager {
+.teachers-list-manager>* {
   width: 80%;
 }
 
-.teachings-list-manager {
+.teachings-list-manager>* {
   width: 120%;
 }
 

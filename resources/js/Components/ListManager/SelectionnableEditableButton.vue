@@ -8,11 +8,10 @@ const props = defineProps<{
     selected?: boolean
 }>()
 
-const emit = defineEmits(['select']);
+const emit = defineEmits(['select', 'edit']);
 
 const handleEdit = () => {
-    // TODO: Ouverture de la popup
-    console.log('edit');
+    emit('edit', props.item);
 }
 
 const handleSelect = () => {

@@ -14,7 +14,7 @@ const props = defineProps<{
   hasImport: boolean;
 }>();
 
-const emit = defineEmits(['select']);
+const emit = defineEmits(['select', 'add', 'import', 'edit']);
 
 const selectedPeriodId = ref(0);
 const selectedItemsId = ref<number[]>([]);
@@ -70,6 +70,8 @@ onUnmounted(() => {
         :hasAdd
         :hasImport
         @input="handleSearch"
+        @add="emit('add')"
+        @import="emit('import')"
     />
 
     <Filter
@@ -88,6 +90,7 @@ onUnmounted(() => {
                 :item="item"
                 :selected="selectedItemsId.includes(item.id)"
                 @select="emit('select', item.id)"
+                @edit="emit('edit', item)"
             />
         </div>
     </div>
