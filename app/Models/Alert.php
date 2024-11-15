@@ -10,4 +10,9 @@ class Alert extends Model
         'message',
         'year_id',
     ];
+
+    public function year()
+    {
+        return $this->belongsTo(Year::class);
+    }
 }

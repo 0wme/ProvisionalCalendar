@@ -10,4 +10,29 @@ class Year extends Model
         'name',
         'periodicity',
     ];
+
+    public function weeks()
+    {
+        return $this->hasMany(Week::class);
+    }
+
+    public function teachers()
+    {
+        return $this->hasMany(Teacher::class);
+    }
+
+    public function teachings()
+    {
+        return $this->hasMany(Teaching::class);
+    }
+
+    public function academicPromotions()
+    {
+        return $this->hasMany(AcademicPromotion::class);
+    }
+
+    public function alerts()
+    {
+        return $this->hasMany(Alert::class);
+    }
 }
