@@ -15,4 +15,9 @@ class AcademicGroup extends Model
     {
         return $this->belongsTo(AcademicPromotion::class);
     }
+
+    public function academicSubgroups()
+    {
+        return $this->hasMany(AcademicSubgroup::class);
+    }
 }
