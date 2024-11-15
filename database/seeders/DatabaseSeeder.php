@@ -12,14 +12,15 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             UserSeeder::class,
             TeachingSeeder::class,
-            TeacherTeachingSeeder::class,
             YearSeeder::class,
             WeekSeeder::class,
             AcademicPromotionSeeder::class,
             AcademicGroupSeeder::class,
             AcademicSubgroupSeeder::class,
-            SlotSeeder::class,
             AlertSeeder::class,
+            TeacherSeeder::class,
+            TeacherTeachingSeeder::class,
+            SlotSeeder::class,
         ]);
     }
 } 
