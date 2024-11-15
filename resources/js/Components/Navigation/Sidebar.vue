@@ -19,7 +19,7 @@ const currentPath = ref(window.location.pathname.split('/')[1]);
 </script>
 
 <template>
-    <div :class="['sidebar bg-white shadow-lg p-5 pl-4 relative transition-all duration-300 w-min h-screen flex flex-col justify-between', { closed }]">
+    <div :class="['sidebar bg-white shadow-lg p-5 ml-4 my-auto rounded-xl relative transition-all duration-300 w-min flex flex-col gap-40', { closed }]">
         <ul class="flex flex-col justify-center gap-8 h-min">
             <MenuItem
                 v-for="item in items"

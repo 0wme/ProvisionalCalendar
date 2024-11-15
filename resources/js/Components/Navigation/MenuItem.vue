@@ -10,7 +10,7 @@ defineProps<{
 </script>
 
 <template>
-    <li class="menu-item flex flex-col items-center cursor-pointer">
+    <li :class="['menu-item flex flex-col items-center', { 'disabled': item.disable }]">
         <div :class="[
             'icon-wrapper flex justify-center items-center w-14 h-10 rounded-3xl',
             ( active ? 'bg-red-100' : 'bg-white' )
@@ -22,12 +22,26 @@ defineProps<{
 </template>
 
 <style scoped>
+.disabled {
+    opacity: 0.3 !important;
+    cursor: default !important;
+    pointer-events: none !important;
+}
+
 .icon-wrapper {
     filter: brightness(100%);
     transition: filter 0.3s ease-in-out;
 }
 
-.menu-item:hover .icon-wrapper {
+.disabled {
+    opacity: 0.5;
+}
+
+.menu-item:hover:not(.disabled) {
+    cursor: pointer;
+}
+
+.menu-item:hover:not(.disabled) .icon-wrapper {
     filter: brightness(90%);
 }
 </style>

@@ -20,6 +20,10 @@ export interface MenuItem {
      * Le sous-menu de l'élément du menu.
      */
     submenu?: MenuItem[],
+    /**
+     * Indique si l'élément du menu est désactivé.
+     */
+    disable?: boolean
 }
 
 /**

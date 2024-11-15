@@ -9,6 +9,6 @@ const provisionnalCalendarMenuItems: MenuItem[] = [
 
 export const sidebarMenuItems: MenuItem[] = [
     { iconClass: "Calendar", label: 'Calendrier Prévisionnel', route: 'calendrier-previsionnel', submenu: provisionnalCalendarMenuItems },
-    { iconClass: "Clock", label: 'EDT', route: 'edt' },
-    { iconClass: "NotebookText", label: 'Service', route: 'service' }
+    { iconClass: "Clock", label: 'EDT', route: 'edt', disable: true },
+    { iconClass: "NotebookText", label: 'Service', route: 'service', disable: true }
 ];
