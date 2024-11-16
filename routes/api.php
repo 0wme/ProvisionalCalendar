@@ -29,3 +29,11 @@ use App\Http\Controllers\Api\TeacherTeachingController;
     Route::delete('/groupes/promotion/{promotion}', [GroupController::class, 'deletePromotion']);
     Route::delete('/groupes/groupe/{group}', [GroupController::class, 'deleteGroup']);
     Route::delete('/groupes/sous-groupe/{subgroup}', [GroupController::class, 'deleteSubgroup']);
+
+//Enseignants
+
+    Route::get('/enseignants/{year}', [TeacherTeachingController::class, 'getTeachers']);
+    Route::get('/enseignements/{year}', [TeacherTeachingController::class, 'getTeachings']);
+    Route::get('/enseignement/enseignants/{teaching}', [TeacherTeachingController::class, 'getTeachersByTeaching']);
+    Route::get('/enseignant/enseignements/{teacher}', [TeacherTeachingController::class, 'getTeachingsByTeacher']);
+    
