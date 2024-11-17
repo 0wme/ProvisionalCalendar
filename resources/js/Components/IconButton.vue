@@ -13,12 +13,12 @@ defineProps<{
 <template>
   <button 
     :class="[
-      'icon-button flex justify-center items-center cursor-pointer text-black hover:brightness-75',
+      'icon-button flex justify-center items-center cursor-pointer text-black brightness-100 transition-brightness duration-300 hover:brightness-75',
       small ? 'p-2 rounded-full' : 'p-4 rounded-xl',
       { 'shadow-md': hasShadow }
     ]"
     :style="{ 'background-color': bgColor }"
   >
-    <Icon :name="iconClass" :size="small ? 16 : 24" :color="iconColor" stroke-width="2" />
+    <Icon :name="iconClass" :size="small ? 16 : 24" :color="iconColor ?? 'black'" :strokeWidth="2" />
   </button>
 </template>
