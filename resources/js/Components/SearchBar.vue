@@ -59,44 +59,6 @@ defineProps<{
 }>()
 
 const emit = defineEmits(['importClick', 'addClick', 'input']);
-import IconButton from '@/Components/IconButton.vue';
-
-/**
- * @component SearchBar
- * @description Barre de recherche réutilisable avec une icône de recherche et des options pour ajouter des boutons d'import et d'ajout
- * 
- * @example
- * ```vue
- * <SearchBar 
- *   placeholder="Rechercher un élément..."
- *   hasImport
- *   hasAdd
- *   @importClick="handleImport"
- *   @addClick="handleAdd"
- * />
- * ```
- * 
- * @example Version compacte
- * ```vue
- * <SearchBar 
- *   placeholder="Rechercher..."
- *   small
- * />
- * ```
- */
-
-defineProps<{
-    /** Placeholder de la barre de recherche*/
-    placeholder: string,
-    /** Indique si la barre de recherche doit avoir un bouton d'import */
-    hasImport?: boolean,
-    /** Indique si la barre de recherche doit avoir un bouton d'ajout */
-    hasAdd?: boolean,
-    /** Indique si la barre de recherche doit être en version compacte */
-    small?: boolean
-}>()
-
-const emit = defineEmits(['importClick', 'addClick', 'input']);
 </script>
 
 <template>
