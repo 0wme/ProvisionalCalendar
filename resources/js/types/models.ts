@@ -56,6 +56,10 @@ export interface Item {
      * Le nom de l'élément.
      */
     name: string;
+    /**
+     * La période de l'élément.
+     */
+    period?: Period;
 }
 
 /**
@@ -113,11 +117,33 @@ export interface Teaching extends Item {
      */
     continuing_tp: number;
     /**
-     * La période de l'enseignement.
-     */
-    period: Period | null;
-    /**
      * Les enseignants de l'enseignement.
      */
     teachers: Teacher[];
+}
+
+/**
+ * @interface Class
+ * 
+ * Représente une classe.
+ */
+export interface Class extends Item {
+    groups: Group[];
+}
+
+/**
+ * @interface Group
+ * 
+ * Représente un groupe.
+ */
+export interface Group extends Item {
+    subGroups: SubGroup[];
+}
+
+/**
+ * @interface SubGroup
+ * 
+ * Représente un sous-groupe.
+ */
+export interface SubGroup extends Item {
 }
