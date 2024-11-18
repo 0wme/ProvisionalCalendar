@@ -11,7 +11,7 @@ const props = defineProps<{
 const emit = defineEmits(['select', 'edit']);
 
 const handleEdit = () => {
-    emit('edit', props.item);
+    emit('edit', props.item.id);
 }
 
 const handleSelect = () => {
