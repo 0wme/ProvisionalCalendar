@@ -1,31 +1,33 @@
 <script setup lang="ts">
-import { ref, computed, defineEmits, onMounted, onUnmounted } from 'vue';
+import { ref, computed, defineEmits, onMounted, onUnmounted, watch } from 'vue';
 import Filter from '@/Components/Filter.vue';
 import SearchBar from '@/Components/SearchBar.vue';
-import SelectionnableEditableButton from './SelectionnableEditableButton.vue';
+import SelectionnableEditableButtonList from './SelectionnableEditableButtonList.vue';
 import { Period, Item } from '@/types/models';
 
 const props = defineProps<{
   title: string;
-  periods: Period[];
+  periods?: Period[];
   items: Item[];
-  hasFilter: boolean;
-  hasAdd: boolean;
-  hasImport: boolean;
+  selectedItemsId?: number[];
+  hasFilter?: boolean;
+  hasAdd?: boolean;
+  hasImport?: boolean;
 }>();
 
-const emit = defineEmits(['select']);
+const emit = defineEmits(['select', 'edit']);
 
 const selectedPeriodId = ref(0);
-const selectedItemsId = ref<number[]>([]);
 
 const searchValue = ref('');
 
 const listManagerItemsHeight = ref('0px');
 const visibleItems = computed(() => {
+    if (!props.items) return [];
+    
     if (props.periods) 
         return props.items
-            .filter(item => item.period.id === selectedPeriodId.value)
+            .filter(item => item.period?.id === selectedPeriodId.value)
             .filter(item => item.name.toLowerCase().includes(searchValue.value.toLowerCase()));
     else
         return props.items
@@ -33,11 +35,11 @@ const visibleItems = computed(() => {
 });
 
 const handleNextPeriod = () => {
-    selectedPeriodId.value = selectedPeriodId.value < (props.periods.length - 1) ? (selectedPeriodId.value + 1) : 0;
+    selectedPeriodId.value = selectedPeriodId.value < (props.periods?.length! - 1) ? (selectedPeriodId.value + 1) : 0;
 }
 
 const handlePreviousPeriod = () => {
-    selectedPeriodId.value = selectedPeriodId.value === 0 ? props.periods.length - 1 : (selectedPeriodId.value - 1);
+    selectedPeriodId.value = selectedPeriodId.value === 0 ? (props.periods?.length! - 1) : (selectedPeriodId.value - 1);
 }
 
 const handleSearch = (event: Event) => {
@@ -47,18 +49,28 @@ const handleSearch = (event: Event) => {
 const listManager = ref<HTMLElement | null>(null)
 
 const updateHeight = () => {
-  const elements = listManager.value?.querySelectorAll(':scope > :not(.list-manager-items)');
-  const elementsHeight = Array.from(elements || []).reduce((acc, el) => acc + el.clientHeight, 0);
-  listManagerItemsHeight.value = `${listManager.value?.clientHeight - elementsHeight - (props.periods ? 96 : 80)}px`;
+  if (!listManager.value) return;
+  
+  requestAnimationFrame(() => {
+    const elements = listManager.value?.querySelectorAll(':scope > :not(.list-manager-items)');
+    const elementsHeight = Array.from(elements || []).reduce((acc, el) => acc + el.clientHeight, 0);
+    listManagerItemsHeight.value = `${listManager.value?.clientHeight! - elementsHeight - (props.periods ? 96 : 80)}px`;
+  });
 }
 
-onMounted(() => {
+const resizeObserver = new ResizeObserver(() => {
   updateHeight();
-  window.addEventListener('resize', updateHeight);
+});
+
+onMounted(() => {
+  if (listManager.value) {
+    resizeObserver.observe(listManager.value);
+  }
+  updateHeight();
 });
 
 onUnmounted(() => {
-  window.removeEventListener('resize', updateHeight);
+  resizeObserver.disconnect();
 });
 </script>
 
@@ -81,15 +93,14 @@ onUnmounted(() => {
         @next="handleNextPeriod"
     />
 
-    <div v-if="visibleItems.length > 0" class="list-manager-items overflow-y-scroll relative">
-        <div class="absolute space-y-3 w-full">
-            <SelectionnableEditableButton
-                v-for="item in visibleItems"
-                :item="item"
-                :selected="selectedItemsId.includes(item.id)"
-                @select="emit('select', item.id)"
-            />
-        </div>
+    <div v-if="visibleItems.length > 0" class="list-manager-items overflow-y-scroll">
+        <SelectionnableEditableButtonList
+            class="w-full"
+            :items="visibleItems"
+            :selectedItemsId
+            @select="emit('select', $event)"
+            @edit="emit('edit', $event)"
+        />
     </div>
 
     <div v-else class="list-manager-items flex items-center justify-center">

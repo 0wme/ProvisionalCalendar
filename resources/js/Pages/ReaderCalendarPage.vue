@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import Sidebar from '../Components/Navigation/Sidebar.vue';
-import { Head } from '@inertiajs/vue3';
+import MainLayout from '@/Layouts/MainLayout.vue';
+import { ref } from 'vue';
+import ProvisionnalCalendarSlot, { ProvisionnalCalendarSlot as ProvisionnalCalendarSlotType } from '@/Components/ProvisionnalCalendar/ProvisionnalCalendarSlot.vue';
+
 
 const props = defineProps<{
     message?: string;
@@ -9,18 +11,22 @@ const props = defineProps<{
 
 console.log(props.role);
 console.log(props.message);
+
+const slot = ref<ProvisionnalCalendarSlotType>({ items: [
+    { teacher: { name: 'John Doe', firstname: 'John', lastname: 'Doe', code: '123456', id: 1 }, substitute: null, time: 1 },
+    { teacher: { name: 'Jane Doe', firstname: 'Jane', lastname: 'Doe', code: '123457', id: 2 }, substitute: null, time: 1 },
+    { teacher: { name: 'John Doe', firstname: 'John', lastname: 'Doe', code: '123456', id: 1 }, substitute: null, time: 2 },
+], subslot: null });
 </script>
 
 <template>
-    <Head title="Calendrier Prévisionnel Lecteur" />
-    <div class="page-content">
-        <Sidebar />
-        <div class="main-content">
-            <div v-if="message" class="welcome-message">
-                {{ message }}
-            </div>
+    <MainLayout>
+        <div v-if="message" class="welcome-message">
+            {{ message }}
         </div>
-    </div>
+        <h1>Calendrier Prévisionnel Lecteur</h1>
+        <ProvisionnalCalendarSlot :slot="slot" :slot-width="100" />
+    </MainLayout>
 </template>
 
 <style scoped>
@@ -32,14 +38,5 @@ console.log(props.message);
     text-align: center;
     font-size: 1.1rem;
     color: #374151;
-}
-
-.page-content {
-    display: flex;
-}
-
-.main-content {
-    flex-grow: 1;
-    padding: 20px;
 }
 </style>

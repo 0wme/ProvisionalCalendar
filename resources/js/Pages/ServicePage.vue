@@ -1,16 +1,9 @@
 <template>
-  <div class="page-content">
-    <Sidebar />
-    <div class="main-content">
-      <!-- Contenu de la page Service -->
-    </div>
-  </div>
+  <MainLayout>
+    <h1>Service Page</h1>
+  </MainLayout>
 </template>
 
 <script setup lang="ts">
-import Sidebar from '../Components/Navigation/Sidebar.vue';
+import MainLayout from '@/Layouts/MainLayout.vue';
 </script>
-
-<style scoped>
-/* Styles identiques */
-</style>
