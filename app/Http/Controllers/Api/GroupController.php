@@ -450,19 +450,41 @@ class GroupController extends Controller
     public function deletePromotion($promotion): JsonResponse
     {
         try {
-            $promotionToDelete = AcademicPromotion::find($promotion);
+            $promotionToDelete = AcademicPromotion::with(['academicGroups.academicSubgroups'])
+                ->find($promotion);
+            
             if (!$promotionToDelete) {
                 return response()->json([
                     'error' => 'Promotion non trouvée'
                 ], 404);
             }
 
+            // Sauvegarde des données avant suppression
+            $deletedPromotion = [
+                'message' => 'Promotion supprimée avec succès',
+                'promotion' => [
+                    'id' => $promotionToDelete->id,
+                    'name' => $promotionToDelete->name,
+                    'year_id' => $promotionToDelete->year_id,
+                    'groups' => $promotionToDelete->academicGroups->map(function ($group) {
+                        return [
+                            'id' => $group->id,
+                            'name' => $group->name,
+                            'subgroups' => $group->academicSubgroups->map(function ($subgroup) {
+                                return [
+                                    'id' => $subgroup->id,
+                                    'name' => $subgroup->name
+                                ];
+                            })
+                        ];
+                    })
+                ]
+            ];
+
             // La suppression en cascade est gérée par la base de données
             $promotionToDelete->delete();
 
-            return response()->json([
-                'message' => 'Promotion supprimée avec succès'
-            ]);
+            return response()->json($deletedPromotion);
 
         } catch (\Exception $e) {
             return response()->json([
@@ -475,19 +497,38 @@ class GroupController extends Controller
     public function deleteGroup($group): JsonResponse
     {
         try {
-            $groupToDelete = AcademicGroup::find($group);
+            $groupToDelete = AcademicGroup::with(['academicSubgroups', 'academicPromotion'])
+                ->find($group);
+            
             if (!$groupToDelete) {
                 return response()->json([
                     'error' => 'Groupe non trouvé'
                 ], 404);
             }
 
+            // Sauvegarde des données avant suppression
+            $deletedGroup = [
+                'message' => 'Groupe supprimé avec succès',
+                'group' => [
+                    'id' => $groupToDelete->id,
+                    'name' => $groupToDelete->name,
+                    'promotion' => [
+                        'id' => $groupToDelete->academicPromotion->id,
+                        'name' => $groupToDelete->academicPromotion->name,
+                    ],
+                    'subgroups' => $groupToDelete->academicSubgroups->map(function ($subgroup) {
+                        return [
+                            'id' => $subgroup->id,
+                            'name' => $subgroup->name,
+                        ];
+                    })
+                ]
+            ];
+
             // La suppression en cascade est gérée par la base de données
             $groupToDelete->delete();
 
-            return response()->json([
-                'message' => 'Groupe supprimé avec succès'
-            ]);
+            return response()->json($deletedGroup);
 
         } catch (\Exception $e) {
             return response()->json([
@@ -500,18 +541,35 @@ class GroupController extends Controller
     public function deleteSubgroup($subgroup): JsonResponse
     {
         try {
-            $subgroupToDelete = AcademicSubgroup::find($subgroup);
+            $subgroupToDelete = AcademicSubgroup::with(['academicGroup.academicPromotion'])
+                ->find($subgroup);
+            
             if (!$subgroupToDelete) {
                 return response()->json([
                     'error' => 'Sous-groupe non trouvé'
                 ], 404);
             }
 
+            // Sauvegarde des données avant suppression
+            $deletedSubgroup = [
+                'message' => 'Sous-groupe supprimé avec succès',
+                'subgroup' => [
+                    'id' => $subgroupToDelete->id,
+                    'name' => $subgroupToDelete->name,
+                    'group' => [
+                        'id' => $subgroupToDelete->academicGroup->id,
+                        'name' => $subgroupToDelete->academicGroup->name,
+                        'promotion' => [
+                            'id' => $subgroupToDelete->academicGroup->academicPromotion->id,
+                            'name' => $subgroupToDelete->academicGroup->academicPromotion->name,
+                        ]
+                    ]
+                ]
+            ];
+
             $subgroupToDelete->delete();
 
-            return response()->json([
-                'message' => 'Sous-groupe supprimé avec succès'
-            ]);
+            return response()->json($deletedSubgroup);
 
         } catch (\Exception $e) {
             return response()->json([
