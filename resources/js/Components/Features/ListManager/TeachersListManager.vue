@@ -10,7 +10,7 @@ defineProps<{
   teachers: Teacher[];
 }>();
 
-const emit = defineEmits(['select']);
+const emit = defineEmits(['select', 'add', 'edit']);
 
 const handleSelect = (teacher: Teacher) => {
     emit('select', teacher);
@@ -29,29 +29,13 @@ const openPopup = () => {
 </script>
 
 <template>
-    <div class="teachers-list-manager min-h-full w-full">
-        <ListManager
-            title="Enseignants"
-            class="w-full h-full"
-            hasAdd
-            :items="teachers"
-            @select="handleSelect"
-            @add="openPopup"
-            @edit="handleEdit"
-        />
-    
-        <TeacherPopup 
-            class="z-50"
-            v-if="showPopup" 
-            :is-editing="false"
-            @close="showPopup = false" 
-        />
-
-        <TeacherPopup 
-            class="z-50"
-            v-if="showPopupEdit" 
-            :is-editing="true"
-            @close="showPopupEdit = false" 
-        />
-    </div>
+    <ListManager
+        title="Enseignants"
+        class="w-full h-full"
+        hasAdd
+        :items="teachers"
+        @select="handleSelect"
+        @add="emit('add')"
+        @edit="emit('edit', $event)"
+    />
 </template>
