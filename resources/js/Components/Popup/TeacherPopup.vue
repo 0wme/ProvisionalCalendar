@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Popup from '../Popup.vue';
+import Popup from './Popup.vue';
 import { ref } from 'vue';
 
 interface Props {

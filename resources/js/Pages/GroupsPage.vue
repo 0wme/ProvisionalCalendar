@@ -5,6 +5,8 @@ import GroupListManager from '@/Features/ListManager/Groups/GroupListManager.vue
 import SubGroupManager from '@/Features/ListManager/Groups/SubGroupListManager.vue';
 import { ref, computed } from 'vue';
 import { Class } from '@/types/models';
+import AddGroupPopup from '@/Components/Popup/Groups/Group/AddGroupPopup.vue';
+import EditGroupPopup from '@/Components/Popup/Groups/Group/EditGroupPopup.vue';
 
 const classes = ref<Class[]>([
     { id: 1, name: 'BUT 1', groups: [
@@ -43,6 +45,10 @@ const classes = ref<Class[]>([
     ] },
 ]);
 
+const showAddGroupPopup = ref<boolean>(false);
+const showEditGroupPopup = ref<boolean>(false);
+const selectedGroupToEditId = ref<number | undefined>();
+
 const selectedClassId = ref<number | undefined>();
 const selectedGroupId = ref<number | undefined>();
 
@@ -66,14 +72,23 @@ const handleGroupSelect = (id: number) => {
         selectedGroupId.value = id;
     }
 }
+
+const handleEditGroup = (id: number) => {
+    selectedGroupToEditId.value = id;
+    showEditGroupPopup.value = true;
+}
 </script>
 
 <template>
     <AdminLayout>
-        <div class="flex gap-10 w-full h-full">
-            <ClassListManager class="w-full" :classes :selectedClassId @select="handleClassSelect" />
-            <GroupListManager class="w-full" :groups :selectedGroupId @select="handleGroupSelect" />
-            <SubGroupManager class="w-full" :subGroups />
+        <div>
+            <div class="flex gap-10 w-full h-full">
+                <ClassListManager class="w-full" :classes :selectedClassId @select="handleClassSelect" />
+                <GroupListManager class="w-full" :groups :selectedGroupId @select="handleGroupSelect" @edit="handleEditGroup" />
+                <SubGroupManager class="w-full" :subGroups />
+            </div>
         </div>
     </AdminLayout>
+    <AddGroupPopup :groups :show="showAddGroupPopup" @close="showAddGroupPopup = false" />
+    <EditGroupPopup :groups :groupId="selectedGroupToEditId" :show="showEditGroupPopup" @cancel="showEditGroupPopup = false" />
 </template>

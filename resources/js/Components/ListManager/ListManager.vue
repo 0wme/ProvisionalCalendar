@@ -59,14 +59,14 @@ const updateHeight = () => {
 }
 
 const resizeObserver = new ResizeObserver(() => {
-  updateHeight();
+    updateHeight();
 });
 
 onMounted(() => {
-  if (listManager.value) {
-    resizeObserver.observe(listManager.value);
-  }
-  updateHeight();
+    if (listManager.value) {
+        resizeObserver.observe(listManager.value);
+    }
+    updateHeight();
 });
 
 onUnmounted(() => {
