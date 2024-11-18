@@ -1,5 +1,14 @@
 <script setup lang="ts">
-import { Head } from '@inertiajs/vue3';
+import { Head, useForm } from '@inertiajs/vue3';
+
+const form = useForm({
+    username: '',
+    password: ''
+});
+
+const submit = () => {
+    form.post(route('login'));
+};
 </script>
 
 <template>

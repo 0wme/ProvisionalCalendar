@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import Sidebar from '../Components/Navigation/Sidebar.vue';
-import HeaderMenu from '../Components/Navigation/HeaderMenu.vue';
 import { Head } from '@inertiajs/vue3';
 
 const props = defineProps<{
@@ -13,13 +12,13 @@ console.log(props.message);
 </script>
 
 <template>
-    <Head title="Calendrier Prévisionnel Administrateur" />
+    <Head title="Calendrier Prévisionnel Lecteur" />
     <div class="page-content">
-        <HeaderMenu />
         <Sidebar />
         <div class="main-content">
-            
-            
+            <div v-if="message" class="welcome-message">
+                {{ message }}
+            </div>
         </div>
     </div>
 </template>
