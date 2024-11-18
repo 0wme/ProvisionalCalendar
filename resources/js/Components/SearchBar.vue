@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import Icon from '@/Components/Icon.vue';
 import IconButton from '@/Components/IconButton.vue';
 
 /**
