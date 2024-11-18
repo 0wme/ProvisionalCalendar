@@ -2,16 +2,13 @@
 import { computed } from 'vue';
 import * as icons from "lucide-vue-next";
 
-const props = withDefaults(defineProps<{
+const props = defineProps<{
   name: string,
-  size?: number,
-  color?: string,
-  strokeWidth?: number
-}>(), {
-  size: 24,
-  color: 'black',
-  strokeWidth: 2,
-})
+  size: number,
+  color: string,
+  strokeWidth: number,
+  defaultClass: string
+}>()
 
 const icon = computed(() => icons[props.name as keyof typeof icons]);
 </script>
@@ -19,8 +16,8 @@ const icon = computed(() => icons[props.name as keyof typeof icons]);
 <template>
   <component
     :is="icon"
-    :size
-    :color
-    :strokeWidth
+    :size="size"
+    :color="color"
+    :stroke-width="strokeWidth" :default-class="defaultClass"
   />
 </template>
