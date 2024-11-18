@@ -14,7 +14,9 @@ return new class extends Migration
         Schema::create('academic_subgroups', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->foreignId('academic_group_id')->constrained('academic_groups');
+            $table->foreignId('academic_group_id')
+                ->constrained('academic_groups')
+                ->onDelete('cascade');
             $table->timestamps();
         });
     }

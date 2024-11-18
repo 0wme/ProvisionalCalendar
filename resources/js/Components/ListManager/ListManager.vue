@@ -75,38 +75,39 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div ref="listManager" class="list-manager p-6 bg-white rounded-3xl shadow-lg space-y-4" :style="{ '--list-manager-items-height': listManagerItemsHeight }">
-    <h1 class="text-2xl font-bold">{{ title }}</h1>
-    <SearchBar
-        placeholder="Rechercher..." 
-        :hasAdd
-        :hasImport
-        @input="handleSearch"
-    />
-
-    <Filter
-        v-if="periods"
-        class="w-52"
-        hasBorder
-        :selectedItemName="periods[selectedPeriodId].name"
-        @previous="handlePreviousPeriod"
-        @next="handleNextPeriod"
-    />
-
-    <div v-if="visibleItems.length > 0" class="list-manager-items overflow-y-scroll">
-        <SelectionnableEditableButtonList
-            class="w-full"
-            :items="visibleItems"
-            :selectedItemsId
-            @select="emit('select', $event)"
-            @edit="emit('edit', $event)"
+    <div ref="listManager" class="list-manager h-full flex flex-col p-6 bg-white rounded-3xl shadow-lg">
+        <h1 class="text-2xl font-bold mb-4">{{ title }}</h1>
+        <SearchBar
+            placeholder="Rechercher..." 
+            :hasAdd
+            :hasImport
+            class="mb-4"
+            @input="handleSearch"
         />
-    </div>
 
-    <div v-else class="list-manager-items flex items-center justify-center">
-        <p>Aucun élément trouvé</p>
+        <Filter
+            v-if="periods"
+            class="w-52 mb-4"
+            hasBorder
+            :selectedItemName="periods[selectedPeriodId].name"
+            @previous="handlePreviousPeriod"
+            @next="handleNextPeriod"
+        />
+
+        <div class="flex-1 min-h-0 overflow-y-auto">
+            <SelectionnableEditableButtonList
+                v-if="visibleItems.length > 0"
+                class="w-full"
+                :items="visibleItems"
+                :selectedItemsId
+                @select="emit('select', $event)"
+                @edit="emit('edit', $event)"
+            />
+            <div v-else class="flex items-center justify-center h-full">
+                <p>Aucun élément trouvé</p>
+            </div>
+        </div>
     </div>
-  </div>
 </template>
 
 <style scoped>

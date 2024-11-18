@@ -17,4 +17,39 @@ class Slot extends Model
         'is_neutralized',
         'week_id',
     ];
+
+    public function teacher()
+    {
+        return $this->belongsTo(Teacher::class);
+    }
+
+    public function substituteTeacher()
+    {
+        return $this->belongsTo(Teacher::class, 'substitute_teacher_id');
+    }
+
+    public function teaching()
+    {
+        return $this->belongsTo(Teaching::class);
+    }
+
+    public function academicPromotion()
+    {
+        return $this->belongsTo(AcademicPromotion::class);
+    }
+
+    public function academicGroup()
+    {
+        return $this->belongsTo(AcademicGroup::class);
+    }
+
+    public function academicSubgroup()
+    {
+        return $this->belongsTo(AcademicSubgroup::class);
+    }
+
+    public function week()
+    {
+        return $this->belongsTo(Week::class);
+    }
 }

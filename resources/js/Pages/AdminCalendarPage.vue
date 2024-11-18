@@ -1,6 +1,6 @@
 <template>
     <AdminLayout>
-        <h1>Calendrier Prévisionnel Editeur</h1>
+        <h1>Calendrier Prévisionnel Errditeur</h1>
     </AdminLayout>
 </template>
   

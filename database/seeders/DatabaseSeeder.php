@@ -11,15 +11,16 @@ class DatabaseSeeder extends Seeder
         $this->call([
             RoleSeeder::class,
             UserSeeder::class,
-            TeachingSeeder::class,
-            TeacherTeachingSeeder::class,
             YearSeeder::class,
             WeekSeeder::class,
             AcademicPromotionSeeder::class,
             AcademicGroupSeeder::class,
             AcademicSubgroupSeeder::class,
-            SlotSeeder::class,
             AlertSeeder::class,
+            TeachingSeeder::class,
+            TeacherSeeder::class,
+            TeacherTeachingSeeder::class,
+            SlotSeeder::class,
         ]);
     }
 } 

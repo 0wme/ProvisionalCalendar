@@ -10,15 +10,8 @@ class TeacherTeachingSeeder extends Seeder
 {
     public function run(): void
     {
-        // Récupérer le premier enseignant (admin)
-        $teacher = Teacher::where('acronym', 'ADM')->first();
-        
-        // Récupérer le cours de PHP Laravel
+        $teacher = Teacher::where('acronym', 'LD')->first();
         $teaching = Teaching::where('apogee_code', 'WEB_R1.05')->first();
-
-        // Créer l'association
-        if ($teacher && $teaching) {
-            $teacher->teachings()->attach($teaching->id);
-        }
+        $teacher->teachings()->attach($teaching->id);
     }
 }

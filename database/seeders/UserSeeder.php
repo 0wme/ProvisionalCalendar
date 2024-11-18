@@ -16,10 +16,6 @@ class UserSeeder extends Seeder
             'lastname' => 'System',
             'password' => bcrypt('admin123')
         ]);
-        
-        $admin->teacher()->create([
-            'acronym' => 'ADM'
-        ]);
 
         // Création du lecteur avec son profil enseignant
         $reader = User::factory()->reader()->create([
@@ -29,9 +25,6 @@ class UserSeeder extends Seeder
             'password' => bcrypt('reader123')
         ]);
         
-        $reader->teacher()->create([
-            'acronym' => 'BRD'
-        ]);
 
         // Création du lecteur étendu avec son profil enseignant
         $extended = User::factory()->extendedReader()->create([
@@ -39,10 +32,6 @@ class UserSeeder extends Seeder
             'firstname' => 'Extended',
             'lastname' => 'Reader',
             'password' => bcrypt('extended123')
-        ]);
-        
-        $extended->teacher()->create([
-            'acronym' => 'ERD'
         ]);
     }
 } 

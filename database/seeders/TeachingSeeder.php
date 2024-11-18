@@ -20,7 +20,8 @@ class TeachingSeeder extends Seeder
                 'cm_hours_initial' => 10.00,
                 'cm_hours_continued' => null,
                 'semestre' => 1,
-                'trimestre' => null
+                'trimestre' => null,
+                'year_id' => 1
             ],
             [
                 'title' => 'R3.02 - Programmation Web',
@@ -32,7 +33,8 @@ class TeachingSeeder extends Seeder
                 'cm_hours_initial' => 20.00,
                 'cm_hours_continued' => null,
                 'semestre' => null,
-                'trimestre' => 3
+                'trimestre' => 3,
+                'year_id' => 1
             ],
             [
                 'title' => 'R5.05 - PHP Laravel',
@@ -44,7 +46,8 @@ class TeachingSeeder extends Seeder
                 'cm_hours_initial' => 25.00,
                 'cm_hours_continued' => 20.00,
                 'semestre' => 5,
-                'trimestre' => null
+                'trimestre' => null,
+                'year_id' => 1
             ],
 
             // Ajoutez d'autres enseignements ici si nécessaire

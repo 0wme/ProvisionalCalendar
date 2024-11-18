@@ -23,6 +23,7 @@ return new class extends Migration
             $table->decimal('cm_hours_continued', 5, 2)->nullable();
             $table->integer('semestre')->nullable();
             $table->integer('trimestre')->nullable();
+            $table->foreignId('year_id')->constrained('years')->onDelete('cascade');
             $table->timestamps();
         });
     }

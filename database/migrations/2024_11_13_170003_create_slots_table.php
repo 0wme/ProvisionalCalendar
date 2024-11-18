@@ -20,7 +20,8 @@ return new class extends Migration
             $table->foreignId('academic_promotion_id')
                 ->nullable()
                 ->default(null)
-                ->constrained('academic_promotions');
+                ->constrained('academic_promotions')
+                ->onDelete('cascade');
                 
             $table->foreignId('academic_group_id')
                 ->nullable()

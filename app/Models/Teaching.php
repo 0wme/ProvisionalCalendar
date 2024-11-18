@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Builder;
 
 class Teaching extends Model
 {
@@ -17,7 +16,8 @@ class Teaching extends Model
         'cm_hours_initial',
         'cm_hours_continued',
         'semestre',
-        'trimestre'
+        'trimestre',
+        'year_id'
     ];
 
     protected static function boot()
@@ -37,5 +37,15 @@ class Teaching extends Model
     public function teachers()
     {
         return $this->belongsToMany(Teacher::class, 'teachers_teachings');
+    }
+
+    public function year()
+    {
+        return $this->belongsTo(Year::class);
+    }
+
+    public function slots()
+    {
+        return $this->hasMany(Slot::class);
     }
 }

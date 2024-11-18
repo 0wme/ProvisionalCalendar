@@ -11,4 +11,9 @@ class AcademicPromotion extends Model
         'year_id',
     ];
 
+    public function academicGroups()
+    {
+        return $this->hasMany(AcademicGroup::class);
+    }
+
 }
