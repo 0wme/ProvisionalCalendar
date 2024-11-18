@@ -25,15 +25,6 @@
 <script setup lang="ts">
 import Icon from '@/Components/Icon.vue';
 
-/**
- * Props du composant
- * @typedef {Object} Props
- * @property {string} iconClass - Nom de l'icône à afficher (requis)
- * @property {string} [bgColor] - Couleur de fond du bouton
- * @property {string} [iconColor] - Couleur de l'icône
- * @property {boolean} [small] - Mode compact du bouton
- * @property {boolean} [hasShadow] - Ajoute une ombre portée
- */
 defineProps<{
   iconClass: string,
   bgColor?: string,
@@ -55,22 +46,12 @@ defineProps<{
   -->
   <button 
     :class="[
-      'icon-button flex justify-center items-center cursor-pointer text-black hover:brightness-75',
+      'icon-button flex justify-center items-center cursor-pointer text-black brightness-100 transition-brightness duration-300 hover:brightness-75',
       small ? 'p-2 rounded-full' : 'p-4 rounded-xl',
       { 'shadow-md': hasShadow }
     ]"
     :style="{ 'background-color': bgColor }"
   >
-    <!-- 
-      Composant Icon:
-      - size: 16px en mode small, 24px en mode normal
-      - stroke-width: épaisseur du trait de l'icône
-    -->
-    <Icon 
-      :name="iconClass" 
-      :size="small ? 16 : 24" 
-      :color="iconColor" 
-      stroke-width="2" 
-    />
+    <Icon :name="iconClass" :size="small ? 16 : 24" :color="iconColor ?? 'black'" :strokeWidth="2" />
   </button>
 </template>

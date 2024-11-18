@@ -23,7 +23,7 @@ const handleEdit = (teaching: Teaching) => {
 </script>
 
 <template>
-    <div class="teachings-list-manager min-h-full w-full">
+    <div class="teachings-list-manager h-full w-full">
         <ListManager
             title="Enseignements"
             class="w-full h-full"
