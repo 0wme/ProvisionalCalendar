@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import Popup from '../Popup.vue';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 
 interface Props {
   isEditing?: boolean;
   initialValues?: {
-    lastName?: string;
-    firstName?: string;
-    code?: string;
+    firstname?: string;
+    lastname?: string;
     email?: string;
   };
 }
@@ -15,27 +14,42 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   isEditing: false,
   initialValues: () => ({
-    lastName: '',
-    firstName: '',
-    code: '',
+    firstname: '',
+    lastname: '',
     email: ''
   })
 });
 
 const emit = defineEmits(['close', 'submit', 'delete']);
 
-const lastName = ref(props.initialValues.lastName);
-const firstName = ref(props.initialValues.firstName);
-const code = ref(props.initialValues.code);
+// États réactifs pour les champs du formulaire
+const firstname = ref(props.initialValues.firstname);
+const lastname = ref(props.initialValues.lastname);
 const email = ref(props.initialValues.email);
 
+// État pour suivre les modifications
+const hasChanges = ref(false);
+
+// Surveiller les changements dans les champs
+watch([firstname, lastname, email], () => {
+  hasChanges.value = 
+    firstname.value !== props.initialValues.firstname ||
+    lastname.value !== props.initialValues.lastname ||
+    email.value !== props.initialValues.email;
+});
+
 const handleSubmit = () => {
-  emit('submit', {
-    lastName: lastName.value,
-    firstName: firstName.value,
-    code: code.value,
+  const data = {
+    firstname: firstname.value,
+    lastname: lastname.value,
     email: email.value
-  });
+  };
+
+  if (props.isEditing) {
+    emit('update', data);
+  } else {
+    emit('add', data);
+  }
 };
 
 const handleDelete = () => {
@@ -48,42 +62,32 @@ const handleDelete = () => {
     :title="isEditing ? 'Modifier un enseignant' : 'Ajouter un enseignant'"
     :button-text="isEditing ? 'Sauvegarder' : 'Ajouter'"
     :show-delete-button="isEditing"
+    :show-confirmation-on-close="hasChanges"
     @close="$emit('close')"
     @submit="handleSubmit"
-    @delete="handleDelete"
+    @delete="$emit('delete')"
   >
     <template #content>
-      <div class="flex flex-col gap-4">
-        <!-- Nom -->
-        <div class="flex flex-col gap-2">
-          <label class="text-lg font-medium">Nom</label>
-          <input 
-            v-model="lastName"
-            type="text" 
-            class="border border-gray-300 rounded-lg p-2"
-            placeholder="ex : Blanchard"
-          />
-        </div>
-
+      <div class="flex flex-col gap-6">
         <!-- Prénom -->
         <div class="flex flex-col gap-2">
           <label class="text-lg font-medium">Prénom</label>
           <input 
-            v-model="firstName"
+            v-model="firstname"
             type="text" 
             class="border border-gray-300 rounded-lg p-2"
-            placeholder="ex : Rémi"
+            placeholder="ex : Jean"
           />
         </div>
 
-        <!-- Code -->
+        <!-- Nom -->
         <div class="flex flex-col gap-2">
-          <label class="text-lg font-medium">Code</label>
+          <label class="text-lg font-medium">Nom</label>
           <input 
-            v-model="code"
+            v-model="lastname"
             type="text" 
             class="border border-gray-300 rounded-lg p-2"
-            placeholder="ex : IUT"
+            placeholder="ex : Dupont"
           />
         </div>
 
@@ -94,7 +98,7 @@ const handleDelete = () => {
             v-model="email"
             type="email" 
             class="border border-gray-300 rounded-lg p-2"
-            placeholder="ex : remi.blanchard@iut.fr"
+            placeholder="ex : jean.dupont@univ.fr"
           />
         </div>
       </div>

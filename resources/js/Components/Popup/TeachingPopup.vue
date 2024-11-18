@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import Popup from '../Popup.vue';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 
 interface Props {
   isEditing?: boolean;
@@ -34,12 +34,29 @@ const title = ref(props.initialValues.title);
 const code = ref(props.initialValues.code);
 const hours = ref(props.initialValues.hours);
 
+// Ajouter un état pour suivre les modifications
+const hasChanges = ref(false);
+
+// Surveiller les changements dans les champs
+watch([title, code, hours], () => {
+  hasChanges.value = 
+    title.value !== props.initialValues.title ||
+    code.value !== props.initialValues.code ||
+    JSON.stringify(hours.value) !== JSON.stringify(props.initialValues.hours);
+}, { deep: true });
+
 const handleSubmit = () => {
-  emit('submit', {
+  const data = {
     title: title.value,
     code: code.value,
     hours: hours.value
-  });
+  };
+  
+  if (props.isEditing) {
+    emit('update', data);
+  } else {
+    emit('add', data);
+  }
 };
 
 const handleDelete = () => {
@@ -52,9 +69,10 @@ const handleDelete = () => {
     :title="isEditing ? 'Modifier une ressource' : 'Ajouter une ressource'"
     :button-text="isEditing ? 'Sauvegarder' : 'Ajouter'"
     :show-delete-button="isEditing"
+    :show-confirmation-on-close="hasChanges"
     @close="$emit('close')"
     @submit="handleSubmit"
-    @delete="handleDelete"
+    @delete="$emit('delete')"
   >
     <template #content>
       <div class="flex flex-col gap-6">
