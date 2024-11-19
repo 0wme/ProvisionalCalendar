@@ -1,46 +1,9 @@
-<script setup lang="ts">
-import Sidebar from '../Components/Navigation/Sidebar.vue';
-import HeaderMenu from '../Components/Navigation/HeaderMenu.vue';
-import { Head } from '@inertiajs/vue3';
-
-const props = defineProps<{
-    message?: string;
-    role?: string;
-}>();
-
-console.log(props.role);
-console.log(props.message);
-</script>
-
 <template>
-    <Head title="Calendrier Prévisionnel Administrateur" />
-    <div class="page-content">
-        <HeaderMenu />
-        <Sidebar />
-        <div class="main-content">
-            
-            
-        </div>
-    </div>
+    <AdminLayout>
+        <h1>Calendrier Prévisionnel Errditeur</h1>
+    </AdminLayout>
 </template>
-
-<style scoped>
-.welcome-message {
-    background-color: #f3f4f6;
-    padding: 1rem;
-    margin: 1rem;
-    border-radius: 0.5rem;
-    text-align: center;
-    font-size: 1.1rem;
-    color: #374151;
-}
-
-.page-content {
-    display: flex;
-}
-
-.main-content {
-    flex-grow: 1;
-    padding: 20px;
-}
-</style>
+  
+<script setup lang="ts">
+import AdminLayout from '@/Layouts/AdminLayout.vue';
+</script>

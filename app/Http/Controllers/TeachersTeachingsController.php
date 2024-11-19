@@ -9,6 +9,6 @@ class TeachersTeachingsController extends Controller
 {
     public function show()
     {
-        return Inertia::render('TeachersTeachingsPageContent');
+        return Inertia::render('TeachersTeachingsPage');
     }
 }
