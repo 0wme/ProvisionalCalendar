@@ -70,7 +70,12 @@ class TeacherTeachingController extends Controller
                     return [
                         'id' => $teaching->id,
                         'title' => $teaching->title,
-                        'apogee_code' => $teaching->apogee_code
+                        'apogee_code' => $teaching->apogee_code,
+                        'tp_hours_initial' => $teaching->tp_hours_initial,
+                        'td_hours_initial' => $teaching->td_hours_initial,
+                        'cm_hours_initial' => $teaching->cm_hours_initial,
+                        'semestre' => $teaching->semestre,
+                        'trimestre' => $teaching->trimestre,
                     ];
                 });
 
