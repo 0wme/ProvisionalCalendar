@@ -14,7 +14,7 @@
           <td class="border border-gray-300 p-2 bg-gray-50">S{{ week }}</td>
 
           <td class="border border-gray-300 p-2 bg-gray-50">
-            <Cell size="full" :height="20"></Cell> 
+            <Cell size="full" :height="20"></Cell>
           </td>
 
           <td class="border border-gray-300 p-2 bg-gray-50">
@@ -26,7 +26,7 @@
                 :height="10"
                 class="cell-with-border"
               >
-                {{ i }}
+                <div class="empty-cell"></div>
               </Cell>
             </div>
           </td>
@@ -40,7 +40,7 @@
                 :height="10"
                 class="cell-with-border"
               >
-                {{ i }}
+                <div class="empty-cell"></div>
               </Cell>
             </div>
           </td>
@@ -66,10 +66,16 @@ const weeks = Array.from({ length: 30 }, (_, i) => i + 1);
 }
 
 .flex-col {
-  flex-direction: column; 
+  flex-direction: column;
 }
 
 .cell-with-border:not(:last-child) {
-  border-bottom: 1px solid #ccc; 
+  border-bottom: 1px solid #ff0000;
+
 }
+
+.empty-cell {
+  height: 30px;
+}
+
 </style>
