@@ -6,7 +6,7 @@ import TeacherPopup from '@/Components/Popup/TeacherPopup.vue';
 import { ref } from 'vue';
 
 defineProps<{
-  title: string;
+  title?: string;
   teachers: Teacher[];
 }>();
 
