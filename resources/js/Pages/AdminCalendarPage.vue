@@ -1,7 +1,7 @@
 <template>
     <AdminLayout>
       <div class="h-full flex">
-        <TeachersListManager :teachers="teachers" class="w-1/4" />
+        <TeachersListManager :teachers="teachers" class="w-1/5" />
         <CalendarTable class="w-3/4 ml-4" />
       </div>
     </AdminLayout>
