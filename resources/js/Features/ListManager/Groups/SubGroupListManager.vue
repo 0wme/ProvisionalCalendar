@@ -1,25 +1,22 @@
 <script setup lang="ts">
 import ListManager from '@/Components/ListManager/ListManager.vue';
 import { defineProps } from 'vue';
-import { SubGroup } from '@/types/models';
+import { Subgroup } from '@/types/models';
 
 defineProps<{
-  subGroups: SubGroup[];
+    subgroups: Subgroup[];
 }>();
 
-const handleEdit = (item: SubGroup) => {
+const handleEdit = (item: Subgroup) => {
     console.log(item);
 }
 </script>
 
 <template>
-    <div>
-        <ListManager
-            title="Sous-groupes"
-            class="w-full h-full"
-            hasAdd
-            :items="subGroups"
-            @edit="handleEdit"
-        />
-    </div>
+    <ListManager
+        title="Sous-groupes"
+        hasAdd
+        :items="subgroups"
+        @edit="handleEdit"
+    />
 </template>

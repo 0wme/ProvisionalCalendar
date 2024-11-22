@@ -20,15 +20,12 @@ const handleEdit = (item: Class) => {
 </script>
 
 <template>
-    <div>
-        <ListManager
-            class="w-full h-full"
-            title="Promotions"
-            hasAdd
-            :items="classes"
-            :selectedItemsId="selectedClassId ? [selectedClassId] : undefined"
-            @select="handleSelect"
-            @edit="handleEdit"
-        />
-    </div>
+    <ListManager
+        title="Promotions"
+        hasAdd
+        :items="classes"
+        :selectedItemsId="selectedClassId ? [selectedClassId] : undefined"
+        @select="handleSelect"
+        @edit="handleEdit"
+    />
 </template>

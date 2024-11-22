@@ -2,7 +2,7 @@
 import Popup from '@/Components/Popup/Popup.vue';
 import { Group } from '@/types/models';
 import { ref, computed, watch } from 'vue';
-import CloseWithoutSaveConfirmationPopup from '../../CloseWithoutSaveConfirmationPopup.vue';
+import CloseWithoutSaveConfirmationPopup from '../../../../Features/Popup/CloseWithoutSaveConfirmationPopup.vue';
 
 const props = defineProps<{
     title: string;

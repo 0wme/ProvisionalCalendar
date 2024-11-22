@@ -8,7 +8,7 @@ defineProps<{
   selectedGroupId?: number;
 }>();
 
-const emit = defineEmits(['select', 'edit']);
+const emit = defineEmits(['select', 'edit', 'add']);
 
 const handleSelect = (item: Group) => {
     emit('select', item);
@@ -17,16 +17,20 @@ const handleSelect = (item: Group) => {
 const handleEdit = (item: Group) => {
     emit('edit', item);
 }
+
+const handleAdd = () => {
+    emit('add');
+}
 </script>
 
 <template>
     <ListManager
         title="Groupes"
-        class="w-full h-full"
         hasAdd
         :items="groups"
         :selectedItemsId="selectedGroupId ? [selectedGroupId] : undefined"
         @select="handleSelect"
         @edit="handleEdit"
+        @add="handleAdd"
     />
 </template>

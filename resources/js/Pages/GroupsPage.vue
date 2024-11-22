@@ -2,58 +2,29 @@
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import ClassListManager from '@/Features/ListManager/Groups/ClassListManager.vue';
 import GroupListManager from '@/Features/ListManager/Groups/GroupListManager.vue';
-import SubGroupManager from '@/Features/ListManager/Groups/SubGroupListManager.vue';
-import { ref, computed } from 'vue';
-import { Class } from '@/types/models';
-import AddGroupPopup from '@/Components/Popup/Groups/Group/AddGroupPopup.vue';
-import EditGroupPopup from '@/Components/Popup/Groups/Group/EditGroupPopup.vue';
+import SubgroupListManager from '@/Features/ListManager/Groups/SubgroupListManager.vue';
+import { ref, computed, onMounted } from 'vue';
+import { Class, Group } from '@/types/models';
+import AddGroupPopup from '@/Features/Popup/Groups/Group/AddGroupPopup.vue';
+import EditGroupPopup from '@/Features/Popup/Groups/Group/EditGroupPopup.vue';
+import axios from 'axios';
 
-const classes = ref<Class[]>([
-    { id: 1, name: 'BUT 1', groups: [
-        { id: 1, name: 'G1', subGroups: [
-            { id: 1, name: 'A' },
-            { id: 2, name: 'B' },
-        ] },
-        { id: 2, name: 'G2', subGroups: [
-            { id: 3, name: 'A' },
-            { id: 4, name: 'B' },
-        ] },
-        { id: 3, name: 'G3', subGroups: [
-            { id: 5, name: 'A' },
-            { id: 6, name: 'B' },
-        ] },
-    ] },
-    { id: 2, name: 'BUT 2', groups: [
-        { id: 4, name: 'G4', subGroups: [
-            { id: 7, name: 'A' },
-            { id: 8, name: 'B' },
-        ] },
-        { id: 5, name: 'G5', subGroups: [
-            { id: 9, name: 'A' },
-            { id: 10, name: 'B' },
-        ] },
-    ] },
-    { id: 3, name: 'BUT 3', groups: [
-        { id: 6, name: 'G7', subGroups: [
-            { id: 11, name: 'A' },
-            { id: 12, name: 'B' },
-        ] },
-        { id: 7, name: 'G8', subGroups: [
-            { id: 13, name: 'A' },
-            { id: 14, name: 'B' },
-        ] },
-    ] },
-]);
+const classes = ref<Class[]>([]);
 
-const showAddGroupPopup = ref<boolean>(false);
-const showEditGroupPopup = ref<boolean>(false);
-const selectedGroupToEditId = ref<number | undefined>();
+onMounted(async () => {
+    const response = await axios.get('/api/groupes/' + 1);
+    classes.value = response.data;
+});
+
+const isAddGroupPopupVisible = ref<boolean>(false);
+const isVisibleEditGroupPopup = ref<boolean>(false);
+const groupToEdit = ref<Group | undefined>();
 
 const selectedClassId = ref<number | undefined>();
 const selectedGroupId = ref<number | undefined>();
 
 const groups = computed(() => classes.value.find(c => c.id === selectedClassId.value)?.groups ?? []);
-const subGroups = computed(() => groups.value?.find(g => g.id === selectedGroupId.value)?.subGroups ?? []);
+const subgroups = computed(() => groups.value?.find(g => g.id === selectedGroupId.value)?.subgroups ?? []);
 
 const handleClassSelect = (id: number) => {
     if (id === selectedClassId.value) {
@@ -73,22 +44,90 @@ const handleGroupSelect = (id: number) => {
     }
 }
 
-const handleEditGroup = (id: number) => {
-    selectedGroupToEditId.value = id;
-    showEditGroupPopup.value = true;
+const handleEditGroup = async (id: number) => {
+    const response = await axios.get('/api/groupes/groupe/' + id);
+    groupToEdit.value = response.data;
+    showEditGroupPopup();
+}
+
+const showEditGroupPopup = () => {
+    isVisibleEditGroupPopup.value = true;
+}
+
+const hideEditGroupPopup = () => {
+    isVisibleEditGroupPopup.value = false;
+}
+
+const handleSaveEditedGroup = async (group: Group) => {
+    hideEditGroupPopup();
+    const response = await axios.put('/api/groupes/groupe/' + group.id, group);
+    classes.value = classes.value.map(classe => {
+        if (classe.id === selectedClassId.value) {
+            return {
+                ...classe,
+                groups: classe.groups.map(g => 
+                    g.id === group.id ? response.data.group : g
+                )
+            };
+        }
+        return classe;
+    });
+}
+
+const hideAddGroupPopup = () => {
+    isAddGroupPopupVisible.value = false;
+}
+
+const handleDeleteGroup = async (group: Group) => {
+    hideEditGroupPopup();
+    await axios.delete('/api/groupes/groupe/' + group.id);
+    classes.value = classes.value.map(classe => {
+        if (classe.id === selectedClassId.value) {
+            return {
+                ...classe,
+                groups: classe.groups.filter(g => g.id !== group.id)
+            };
+        }
+        return classe;
+    });
+}
+
+const showAddGroupPopup = () => {
+    isAddGroupPopupVisible.value = true;
+}
+
+const handleAddGroup = async (group: Group) => {
+    hideAddGroupPopup();
+    const response = await axios.post('/api/groupes/groupe/' + selectedClassId.value, group);
+    classes.value = classes.value.map(classe => {
+        if (classe.id === selectedClassId.value) {
+            return { ...classe, groups: [...classe.groups, response.data.group] };
+        }
+        return classe;
+    });
 }
 </script>
 
 <template>
     <AdminLayout>
-        <div>
-            <div class="flex gap-10 w-full h-full">
-                <ClassListManager class="w-full" :classes :selectedClassId @select="handleClassSelect" />
-                <GroupListManager class="w-full" :groups :selectedGroupId @select="handleGroupSelect" @edit="handleEditGroup" />
-                <SubGroupManager class="w-full" :subGroups />
-            </div>
+        <div class="flex gap-10 w-full h-full">
+            <ClassListManager class="w-full h-full" :classes :selectedClassId @select="handleClassSelect" />
+            <GroupListManager class="w-full h-full" :groups :selectedGroupId @select="handleGroupSelect" @add="showAddGroupPopup" @edit="handleEditGroup" />
+            <SubgroupListManager class="w-full h-full" :subgroups />
         </div>
     </AdminLayout>
-    <AddGroupPopup :groups :show="showAddGroupPopup" @close="showAddGroupPopup = false" />
-    <EditGroupPopup :groups :groupId="selectedGroupToEditId" :show="showEditGroupPopup" @cancel="showEditGroupPopup = false" />
+    <AddGroupPopup
+        :groups
+        :show="isAddGroupPopupVisible"
+        @cancel="hideAddGroupPopup"
+        @add="handleAddGroup"
+    />
+    <EditGroupPopup
+        :groups
+        :group="groupToEdit"
+        :show="isVisibleEditGroupPopup"
+        @cancel="hideEditGroupPopup"
+        @delete="handleDeleteGroup"
+        @save="handleSaveEditedGroup"
+    />
 </template>

@@ -15,7 +15,7 @@ const props = defineProps<{
   hasImport?: boolean;
 }>();
 
-const emit = defineEmits(['select', 'edit']);
+const emit = defineEmits(['select', 'edit', 'add']);
 
 const selectedPeriodId = ref(0);
 
@@ -83,6 +83,7 @@ onUnmounted(() => {
             :hasImport
             class="mb-4"
             @input="handleSearch"
+            @addClick="emit('add')"
         />
 
         <Filter

@@ -137,13 +137,13 @@ export interface Class extends Item {
  * Représente un groupe.
  */
 export interface Group extends Item {
-    subGroups: SubGroup[];
+    subgroups: Subgroup[];
 }
 
 /**
- * @interface SubGroup
+ * @interface Subgroup
  * 
  * Représente un sous-groupe.
  */
-export interface SubGroup extends Item {
+export interface Subgroup extends Item {
 }
