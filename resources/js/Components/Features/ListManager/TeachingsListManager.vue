@@ -26,7 +26,6 @@ const handleEdit = (teaching: Teaching) => {
     <div class="teachings-list-manager h-full w-full">
         <ListManager
             title="Enseignements"
-            class="w-full h-full"
             hasAdd
             hasImport
             :periods

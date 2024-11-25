@@ -5,7 +5,7 @@
   </template>
   
   <script setup lang="ts">
-import { defineProps, computed } from 'vue';
+  import { defineProps, computed } from 'vue';
   
   const props = defineProps<{
     size: 'full' | 'third' | 'sixth';
@@ -25,8 +25,14 @@ import { defineProps, computed } from 'vue';
   </script>
   
   <style scoped>
-  .cell {
-    border: 1px solid #ccc;
-    box-sizing: border-box;
-  }
+
+.cell {
+  display: flex; 
+  flex-grow: 1; 
+  width: 100%; 
+  align-items: stretch;
+  justify-content: stretch;
+  box-sizing: border-box;
+  border: 1px solid #000000;
+}
   </style>

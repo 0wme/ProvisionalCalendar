@@ -83,12 +83,12 @@ const toggleButton = () => {
 
       <div :class="['flex gap-8 flex-1 min-h-0', {'flex-row-reverse': buttonClicked}]">
         <TeachersListManager
-          class="flex-1"
+          class="flex-1 h-full w-full"
           :teachers="teachers"
         />
         <TeachingsListManager
           title="Liste des Enseignements"
-          class="flex-1"
+          class="flex-1 h-full w-full"
           :teachings="filteredTeachings"
           :periods="periods"
         />
