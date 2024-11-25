@@ -4,7 +4,7 @@ import ClassListManager from '@/Features/ListManager/Groups/ClassListManager.vue
 import GroupListManager from '@/Features/ListManager/Groups/GroupListManager.vue';
 import SubgroupListManager from '@/Features/ListManager/Groups/SubgroupListManager.vue';
 import { ref, computed, onMounted } from 'vue';
-import { Class, Group } from '@/types/models';
+import { Class, Group, Subgroup } from '@/types/models';
 import AddGroupPopup from '@/Features/Popup/Groups/Group/AddGroupPopup.vue';
 import EditGroupPopup from '@/Features/Popup/Groups/Group/EditGroupPopup.vue';
 import axios from 'axios';
@@ -93,7 +93,9 @@ const handleDeleteGroup = async (group: Group) => {
 }
 
 const showAddGroupPopup = () => {
-    isAddGroupPopupVisible.value = true;
+    if (selectedClassId.value) {
+        isAddGroupPopupVisible.value = true;
+    }
 }
 
 const handleAddGroup = async (group: Group) => {
@@ -106,6 +108,41 @@ const handleAddGroup = async (group: Group) => {
         return classe;
     });
 }
+
+const isAddSubgroupPopupVisible = ref<boolean>(false);
+const isVisibleEditSubgroupPopup = ref<boolean>(false);
+const subgroupToEdit = ref<Subgroup | undefined>();
+
+const handleAddSubgroup = async (subgroup: Subgroup) => {
+    hideAddSubgroupPopup();
+    const response = await axios.post('/api/groupes/sous-groupe/' + selectedGroupId.value, subgroup);
+}
+
+const hideAddSubgroupPopup = () => {
+    isAddSubgroupPopupVisible.value = false;
+}
+
+const showEditSubgroupPopup = () => {
+    isVisibleEditSubgroupPopup.value = true;
+}
+
+const handleEditSubgroup = (id: number) => {
+    subgroupToEdit.value = subgroups.value.find(s => s.id === id);
+    showEditSubgroupPopup();
+}
+
+const hideEditSubgroupPopup = () => {
+    isVisibleEditSubgroupPopup.value = false;
+}
+
+const handleSaveEditedSubgroup = async (subgroup: Subgroup) => {
+    hideEditSubgroupPopup();
+    const response = await axios.put('/api/groupes/sous-groupe/' + subgroup.id, subgroup);
+}
+
+const showAddSubgroupPopup = () => {
+    isAddSubgroupPopupVisible.value = true;
+}
 </script>
 
 <template>
@@ -113,7 +150,7 @@ const handleAddGroup = async (group: Group) => {
         <div class="flex gap-10 w-full h-full">
             <ClassListManager class="w-full h-full" :classes :selectedClassId @select="handleClassSelect" />
             <GroupListManager class="w-full h-full" :groups :selectedGroupId @select="handleGroupSelect" @add="showAddGroupPopup" @edit="handleEditGroup" />
-            <SubgroupListManager class="w-full h-full" :subgroups />
+            <SubgroupListManager class="w-full h-full" :subgroups @add="showAddSubgroupPopup" @edit="handleEditSubgroup" />
         </div>
     </AdminLayout>
     <AddGroupPopup
@@ -123,11 +160,24 @@ const handleAddGroup = async (group: Group) => {
         @add="handleAddGroup"
     />
     <EditGroupPopup
-        :groups
         :group="groupToEdit"
         :show="isVisibleEditGroupPopup"
         @cancel="hideEditGroupPopup"
         @delete="handleDeleteGroup"
         @save="handleSaveEditedGroup"
+    />
+    <AddSubgroupPopup
+        :subgroups
+        :show="isAddSubgroupPopupVisible"
+        @cancel="hideAddSubgroupPopup"
+        @add="handleAddSubgroup"
+    />
+    <EditSubgroupPopup
+        :subgroups
+        :subgroup="subgroupToEdit"
+        :show="isVisibleEditSubgroupPopup"
+        @cancel="hideEditSubgroupPopup"
+        @delete="handleDeleteSubgroup"
+        @save="handleSaveEditedSubgroup"
     />
 </template>
