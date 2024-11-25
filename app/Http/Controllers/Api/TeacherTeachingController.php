@@ -72,10 +72,14 @@ class TeacherTeachingController extends Controller
                         'title' => $teaching->title,
                         'apogee_code' => $teaching->apogee_code,
                         'tp_hours_initial' => $teaching->tp_hours_initial,
-                        'td_hours_initial' => $teaching->td_hours_initial,
+                        'tp_hours_continued' => $teaching->tp_hours_continued,
+                        'td_hours_intial' => $teaching->td_hours_intial,
+                        'td_hours_continued' => $teaching->td_hours_continued,
                         'cm_hours_initial' => $teaching->cm_hours_initial,
+                        'cm_hours_continued' => $teaching->cm_hours_continued,
                         'semestre' => $teaching->semestre,
                         'trimestre' => $teaching->trimestre,
+                        'year_id' => $teaching->year_id,
                     ];
                 });
 

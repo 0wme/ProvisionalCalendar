@@ -17,6 +17,8 @@ class DatabaseSeeder extends Seeder
             AcademicGroupSeeder::class,
             AcademicSubgroupSeeder::class,
             AlertSeeder::class,
+            SemesterSeeder::class,
+            TrimesterSeeder::class,
             TeachingSeeder::class,
             TeacherSeeder::class,
             TeacherTeachingSeeder::class,
