@@ -77,8 +77,8 @@ class TeacherTeachingController extends Controller
                         'td_hours_continued' => $teaching->td_hours_continued,
                         'cm_hours_initial' => $teaching->cm_hours_initial,
                         'cm_hours_continued' => $teaching->cm_hours_continued,
-                        'semestre' => $teaching->semestre,
-                        'trimestre' => $teaching->trimestre,
+                        'semester' => $teaching->semester?->semester_number,
+                        'trimester' => $teaching->trimester?->trimester_number,
                         'year_id' => $teaching->year_id,
                     ];
                 });
@@ -220,8 +220,8 @@ class TeacherTeachingController extends Controller
                 'td_hours_continued' => $teaching->td_hours_continued,
                 'cm_hours_initial' => $teaching->cm_hours_initial,
                 'cm_hours_continued' => $teaching->cm_hours_continued,
-                'semestre' => $teaching->semestre,
-                'trimestre' => $teaching->trimestre,
+                'semester' => $teaching->semester?->semester_number,
+                'trimester' => $teaching->trimester?->trimester_number,
                 'year' => [
                     'id' => $teaching->year->id,
                     'name' => $teaching->year->name
@@ -315,8 +315,8 @@ class TeacherTeachingController extends Controller
                 'td_hours_continued' => 'nullable|numeric|min:0',
                 'cm_hours_initial' => 'nullable|numeric|min:0',
                 'cm_hours_continued' => 'nullable|numeric|min:0',
-                'semestre' => 'nullable|integer|min:1|max:6',
-                'trimestre' => 'nullable|integer|min:1|max:4'
+                'semester' => 'nullable|integer|min:1|max:6',
+                'trimester' => 'nullable|integer|min:1|max:4'
             ]);
 
             // Vérifie si l'année existe
@@ -347,8 +347,8 @@ class TeacherTeachingController extends Controller
                 'td_hours_continued' => $request->td_hours_continued,
                 'cm_hours_initial' => $request->cm_hours_initial,
                 'cm_hours_continued' => $request->cm_hours_continued,
-                'semestre' => $request->semestre,
-                'trimestre' => $request->trimestre,
+                'semester' => $request->semester?->semester_number,
+                'trimester' => $request->trimester?->trimester_number,
                 'year_id' => $year
             ]);
 
@@ -364,8 +364,8 @@ class TeacherTeachingController extends Controller
                     'td_hours_continued' => $teaching->td_hours_continued,
                     'cm_hours_initial' => $teaching->cm_hours_initial,
                     'cm_hours_continued' => $teaching->cm_hours_continued,
-                    'semestre' => $teaching->semestre,
-                    'trimestre' => $teaching->trimestre,
+                    'semester' => $teaching->semester?->semester_number,
+                    'trimester' => $teaching->trimester?->trimester_number,
                     'year_id' => $teaching->year_id
                 ]
             ], 201);
@@ -459,8 +459,8 @@ class TeacherTeachingController extends Controller
                 'td_hours_continued' => 'nullable|numeric|min:0',
                 'cm_hours_initial' => 'nullable|numeric|min:0',
                 'cm_hours_continued' => 'nullable|numeric|min:0',
-                'semestre' => 'nullable|integer|min:max:6',
-                'trimestre' => 'nullable|integer|min:1|max:4'
+                'semester' => 'nullable|integer|min:max:6',
+                'trimester' => 'nullable|integer|min:1|max:4'
             ]);
 
             // Vérifie si l'enseignement existe
@@ -492,8 +492,8 @@ class TeacherTeachingController extends Controller
                 'td_hours_continued' => $request->td_hours_continued,
                 'cm_hours_initial' => $request->cm_hours_initial,
                 'cm_hours_continued' => $request->cm_hours_continued,
-                'semestre' => $request->semestre,
-                'trimestre' => $request->trimestre
+                'semester' => $request->semester?->semester_number,
+                'trimester' => $request->trimester?->trimester_number,
             ]);
 
             // Recharge les relations pour la réponse
@@ -511,8 +511,8 @@ class TeacherTeachingController extends Controller
                     'td_hours_continued' => $teaching->td_hours_continued,
                     'cm_hours_initial' => $teaching->cm_hours_initial,
                     'cm_hours_continued' => $teaching->cm_hours_continued,
-                    'semestre' => $teaching->semestre,
-                    'trimestre' => $teaching->trimestre,
+                    'semester' => $teaching->semester?->semester_number,
+                    'trimester' => $teaching->trimester?->trimester_number,
                     'year' => [
                         'id' => $teaching->year->id,
                         'name' => $teaching->year->name

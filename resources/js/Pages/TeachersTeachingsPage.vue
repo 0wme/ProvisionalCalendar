@@ -2,8 +2,8 @@
 import { ref, onMounted, computed } from 'vue';
 import axios from 'axios';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
-import TeachersListManager from '../Components/Features/ListManager/TeachersListManager.vue';
-import TeachingsListManager from '../Components/Features/ListManager/TeachingsListManager.vue';
+import TeachersListManager from '../Features/ListManager/TeachersListManager.vue';
+import TeachingsListManager from '../Features/ListManager/TeachingsListManager.vue';
 import { Teacher, Teaching, Period } from '@/types/models';
 
 // Données des enseignants et enseignements
@@ -30,10 +30,10 @@ onMounted(async () => {
     const teachingsResponse = await axios.get('/api/enseignements/1');
     teachings.value = teachingsResponse.data.map((teaching: any) => {
       let period = null;
-      if (teaching.semestre) {
-        period = { id: teaching.semestre, name: `Semestre ${teaching.semestre}` };
-      } else if (teaching.trimestre) {
-        period = { id: teaching.trimestre, name: `Trimestre ${teaching.trimestre}` };
+      if (teaching.semester) {
+        period = { id: teaching.semester, name: `Semestre ${teaching.semester}` };
+      } else if (teaching.trimester) {
+        period = { id: teaching.trimester, name: `Trimestre ${teaching.trimester}` };
       }
 
       return {
@@ -43,6 +43,8 @@ onMounted(async () => {
         period, 
       };
     });
+
+    console.log(teachings.value);
   } catch (error) {
     console.error('Erreur lors de la récupération des données:', error);
   }

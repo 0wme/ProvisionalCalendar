@@ -121,8 +121,8 @@ export interface Teaching extends Item {
     /**
      * Les enseignants de l'enseignement.
      */
-    semestre: number;
-    trimestre: number;
+    semester: number;
+    trimester: number;
 
     teachers: Teacher[];
 }

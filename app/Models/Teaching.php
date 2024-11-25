@@ -48,4 +48,14 @@ class Teaching extends Model
     {
         return $this->hasMany(Slot::class);
     }
+
+    public function semester()
+    {
+        return $this->belongsTo(Semester::class);
+    }
+
+    public function trimester()
+    {
+        return $this->belongsTo(Trimester::class);
+    }
 }

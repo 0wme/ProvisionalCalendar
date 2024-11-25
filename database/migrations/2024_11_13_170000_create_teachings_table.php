@@ -20,7 +20,7 @@ return new class extends Migration
 
         Schema::create('trimesters', function (Blueprint $table) {
             $table->id();
-            $table->integer('trimestre_number');
+            $table->integer('trimester_number');
             $table->foreignId('year_id')->constrained('years')->onDelete('cascade');
             $table->timestamps();
         });
@@ -36,7 +36,7 @@ return new class extends Migration
             $table->decimal('cm_hours_initial', 5, 2);
             $table->decimal('cm_hours_continued', 5, 2)->nullable();
             $table->foreignId('semester_id')->nullable()->constrained('semesters')->onDelete('cascade');
-            $table->foreignId('trimestre_id')->nullable()->constrained('trimesters')->onDelete('cascade');
+            $table->foreignId('trimester_id')->nullable()->constrained('trimesters')->onDelete('cascade');
             $table->foreignId('year_id')->constrained('years')->onDelete('cascade');
             $table->timestamps();
         });
@@ -51,6 +51,6 @@ return new class extends Migration
     {
         Schema::dropIfExists('teachings');
         Schema::dropIfExists('semesters');
-        Schema::dropIfExists('trimestres');
+        Schema::dropIfExists('trimesters');
     }
 };

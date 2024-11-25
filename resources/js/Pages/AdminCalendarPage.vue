@@ -11,7 +11,7 @@
   import { ref, onMounted } from 'vue';
   import axios from 'axios';
   import AdminLayout from '@/Layouts/AdminLayout.vue';
-  import TeachersListManager from '@/Components/Features/ListManager/TeachersListManager.vue';
+  import TeachersListManager from '@/Features/ListManager/TeachersListManager.vue';
   import CalendarTable from '@/Calendar/CalendarTable.vue';
   
   const teachers = ref([]);

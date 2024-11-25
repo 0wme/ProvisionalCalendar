@@ -20,7 +20,7 @@ class TeachingSeeder extends Seeder
                 'cm_hours_initial' => 10.00,
                 'cm_hours_continued' => null,
                 'semester_id' => 1,
-                'trimestre_id' => null,
+                'trimester_id' => null,
                 'year_id' => 1
             ],
             [
@@ -33,7 +33,7 @@ class TeachingSeeder extends Seeder
                 'cm_hours_initial' => 20.00,
                 'cm_hours_continued' => null,
                 'semester_id' => 3,
-                'trimestre_id' => null,
+                'trimester_id' => null,
                 'year_id' => 1
             ],
             [
@@ -46,7 +46,7 @@ class TeachingSeeder extends Seeder
                 'cm_hours_initial' => 25.00,
                 'cm_hours_continued' => 20.00,
                 'semester_id' => 5,
-                'trimestre_id' => null,
+                'trimester_id' => null,
                 'year_id' => 1
             ],
 
@@ -59,8 +59,8 @@ class TeachingSeeder extends Seeder
                 'td_hours_continued' => null,
                 'cm_hours_initial' => 15.00,
                 'cm_hours_continued' => null,
-                'semestre' => 1,
-                'trimestre' => null,
+                'semester_id' => 1,
+                'trimester_id' => null,
                 'year_id' => 1
             ],
             [
@@ -72,8 +72,8 @@ class TeachingSeeder extends Seeder
                 'td_hours_continued' => null,
                 'cm_hours_initial' => 10.00,
                 'cm_hours_continued' => null,
-                'semestre' => 1,
-                'trimestre' => null,
+                'semester_id' => 1,
+                'trimester_id' => null,
                 'year_id' => 1
             ],
             [
@@ -85,8 +85,8 @@ class TeachingSeeder extends Seeder
                 'td_hours_continued' => null,
                 'cm_hours_initial' => 15.00,
                 'cm_hours_continued' => null,
-                'semestre' => 1,
-                'trimestre' => null,
+                'semester_id' => 1,
+                'trimester_id' => null,
                 'year_id' => 1
             ],
             [
@@ -98,8 +98,8 @@ class TeachingSeeder extends Seeder
                 'td_hours_continued' => null,
                 'cm_hours_initial' => 10.00,
                 'cm_hours_continued' => null,
-                'semestre' => 2,
-                'trimestre' => null,
+                'semester_id' => 2,
+                'trimester_id' => null,
                 'year_id' => 1
             ],
             [
@@ -111,8 +111,8 @@ class TeachingSeeder extends Seeder
                 'td_hours_continued' => null,
                 'cm_hours_initial' => 15.00,
                 'cm_hours_continued' => null,
-                'semestre' => 2,
-                'trimestre' => null,
+                'semester_id' => 2,
+                'trimester_id' => null,
                 'year_id' => 1
             ],
             [
@@ -124,8 +124,8 @@ class TeachingSeeder extends Seeder
                 'td_hours_continued' => null,
                 'cm_hours_initial' => 10.00,
                 'cm_hours_continued' => null,
-                'semestre' => 2,
-                'trimestre' => null,
+                'semester_id' => 2,
+                'trimester_id' => null,
                 'year_id' => 1
             ],
             [
@@ -137,8 +137,8 @@ class TeachingSeeder extends Seeder
                 'td_hours_continued' => null,
                 'cm_hours_initial' => 15.00,
                 'cm_hours_continued' => null,
-                'semestre' => 2,
-                'trimestre' => null,
+                'semester_id' => 2,
+                'trimester_id' => null,
                 'year_id' => 1
             ],
             [
@@ -150,8 +150,8 @@ class TeachingSeeder extends Seeder
                 'td_hours_continued' => null,
                 'cm_hours_initial' => 10.00,
                 'cm_hours_continued' => null,
-                'semestre' => 3,
-                'trimestre' => null,
+                'semester_id' => 3,
+                'trimester_id' => null,
                 'year_id' => 1
             ],
             [
@@ -163,8 +163,8 @@ class TeachingSeeder extends Seeder
                 'td_hours_continued' => null,
                 'cm_hours_initial' => 15.00,
                 'cm_hours_continued' => null,
-                'semestre' => 3,
-                'trimestre' => null,
+                'semester_id' => 3,
+                'trimester_id' => null,
                 'year_id' => 1
             ],
             [
@@ -176,8 +176,8 @@ class TeachingSeeder extends Seeder
                 'td_hours_continued' => null,
                 'cm_hours_initial' => 10.00,
                 'cm_hours_continued' => null,
-                'semestre' => 3,
-                'trimestre' => null,
+                'semester_id' => 3,
+                'trimester_id' => null,
                 'year_id' => 1
             ],
             [
@@ -189,8 +189,8 @@ class TeachingSeeder extends Seeder
                 'td_hours_continued' => null,
                 'cm_hours_initial' => 10.00,
                 'cm_hours_continued' => null,
-                'semestre' => 4,
-                'trimestre' => null,
+                'semester_id' => 4,
+                'trimester_id' => null,
                 'year_id' => 1
             ],
             [
@@ -202,8 +202,8 @@ class TeachingSeeder extends Seeder
                 'td_hours_continued' => null,
                 'cm_hours_initial' => 15.00,
                 'cm_hours_continued' => null,
-                'semestre' => 4,
-                'trimestre' => null,
+                'semester_id' => 4,
+                'trimester_id' => null,
                 'year_id' => 1
             ],
             [
@@ -215,8 +215,8 @@ class TeachingSeeder extends Seeder
                 'td_hours_continued' => null,
                 'cm_hours_initial' => 10.00,
                 'cm_hours_continued' => null,
-                'semestre' => 4,
-                'trimestre' => null,
+                'semester_id' => 4,
+                'trimester_id' => null,
                 'year_id' => 1
             ],
             [
@@ -228,8 +228,8 @@ class TeachingSeeder extends Seeder
                 'td_hours_continued' => null,
                 'cm_hours_initial' => 15.00,
                 'cm_hours_continued' => null,
-                'semestre' => 4,
-                'trimestre' => null,
+                'semester_id' => 4,
+                'trimester_id' => null,
                 'year_id' => 1
             ],
             [
@@ -241,8 +241,8 @@ class TeachingSeeder extends Seeder
                 'td_hours_continued' => null,
                 'cm_hours_initial' => 10.00,
                 'cm_hours_continued' => null,
-                'semestre' => 5,
-                'trimestre' => null,
+                'semester_id' => 5,
+                'trimester_id' => null,
                 'year_id' => 1
             ],
             [
@@ -254,8 +254,8 @@ class TeachingSeeder extends Seeder
                 'td_hours_continued' => null,
                 'cm_hours_initial' => 15.00,
                 'cm_hours_continued' => null,
-                'semestre' => 5,
-                'trimestre' => null,
+                'semester_id' => 5,
+                'trimester_id' => null,
                 'year_id' => 1
             ],
             [
@@ -267,8 +267,8 @@ class TeachingSeeder extends Seeder
                 'td_hours_continued' => null,
                 'cm_hours_initial' => 10.00,
                 'cm_hours_continued' => null,
-                'semestre' => 5,
-                'trimestre' => null,
+                'semester_id' => 5,
+                'trimester_id' => null,
                 'year_id' => 1
             ],
             [
@@ -280,8 +280,8 @@ class TeachingSeeder extends Seeder
                 'td_hours_continued' => null,
                 'cm_hours_initial' => 15.00,
                 'cm_hours_continued' => null,
-                'semestre' => 5,
-                'trimestre' => null,
+                'semester_id' => 5,
+                'trimester_id' => null,
                 'year_id' => 1
             ],
             [
@@ -293,13 +293,10 @@ class TeachingSeeder extends Seeder
                 'td_hours_continued' => null,
                 'cm_hours_initial' => 15.00,
                 'cm_hours_continued' => null,
-                'semestre' => 0,
-                'trimestre' => null,
+                'semester_id' => 5,
+                'trimester_id' => null,
                 'year_id' => 1
-            ]
-
-
-        
+            ]        
         ];
 
         foreach ($teachings as $teaching) {

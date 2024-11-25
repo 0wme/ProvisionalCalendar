@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Trimester extends Model
 {
     protected $fillable = [
-        'trimestre_number',
+        'trimester_number',
         'year_id'
     ];
 }
