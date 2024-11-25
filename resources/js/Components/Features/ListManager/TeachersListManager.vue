@@ -6,7 +6,7 @@ import TeacherPopup from '@/Components/Popup/TeacherPopup.vue';
 import { ref } from 'vue';
 
 defineProps<{
-  title: string;
+  title?: string;
   teachers: Teacher[];
 }>();
 
@@ -31,8 +31,7 @@ const openPopup = () => {
 <template>
     <ListManager
         title="Enseignants"
-        class="w-full h-full"
-        hasAdd
+         hasAdd
         :items="teachers"
         @select="handleSelect"
         @add="emit('add')"

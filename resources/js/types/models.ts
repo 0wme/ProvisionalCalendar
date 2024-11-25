@@ -40,6 +40,8 @@ export interface Period {
      * Le nom de la période.
      */
     name: string;
+
+    
 }
 
 /**
@@ -119,6 +121,9 @@ export interface Teaching extends Item {
     /**
      * Les enseignants de l'enseignement.
      */
+    semestre: number;
+    trimestre: number;
+
     teachers: Teacher[];
 }
 

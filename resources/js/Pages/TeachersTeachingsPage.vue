@@ -1,92 +1,118 @@
 <script setup lang="ts">
+import { ref, onMounted, computed } from 'vue';
+import axios from 'axios';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
-import Sidebar from '../Components/Navigation/Sidebar.vue';
-import HeaderMenu from '../Components/Navigation/HeaderMenu.vue';
 import TeachersListManager from '../Components/Features/ListManager/TeachersListManager.vue';
-import { ref } from 'vue';
-import { Teacher } from '@/types/model';
 import TeachingsListManager from '../Components/Features/ListManager/TeachingsListManager.vue';
-import { Teaching } from '@/types/model';
-const teachers = ref<Teacher[]>([
-  { id: 1, name: 'John Doe', firstname: 'John', lastname: 'Doe', code: 'T001' },
-  { id: 2, name: 'Jane Smith', firstname: 'Jane', lastname: 'Smith', code: 'T002' },
-  { id: 3, name: 'Jean-Pierre Dupont', firstname: 'Jean-Pierre', lastname: 'Dupont', code: 'T003' },
-  { id: 4, name: 'Marie Martin', firstname: 'Marie', lastname: 'Martin', code: 'T004' },
-  { id: 5, name: 'Pierre Dupont', firstname: 'Pierre', lastname: 'Dupont', code: 'T005' },
-  { id: 6, name: 'François Durand', firstname: 'François', lastname: 'Durand', code: 'T006' },
-  { id: 7, name: 'Sophie Garnier', firstname: 'Sophie', lastname: 'Garnier', code: 'T007' },
-  { id: 8, name: 'Laurent Bernard', firstname: 'Laurent', lastname: 'Bernard', code: 'T008' },
-  { id: 9, name: 'Catherine Lefebvre', firstname: 'Catherine', lastname: 'Lefebvre', code: 'T009' },
-  { id: 10, name: 'Nicolas Moreau', firstname: 'Nicolas', lastname: 'Moreau', code: 'T010' },
-]);
+import { Teacher, Teaching, Period } from '@/types/models';
+
+// Données des enseignants et enseignements
+const teachers = ref<Teacher[]>([]);
+const teachings = ref<Teaching[]>([]);
+
+// Popups
+const showPopup = ref(false);
+const showPopupEdit = ref(false);
+
+onMounted(async () => {
+  try {
+    // Récupère les enseignants
+    const teachersResponse = await axios.get('/api/enseignants/1');
+    teachers.value = teachersResponse.data.map((teacher: any) => ({
+      id: teacher.id,
+      name: `${teacher.first_name} ${teacher.last_name}`,
+      firstname: teacher.first_name,
+      lastname: teacher.last_name,
+      code: teacher.acronym,
+    }));
+
+    // Récupère les enseignements
+    const teachingsResponse = await axios.get('/api/enseignements/1');
+    teachings.value = teachingsResponse.data.map((teaching: any) => {
+      let period = null;
+      if (teaching.semestre) {
+        period = { id: teaching.semestre, name: `Semestre ${teaching.semestre}` };
+      } else if (teaching.trimestre) {
+        period = { id: teaching.trimestre, name: `Trimestre ${teaching.trimestre}` };
+      }
+
+      return {
+        id: teaching.id,
+        name: teaching.title,
+        code: teaching.apogee_code,
+        period, 
+      };
+    });
+  } catch (error) {
+    console.error('Erreur lors de la récupération des données:', error);
+  }
+});
 
 const periods = ref<Period[]>([
-  { id: 0, name: 'Semestre 1' },
-  { id: 1, name: 'Semestre 2' },
-  { id: 2, name: 'Semestre 3' },
-  { id: 3, name: 'Semestre 4' },
-  { id: 4, name: 'Semestre 5' },
-  { id: 5, name: 'Semestre 6' },
+  { id: 1, name: 'Semestre 1' },
+  { id: 2, name: 'Semestre 2' },
+  { id: 3, name: 'Semestre 3' },
+  { id: 4, name: 'Semestre 4' },
+  { id: 5, name: 'Semestre 5' },
+  { id: 6, name: 'Semestre 6' },
 ]);
 
-const teachings = ref<Teaching[]>([
-  { id: 1, name: 'Math', code: 'T001', period:periods.value[0]},
-  { id: 2, name: 'Science', code: 'T002', period:periods.value[1]},
-  { id: 3, name: 'Physique', code: 'T003', period:periods.value[0]},
-  { id: 2, name: 'SVT', code: 'T004', period:periods.value[0]},
-  { id: 2, name: 'Algorithme', code: 'T005', period:periods.value[0]},
-  { id: 2, name: 'EPS', code: 'T006', period:periods.value[0]},
-  { id: 2, name: 'Technologie', code: 'T007', period:periods.value[0]},
-  { id: 2, name: 'Développement Web', code: 'T008', period:periods.value[0]},
-  { id: 2, name: 'Base de données', code: 'T009', period:periods.value[0]},
-  { id: 2, name: 'Francais', code: 'T0010', period:periods.value[0]},
-  { id: 2, name: 'Art Plastique', code: 'T011', period:periods.value[0]},
-  { id: 2, name: 'Communication', code: 'T012', period:periods.value[0]},
-  { id: 2, name: 'Virtualisation', code: 'T013', period:periods.value[0]},
-
-]);
+const selectedPeriod = ref<number>(0); 
+const filteredTeachings = computed(() => {
+  if (selectedPeriod.value === 0) {
+    return teachings.value; 
+  }
+  return teachings.value.filter((teaching) => teaching.period?.id === selectedPeriod.value);
+});
 
 const buttonClicked = ref(false);
-
 const toggleButton = () => {
   buttonClicked.value = !buttonClicked.value;
 };
 </script>
 
 <template>
-    <AdminLayout>
-        <div class="flex flex-col h-full">
-            <button 
-                :class="['mode-button text-white border-none rounded-xl py-2.5 px-5 cursor-pointer text-base w-max mb-8',
-                buttonClicked ? 'bg-[#FF9898]' : 'bg-[#9A98FF]']"
-                @click="toggleButton">
-                {{ buttonClicked ? 'Mode Enseignements' : 'Mode Enseignants' }}
-            </button>
-            <div :class="['flex gap-8 flex-1 min-h-0', {'flex-row-reverse': buttonClicked}]">
-                <TeachersListManager
-                    class="flex-1"
-                    :teachers
-                />
-                <TeachingsListManager
-                    title="Liste des Enseignements"
-                    class="flex-1"
-                    :teachings
-                    :periods
-                />
-            </div>
-        </div>
-    </AdminLayout>
-    <TeacherPopup 
-        class="z-50"
-        v-if="showPopup" 
-        :is-editing="false"
-        @close="showPopup = false" 
-    />
+  <AdminLayout>
+    <div class="flex flex-col h-full">
+      <button
+        :class="['mode-button text-white border-none rounded-xl py-2.5 px-5 cursor-pointer text-base w-max mb-8',
+        buttonClicked ? 'bg-[#FF9898]' : 'bg-[#9A98FF]']"
+        @click="toggleButton">
+        {{ buttonClicked ? 'Mode Enseignements' : 'Mode Enseignants' }}
+      </button>
 
-    <TeacherPopup 
-        class="z-50"
-        v-if="showPopupEdit" 
-        :is-editing="true"
-        @close="showPopupEdit = false" 
-    />
+      <div :class="['flex gap-8 flex-1 min-h-0', {'flex-row-reverse': buttonClicked}]">
+        <TeachersListManager
+          class="flex-1 h-full w-full"
+          :teachers="teachers"
+        />
+        <TeachingsListManager
+          title="Liste des Enseignements"
+          class="flex-1 h-full w-full"
+          :teachings="filteredTeachings"
+          :periods="periods"
+        />
+      </div>
+    </div>
+  </AdminLayout>
+
+  <TeacherPopup
+    class="z-50"
+    v-if="showPopup"
+    :is-editing="false"
+    @close="showPopup = false"
+  />
+
+  <TeacherPopup
+    class="z-50"
+    v-if="showPopupEdit"
+    :is-editing="true"
+    @close="showPopupEdit = false"
+  />
 </template>
+
+<style scoped>
+.mode-button {
+  transition: background-color 0.3s ease;
+}
+</style>
