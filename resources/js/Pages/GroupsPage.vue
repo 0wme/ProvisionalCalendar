@@ -118,6 +118,14 @@ const subgroupToEdit = ref<Subgroup | undefined>();
 const handleAddSubgroup = async (subgroup: Subgroup) => {
     hideAddSubgroupPopup();
     const response = await axios.post('/api/groupes/sous-groupe/' + selectedGroupId.value, subgroup);
+    classes.value = classes.value.map(classe => {
+        if (classe.id === selectedClassId.value) {
+            return { ...classe, groups: classe.groups.map(group => 
+                group.id === selectedGroupId.value ? { ...group, subgroups: [...group.subgroups, response.data.subgroup] } : group
+            ) };
+        }
+        return classe;
+    });
 }
 
 const handleDeleteSubgroup = async (subgroup: Subgroup) => {
