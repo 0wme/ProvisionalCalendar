@@ -2,7 +2,7 @@
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import ClassListManager from '@/Features/ListManager/Groups/ClassListManager.vue';
 import GroupListManager from '@/Features/ListManager/Groups/GroupListManager.vue';
-import SubgroupListManager from '@/Features/ListManager/Groups/SubGroupListManager.vue';
+import SubgroupListManager from '@/Features/ListManager/Groups/SubgroupListManager.vue';
 import { ref, computed, onMounted } from 'vue';
 import { Class, Group, Subgroup } from '@/types/models';
 import AddGroupPopup from '@/Features/Popup/Groups/Group/AddGroupPopup.vue';
@@ -162,6 +162,14 @@ const hideEditSubgroupPopup = () => {
 const handleSaveEditedSubgroup = async (subgroup: Subgroup) => {
     hideEditSubgroupPopup();
     const response = await axios.put('/api/groupes/sous-groupe/' + subgroup.id, subgroup);
+    classes.value = classes.value.map(classe => {
+        if (classe.id === selectedClassId.value) {
+            return { ...classe, groups: classe.groups.map(group =>
+                group.id === selectedGroupId.value ? { ...group, subgroups: group.subgroups.map(s => s.id === subgroup.id ? response.data.subgroup : s) } : group
+            ) };
+        }
+        return classe;
+    });
 }
 
 const showAddSubgroupPopup = () => {
