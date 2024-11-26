@@ -131,6 +131,14 @@ const handleAddSubgroup = async (subgroup: Subgroup) => {
 const handleDeleteSubgroup = async (subgroup: Subgroup) => {
     hideEditSubgroupPopup();
     await axios.delete('/api/groupes/sous-groupe/' + subgroup.id);
+    classes.value = classes.value.map(classe => {
+        if (classe.id === selectedClassId.value) {
+            return { ...classe, groups: classe.groups.map(group =>
+                group.id === selectedGroupId.value ? { ...group, subgroups: group.subgroups.filter(s => s.id !== subgroup.id) } : group
+            ) };
+        }
+        return classe;
+    });
 }
 
 const hideAddSubgroupPopup = () => {
