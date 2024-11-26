@@ -9,7 +9,7 @@ import CloseWithoutSaveConfirmationPopup from '@/Features/Popup/CloseWithoutSave
 const emit = defineEmits(['cancel', 'delete', 'save']);
 
 const props = defineProps<{
-    group?: Subgroup;
+    subgroup?: Subgroup;
     show?: boolean;
 }>();
 
@@ -48,8 +48,8 @@ const handleUpdateSubgroupName = (groupName: string) => {
 };
 
 watch(() => props.show, () => {
-    if (props.show && props.group) {
-        editedSubgroup.value = { ...props.group };
+    if (props.show && props.subgroup) {
+        editedSubgroup.value = { ...props.subgroup };
     }
 });
 
@@ -58,7 +58,7 @@ const showCloseWithoutSaveConfirmationPopup = () => {
 };
 
 const handleClose = () => {
-    if (editedSubgroup.value?.name !== props.group?.name) {
+    if (editedSubgroup.value?.name !== props.subgroup?.name) {
         showCloseWithoutSaveConfirmationPopup();
     } else {
         emit('cancel');
@@ -71,7 +71,7 @@ const handleSave = () => {
 </script>
 
 <template>
-    <SubgroupPopup :group="editedSubgroup" :show title="Modifier un sous-groupe" @updateSubgroupName="handleUpdateSubgroupName" @close="handleClose">
+    <SubgroupPopup :subgroup="editedSubgroup" :show title="Modifier un sous-groupe" @updateSubgroupName="handleUpdateSubgroupName" @close="handleClose">
         <div class="flex gap-4">
             <Button class="bg-green-500 text-white w-full" @click="handleSave">Sauvegarder</Button>
             <Button class="bg-red-500 text-white w-full" @click="showDeleteConfirmationPopup">Supprimer</Button>

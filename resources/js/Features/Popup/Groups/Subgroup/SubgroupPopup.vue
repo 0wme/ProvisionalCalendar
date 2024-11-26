@@ -22,7 +22,7 @@ const emit = defineEmits(['close', 'updateSubgroupName']);
             <div class="flex flex-col gap-2">
                 <p class="text-lg font-medium">Nom du groupe</p>
                 <input
-                    :value="group?.name"
+                    :value="subgroup?.name"
                     class="border border-gray-300 rounded-lg p-2"
                     :placeholder="'ex : G1'"
                     @input="emit('updateSubgroupName', ($event.target as HTMLInputElement).value)"

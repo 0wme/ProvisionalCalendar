@@ -2,11 +2,13 @@
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import ClassListManager from '@/Features/ListManager/Groups/ClassListManager.vue';
 import GroupListManager from '@/Features/ListManager/Groups/GroupListManager.vue';
-import SubgroupListManager from '@/Features/ListManager/Groups/SubgroupListManager.vue';
+import SubgroupListManager from '@/Features/ListManager/Groups/SubGroupListManager.vue';
 import { ref, computed, onMounted } from 'vue';
 import { Class, Group, Subgroup } from '@/types/models';
 import AddGroupPopup from '@/Features/Popup/Groups/Group/AddGroupPopup.vue';
 import EditGroupPopup from '@/Features/Popup/Groups/Group/EditGroupPopup.vue';
+import AddSubgroupPopup from '@/Features/Popup/Groups/Subgroup/AddSubgroupPopup.vue';
+import EditSubgroupPopup from '@/Features/Popup/Groups/Subgroup/EditSubgroupPopup.vue';
 import axios from 'axios';
 
 const classes = ref<Class[]>([]);
@@ -118,6 +120,11 @@ const handleAddSubgroup = async (subgroup: Subgroup) => {
     const response = await axios.post('/api/groupes/sous-groupe/' + selectedGroupId.value, subgroup);
 }
 
+const handleDeleteSubgroup = async (subgroup: Subgroup) => {
+    hideEditSubgroupPopup();
+    await axios.delete('/api/groupes/sous-groupe/' + subgroup.id);
+}
+
 const hideAddSubgroupPopup = () => {
     isAddSubgroupPopupVisible.value = false;
 }
@@ -126,8 +133,9 @@ const showEditSubgroupPopup = () => {
     isVisibleEditSubgroupPopup.value = true;
 }
 
-const handleEditSubgroup = (id: number) => {
-    subgroupToEdit.value = subgroups.value.find(s => s.id === id);
+const handleEditSubgroup = async (id: number) => {
+    const response = await axios.get('/api/groupes/sous-groupe/' + id);
+    subgroupToEdit.value = response.data;
     showEditSubgroupPopup();
 }
 
@@ -154,7 +162,6 @@ const showAddSubgroupPopup = () => {
         </div>
     </AdminLayout>
     <AddGroupPopup
-        :groups
         :show="isAddGroupPopupVisible"
         @cancel="hideAddGroupPopup"
         @add="handleAddGroup"
@@ -167,13 +174,11 @@ const showAddSubgroupPopup = () => {
         @save="handleSaveEditedGroup"
     />
     <AddSubgroupPopup
-        :subgroups
         :show="isAddSubgroupPopupVisible"
         @cancel="hideAddSubgroupPopup"
         @add="handleAddSubgroup"
     />
     <EditSubgroupPopup
-        :subgroups
         :subgroup="subgroupToEdit"
         :show="isVisibleEditSubgroupPopup"
         @cancel="hideEditSubgroupPopup"
