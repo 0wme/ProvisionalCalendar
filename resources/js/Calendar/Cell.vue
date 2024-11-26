@@ -29,10 +29,18 @@ const sizeClass = computed(() => {
   display: flex;
   flex-grow: 1;
   width: 100%;
+  height: 100%; 
   align-items: stretch;
   justify-content: stretch;
   box-sizing: border-box;
   border: 1px solid #000000;
-  border-radius: 5px; 
+  border-radius: 5px;
+}
+
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 </style>

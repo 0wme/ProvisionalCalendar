@@ -12,11 +12,11 @@
       <tbody>
         <tr v-for="week in weeks" :key="week">
           <td class="border border-gray-300 p-2 bg-gray-50 week-cell">S{{ week }}</td>
-          <td class="border border-gray-300 p-2 bg-gray-50">
-            <Cell size="full" :height="12"></Cell>
+          <td class="border border-gray-300 p-0 bg-gray-50">
+            <Cell size="full" :height="12" class="cell-full"></Cell>
           </td>
-          <td class="border border-gray-300 p-2 bg-gray-50">
-            <div class="flex flex-col w-full h-full">
+          <td class="border border-gray-300 p-0 bg-gray-50">
+            <div class="flex flex-col td-cell">
               <Cell
                 v-for="i in 2"
                 :key="`td-${week}-${i}`"
@@ -28,8 +28,8 @@
               </Cell>
             </div>
           </td>
-          <td class="border border-gray-300 p-2 bg-gray-50">
-            <div class="flex flex-col w-full h-full">
+          <td class="border border-gray-300 p-0 bg-gray-50">
+            <div class="flex flex-col tp-cell">
               <Cell
                 v-for="i in 6"
                 :key="`tp-${week}-${i}`"
@@ -56,18 +56,28 @@ const weeks = Array.from({ length: 30 }, (_, i) => i + 1);
 
 <style scoped>
 .table-fixed {
+  width: 100%;
+  height: 100%; 
   table-layout: fixed;
   border-radius: 10px;
   overflow: hidden;
 }
 
 th {
-  background-color: #E8DEF8; 
+  background-color: #E8DEF8;
 }
 
-.cell-with-border:not(:last-child) {
-  border-bottom: 1px solid #ff0f0f;
+tbody > tr > td {
+  padding: 0; 
+  vertical-align: top; 
 }
+
+.cell-full {
+  display: flex;
+  flex: 1;
+  height: 100%; 
+}
+
 
 .flex-col {
   display: flex;
@@ -81,5 +91,19 @@ th {
 .week-cell {
   border-radius: 25px 0 0 25px;
   background-color: #FFE5DA;
+  display: flex; 
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem; 
+  font-weight: bold;
+  color: #000; 
+  height: 100%;
+}
+
+.td-cell,
+.tp-cell {
+  display: flex;
+  flex-direction: column;
+  height: 100%; 
 }
 </style>
