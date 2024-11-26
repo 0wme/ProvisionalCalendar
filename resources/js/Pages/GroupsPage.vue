@@ -173,7 +173,9 @@ const handleSaveEditedSubgroup = async (subgroup: Subgroup) => {
 }
 
 const showAddSubgroupPopup = () => {
-    isAddSubgroupPopupVisible.value = true;
+    if (selectedGroupId.value) {
+        isAddSubgroupPopupVisible.value = true;
+    }
 }
 </script>
 
