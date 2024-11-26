@@ -1,8 +1,10 @@
 <template>
     <AdminLayout>
-      <div class="h-full flex">
+      <div class="h-full flex mt-10">
         <TeachersListManager :teachers="teachers" class="w-1/5" />
-        <CalendarTable class="w-3/4 ml-4" />
+        <div class="w-3/4 ml-4 overflow-auto h-full">
+          <CalendarTable />
+        </div>
       </div>
     </AdminLayout>
   </template>
