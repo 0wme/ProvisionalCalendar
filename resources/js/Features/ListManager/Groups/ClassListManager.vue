@@ -8,14 +8,18 @@ defineProps<{
   selectedClassId?: number;
 }>();
 
-const emit = defineEmits(['select']);
+const emit = defineEmits(['select', 'edit', 'add']);
 
 const handleSelect = (item: Class) => {
     emit('select', item);
 }
 
 const handleEdit = (item: Class) => {
-    console.log(item);
+    emit('edit', item);
+}
+
+const handleAdd = () => {
+    emit('add');
 }
 </script>
 
@@ -27,5 +31,6 @@ const handleEdit = (item: Class) => {
         :selectedItemsId="selectedClassId ? [selectedClassId] : undefined"
         @select="handleSelect"
         @edit="handleEdit"
+        @add="handleAdd"
     />
 </template>
