@@ -4,8 +4,9 @@ import { Class } from '@/types/models';
 import Button from '@/Components/Button.vue';
 import { ref, watch } from 'vue';
 import CloseWithoutSaveConfirmationPopup from '@/Features/Popup/CloseWithoutSaveConfirmationPopup.vue';
+import axios from 'axios';
 
-const emit = defineEmits(['cancel', 'add']);
+const emit = defineEmits(['cancel', 'add', 'error']);
 
 const props = defineProps<{
     show?: boolean;
@@ -58,8 +59,13 @@ const handleClose = () => {
     }
 };
 
-const handleAdd = () => {
-    emit('add', classe.value);
+const handleAdd = async () => {
+    try {
+        const response = await axios.post('/api/groupes/promotion/1', classe);
+        emit('add', response.data.promotion);
+    } catch (error) {
+        emit('error', error);
+    }
 };
 </script>
 

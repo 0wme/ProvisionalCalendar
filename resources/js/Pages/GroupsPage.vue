@@ -12,6 +12,7 @@ import EditGroupPopup from '@/Features/Popup/Groups/Group/EditGroupPopup.vue';
 import AddSubgroupPopup from '@/Features/Popup/Groups/Subgroup/AddSubgroupPopup.vue';
 import EditSubgroupPopup from '@/Features/Popup/Groups/Subgroup/EditSubgroupPopup.vue';
 import axios from 'axios';
+import ErrorPopup from '@/Features/Popup/ErrorPopup.vue';
 
 const classes = ref<Class[]>([]);
 
@@ -205,8 +206,7 @@ const hideEditClassPopup = () => {
 
 const handleAddClass = async (classe: Class) => {
     hideAddClassPopup();
-    const response = await axios.post('/api/groupes/promotion/1', classe);
-    classes.value = [...classes.value, response.data.promotion];
+    classes.value = [...classes.value, classe];
 }
 
 const handleDeleteClass = async (classe: Class) => {
@@ -230,6 +230,9 @@ const handleEditClass = async (id: number) => {
     editedClass.value = response.data;
     showEditClassPopup();
 }
+
+const errorMessage = ref<string>('');
+const isErrorPopupVisible = ref<boolean>(false);
 </script>
 
 <template>
@@ -275,5 +278,9 @@ const handleEditClass = async (id: number) => {
         @cancel="hideEditSubgroupPopup"
         @delete="handleDeleteSubgroup"
         @save="handleSaveEditedSubgroup"
+    />
+    <ErrorPopup
+        :message="errorMessage"
+        :show="isErrorPopupVisible"
     />
 </template>
