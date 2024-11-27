@@ -231,6 +231,19 @@ const handleEditClass = async (id: number) => {
     showEditClassPopup();
 }
 
+const handleError = (error: string) => {
+    errorMessage.value = error;
+    showErrorPopup();
+}
+
+const showErrorPopup = () => {
+    isErrorPopupVisible.value = true;
+}
+
+const hideErrorPopup = () => {
+    isErrorPopupVisible.value = false;
+}
+
 const errorMessage = ref<string>('');
 const isErrorPopupVisible = ref<boolean>(false);
 </script>
@@ -247,6 +260,7 @@ const isErrorPopupVisible = ref<boolean>(false);
         :show="isAddClassPopupVisible"
         @cancel="hideAddClassPopup"
         @add="handleAddClass"
+        @error="handleError"
     />
     <EditClassPopup
         :classe="editedClass"
@@ -282,5 +296,6 @@ const isErrorPopupVisible = ref<boolean>(false);
     <ErrorPopup
         :message="errorMessage"
         :show="isErrorPopupVisible"
+        @close="hideErrorPopup"
     />
 </template>

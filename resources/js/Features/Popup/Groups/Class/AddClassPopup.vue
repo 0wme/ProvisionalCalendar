@@ -61,10 +61,14 @@ const handleClose = () => {
 
 const handleAdd = async () => {
     try {
-        const response = await axios.post('/api/groupes/promotion/1', classe);
+        const response = await axios.post('/api/groupes/promotion/1', classe.value);
         emit('add', response.data.promotion);
-    } catch (error) {
-        emit('error', error);
+    } catch (error: any) {
+        if (error.response?.status === 422) {
+            emit('error', error.response.data.error);
+            return;
+        }
+        return;
     }
 };
 </script>
