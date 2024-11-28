@@ -66,11 +66,10 @@ const handleCancel = () => {
 };
 
 const handleDelete = async () => {
-    hideDeleteConfirmationPopup();
-    emit('delete', editedClass.value);
     try {
-        const response = await axios.delete(`${API_ENDPOINTS.PROMOTION}/${editedClass.value}`);
-        emit('delete', response.data);
+        const response = await axios.delete(`${API_ENDPOINTS.PROMOTION}/${props.classe!.id}`);
+        hideDeleteConfirmationPopup();
+        emit('delete', response.data.promotion);
     } catch (error: any) {
         if (error.response?.data?.error) {
             emit('error', error.response.data.error);
@@ -80,8 +79,17 @@ const handleDelete = async () => {
     }
 };
 
-const handleSave = () => {
-    emit('save', editedClass.value);
+const handleSave = async () => {
+    try {
+        const response = await axios.put('/api/groupes/promotion/' + editedClass.value!.id, editedClass.value);
+        emit('save', response.data.promotion);
+    } catch (error: any) {
+        if (error.response?.data?.error) {
+            emit('error', error.response.data.error);
+        } else {
+            emit('error', MESSAGES.DEFAULT_ERROR_MESSAGE);
+        }
+    }
 };
 </script>
 

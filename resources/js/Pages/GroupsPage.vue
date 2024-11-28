@@ -211,7 +211,6 @@ const handleAddClass = async (classe: Class) => {
 
 const handleDeleteClass = async (classe: Class) => {
     hideEditClassPopup();
-    await axios.delete('/api/groupes/promotion/' + classe.id);
     classes.value = classes.value.filter(c => c.id !== classe.id);
     if (selectedClassId.value === classe.id) {
         selectedClassId.value = undefined;
@@ -221,8 +220,7 @@ const handleDeleteClass = async (classe: Class) => {
 
 const handleSaveEditedClass = async (classe: Class) => {
     hideEditClassPopup();
-    const response = await axios.put('/api/groupes/promotion/' + classe.id, classe);
-    classes.value = classes.value.map(c => c.id === classe.id ? { ...c, name: response.data.promotion.name } : c);
+    classes.value = classes.value.map(c => c.id === classe.id ? { ...c, name: classe.name } : c);
 }
 
 const handleEditClass = async (id: number) => {
