@@ -5,17 +5,36 @@ import { Class } from '@/types/models';
 import Button from '@/Components/Button.vue';
 import { ref, watch } from 'vue';
 import CloseWithoutSaveConfirmationPopup from '@/Features/Popup/CloseWithoutSaveConfirmationPopup.vue';
+import axios from 'axios';
+import { API_ENDPOINTS } from '@/constants';
+import { MESSAGES } from '@/constants';
 
-const emit = defineEmits(['cancel', 'delete', 'save']);
-
-const props = defineProps<{
-    classe?: Class;
-    show?: boolean;
-}>();
+const props = defineProps<{ classe?: Class; show?: boolean }>();
+const emit = defineEmits(['cancel', 'delete', 'save', 'error']);
 
 const isDeleteConfirmationPopupVisible = ref<boolean>(false);
 const editedClass = ref<Class | undefined>();
 const isCloseWithoutSaveConfirmationPopupVisible = ref<boolean>(false);
+
+const clonePropsClass = () => {
+    if (props.classe) {
+        editedClass.value = { ...props.classe };
+    }
+};
+
+watch(() => props.show, () => {
+    if (props.show) {
+        clonePropsClass();
+    }
+});
+
+const showCloseWithoutSaveConfirmationPopup = () => {
+    isCloseWithoutSaveConfirmationPopupVisible.value = true;
+};
+
+const hideCloseWithoutSaveConfirmationPopup = () => {
+    isCloseWithoutSaveConfirmationPopupVisible.value = false;
+};
 
 const showDeleteConfirmationPopup = () => {
     isDeleteConfirmationPopupVisible.value = true;
@@ -23,6 +42,10 @@ const showDeleteConfirmationPopup = () => {
 
 const hideDeleteConfirmationPopup = () => {
     isDeleteConfirmationPopupVisible.value = false;
+};
+
+const handleUpdateClassName = (groupName: string) => {
+    editedClass.value!.name = groupName;
 };
 
 const handleCloseWithoutSaving = () => {
@@ -34,34 +57,26 @@ const handleCancelCloseWithoutSaving = () => {
     hideCloseWithoutSaveConfirmationPopup();
 };
 
-const hideCloseWithoutSaveConfirmationPopup = () => {
-    isCloseWithoutSaveConfirmationPopupVisible.value = false;
-};
-
-const handleDelete = () => {
-    hideDeleteConfirmationPopup();
-    emit('delete', editedClass.value);
-};
-
-const handleUpdateClassName = (groupName: string) => {
-    editedClass.value!.name = groupName;
-};
-
-watch(() => props.show, () => {
-    if (props.show && props.classe) {
-        editedClass.value = { ...props.classe };
-    }
-});
-
-const showCloseWithoutSaveConfirmationPopup = () => {
-    isCloseWithoutSaveConfirmationPopupVisible.value = true;
-};
-
-const handleClose = () => {
+const handleCancel = () => {
     if (editedClass.value?.name !== props.classe?.name) {
         showCloseWithoutSaveConfirmationPopup();
     } else {
         emit('cancel');
+    }
+};
+
+const handleDelete = async () => {
+    hideDeleteConfirmationPopup();
+    emit('delete', editedClass.value);
+    try {
+        const response = await axios.delete(`${API_ENDPOINTS.PROMOTION}/${editedClass.value}`);
+        emit('delete', response.data);
+    } catch (error: any) {
+        if (error.response?.data?.error) {
+            emit('error', error.response.data.error);
+        } else {
+            emit('error', MESSAGES.DEFAULT_ERROR_MESSAGE);
+        }
     }
 };
 
@@ -71,7 +86,7 @@ const handleSave = () => {
 </script>
 
 <template>
-    <ClassPopup :classe="editedClass" :show title="Modifier un sous-groupe" @updateClassName="handleUpdateClassName" @close="handleClose">
+    <ClassPopup :classe="editedClass" :show title="Modifier un sous-groupe" @updateClassName="handleUpdateClassName" @close="handleCancel">
         <div class="flex gap-4">
             <Button class="bg-green-500 text-white w-full" @click="handleSave">Sauvegarder</Button>
             <Button class="bg-red-500 text-white w-full" @click="showDeleteConfirmationPopup">Supprimer</Button>
