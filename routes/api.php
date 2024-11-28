@@ -3,6 +3,12 @@
 use App\Http\Controllers\Api\GroupController;
 use App\Http\Controllers\Api\TeacherTeachingController;
 
+use App\Http\Controllers\Api\YearController;
+
+//Years
+
+Route::get('/years', [YearController::class, 'index']);
+
 //Groupes
 
     //Récupération des données
