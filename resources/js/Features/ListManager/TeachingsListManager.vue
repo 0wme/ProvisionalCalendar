@@ -2,8 +2,8 @@
 import ListManager from '@/Components/ListManager/ListManager.vue';
 import { Teaching, Period } from '@/types/models';
 import { defineProps } from 'vue';
-import AddTeachingPopup from '@/Components/Popup/AddTeachingPopup.vue';
-import EditTeachingPopup from '@/Components/Popup/EditTeachingPopup.vue';
+import AddTeachingPopup from '@/Features/Popup/Teachings/AddTeachingPopup.vue';
+import EditTeachingPopup from '@/Features/Popup/Teachings/EditTeachingPopup.vue';
 import { ref } from 'vue';
 
 defineProps<{

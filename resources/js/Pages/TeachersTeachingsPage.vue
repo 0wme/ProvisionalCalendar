@@ -4,13 +4,12 @@ import axios from 'axios';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import TeachersListManager from '../Features/ListManager/TeachersListManager.vue';
 import TeachingsListManager from '../Features/ListManager/TeachingsListManager.vue';
+import TeachingPopup from '../Features/Popup/Teachings/TeachingPopup.vue';
 import { Teacher, Teaching, Period } from '@/types/models';
 
-// Données des enseignants et enseignements
 const teachers = ref<Teacher[]>([]);
 const teachings = ref<Teaching[]>([]);
 
-// Popups
 const showPopup = ref(false);
 const showPopupEdit = ref(false);
 
@@ -43,20 +42,18 @@ onMounted(async () => {
         period, 
       };
     });
-
-    console.log(teachings.value);
   } catch (error) {
     console.error('Erreur lors de la récupération des données:', error);
   }
 });
 
 const periods = ref<Period[]>([
-  { id: 1, name: 'Semestre 1' },
-  { id: 2, name: 'Semestre 2' },
-  { id: 3, name: 'Semestre 3' },
-  { id: 4, name: 'Semestre 4' },
-  { id: 5, name: 'Semestre 5' },
-  { id: 6, name: 'Semestre 6' },
+  { id: 0, name: 'Semestre 1' },
+  { id: 1, name: 'Semestre 2' },
+  { id: 2, name: 'Semestre 3' },
+  { id: 3, name: 'Semestre 4' },
+  { id: 4, name: 'Semestre 5' },
+  { id: 5, name: 'Semestre 6' },
 ]);
 
 const selectedPeriod = ref<number>(0); 
@@ -75,9 +72,9 @@ const toggleButton = () => {
 
 <template>
   <AdminLayout>
-    <div class="flex flex-col h-full">
+    <div class="flex flex-col h-full gap-8">
       <button
-        :class="['mode-button text-white border-none rounded-xl py-2.5 px-5 cursor-pointer text-base w-max mb-8',
+        :class="['mode-button text-white border-none rounded-xl py-2.5 px-5 cursor-pointer text-base w-max',
         buttonClicked ? 'bg-[#FF9898]' : 'bg-[#9A98FF]']"
         @click="toggleButton">
         {{ buttonClicked ? 'Mode Enseignements' : 'Mode Enseignants' }}
@@ -85,7 +82,7 @@ const toggleButton = () => {
 
       <div :class="['flex gap-8 flex-1 min-h-0', {'flex-row-reverse': buttonClicked}]">
         <TeachersListManager
-          class="flex-1 h-full w-full"
+          class="flex-1 h-full w-1/3"
           :teachers="teachers"
         />
         <TeachingsListManager
@@ -97,19 +94,9 @@ const toggleButton = () => {
       </div>
     </div>
   </AdminLayout>
-
-  <TeacherPopup
-    class="z-50"
-    v-if="showPopup"
-    :is-editing="false"
-    @close="showPopup = false"
-  />
-
-  <TeacherPopup
-    class="z-50"
-    v-if="showPopupEdit"
-    :is-editing="true"
-    @close="showPopupEdit = false"
+  <TeachingPopup
+        :show="true"
+        title="Ajouter un enseignement"
   />
 </template>
 

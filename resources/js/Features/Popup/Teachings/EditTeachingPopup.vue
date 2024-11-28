@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import Popup from '../Popup/Popup.vue';
+import Popup from '@/Components/Popup/Popup.vue';
 import Button from '@/Components/Button.vue';
-import BaseTeachingForm from '@/Components/Popup/BaseTeachingPopup.vue';
 import DeleteConfirmationPopup from '@/Components/DeleteConfirmationPopup.vue';
 import CloseWithoutSaveConfirmationPopup from '@/Components/CloseWithoutSaveConfirmationPopup.vue';
 import type { Teaching } from '@/types/models';
