@@ -5,33 +5,44 @@ import Button from '@/Components/Button.vue';
 import { ref, watch } from 'vue';
 import CloseWithoutSaveConfirmationPopup from '@/Features/Popup/CloseWithoutSaveConfirmationPopup.vue';
 import axios from 'axios';
+import { API_ENDPOINTS, MESSAGES } from '@/constants';
 
+const props = defineProps<{ show?: boolean }>();
 const emit = defineEmits(['cancel', 'add', 'error']);
 
-const props = defineProps<{
-    show?: boolean;
-}>();
+const classe = ref<Class>({ id: 0, name: '', groups: [] });
+const isCloseWithoutSaveConfirmationPopupVisible = ref<boolean>(false);
 
-const classe = ref<Class>({
-    id: 0,
-    name: '',
-    groups: []
-});
+const resetClass = () => {
+    classe.value = {
+        id: 0,
+        name: '',
+        groups: []
+    };
+};
 
 watch(() => props.show, () => {
-    if (props.show) {
-        classe.value = {
-            id: 0,
-            name: '',
-            groups: []
-        };
-    }
+    resetClass();
 });
 
-const isCloseWithoutSaveConfirmationPopupVisible = ref<boolean>(false);
+const showCloseWithoutSaveConfirmationPopup = () => {
+    isCloseWithoutSaveConfirmationPopupVisible.value = true;
+};
+
+const hideCloseWithoutSaveConfirmationPopup = () => {
+    isCloseWithoutSaveConfirmationPopupVisible.value = false;
+};
 
 const handleUpdateClassName = (newClassName: string) => {
     classe.value.name = newClassName;
+};
+
+const handleCancel = () => {
+    if (classe.value.name !== '') {
+        showCloseWithoutSaveConfirmationPopup();
+    } else {
+        emit('cancel');
+    }
 };
 
 const handleCloseWithoutSaving = () => {
@@ -43,38 +54,22 @@ const handleCancelCloseWithoutSaving = () => {
     hideCloseWithoutSaveConfirmationPopup();
 };
 
-const showCloseWithoutSaveConfirmationPopup = () => {
-    isCloseWithoutSaveConfirmationPopupVisible.value = true;
-};
-
-const hideCloseWithoutSaveConfirmationPopup = () => {
-    isCloseWithoutSaveConfirmationPopupVisible.value = false;
-};
-
-const handleClose = () => {
-    if (classe.value.name !== '') {
-        showCloseWithoutSaveConfirmationPopup();
-    } else {
-        emit('cancel');
-    }
-};
-
 const handleAdd = async () => {
     try {
-        const response = await axios.post('/api/groupes/promotion/1', classe.value);
+        const response = await axios.post(`${API_ENDPOINTS.PROMOTION}/1`, classe.value);
         emit('add', response.data.promotion);
     } catch (error: any) {
-        if (error.response?.status === 422) {
+        if (error.response?.data?.error) {
             emit('error', error.response.data.error);
-            return;
+        } else {
+            emit('error', MESSAGES.DEFAULT_ERROR_MESSAGE);
         }
-        return;
     }
 };
 </script>
 
 <template>
-    <ClassPopup :show :classe title="Ajouter un sous-groupe" @updateClassName="handleUpdateClassName" @close="handleClose">
+    <ClassPopup :show :classe title="Ajouter un sous-groupe" @updateClassName="handleUpdateClassName" @close="handleCancel">
         <div class="flex gap-4">
             <Button class="bg-green-500 text-white w-full" @click="handleAdd">Ajouter</Button>
         </div>

@@ -71,7 +71,7 @@ const handleSaveEditedGroup = async (group: Group) => {
             return {
                 ...classe,
                 groups: classe.groups.map(g => 
-                    g.id === group.id ? response.data.group : g
+                    g.id === group.id ? { ...g, name: response.data.group.name } : g
                 )
             };
         }
@@ -171,7 +171,7 @@ const handleSaveEditedSubgroup = async (subgroup: Subgroup) => {
     classes.value = classes.value.map(classe => {
         if (classe.id === selectedClassId.value) {
             return { ...classe, groups: classe.groups.map(group =>
-                group.id === selectedGroupId.value ? { ...group, subgroups: group.subgroups.map(s => s.id === subgroup.id ? response.data.subgroup : s) } : group
+                group.id === selectedGroupId.value ? { ...group, subgroups: group.subgroups.map(s => s.id === subgroup.id ? { ...s, name: response.data.subgroup.name } : s) } : group
             ) };
         }
         return classe;
@@ -222,7 +222,7 @@ const handleDeleteClass = async (classe: Class) => {
 const handleSaveEditedClass = async (classe: Class) => {
     hideEditClassPopup();
     const response = await axios.put('/api/groupes/promotion/' + classe.id, classe);
-    classes.value = classes.value.map(c => c.id === classe.id ? response.data.promotion : c);
+    classes.value = classes.value.map(c => c.id === classe.id ? { ...c, name: response.data.promotion.name } : c);
 }
 
 const handleEditClass = async (id: number) => {
@@ -268,11 +268,13 @@ const isErrorPopupVisible = ref<boolean>(false);
         @cancel="hideEditClassPopup"
         @delete="handleDeleteClass"
         @save="handleSaveEditedClass"
+        @error="handleError"
     />
     <AddGroupPopup
         :show="isAddGroupPopupVisible"
         @cancel="hideAddGroupPopup"
         @add="handleAddGroup"
+        @error="handleError"
     />
     <EditGroupPopup
         :group="groupToEdit"
@@ -280,11 +282,13 @@ const isErrorPopupVisible = ref<boolean>(false);
         @cancel="hideEditGroupPopup"
         @delete="handleDeleteGroup"
         @save="handleSaveEditedGroup"
+        @error="handleError"
     />
     <AddSubgroupPopup
         :show="isAddSubgroupPopupVisible"
         @cancel="hideAddSubgroupPopup"
         @add="handleAddSubgroup"
+        @error="handleError"
     />
     <EditSubgroupPopup
         :subgroup="subgroupToEdit"
@@ -292,6 +296,7 @@ const isErrorPopupVisible = ref<boolean>(false);
         @cancel="hideEditSubgroupPopup"
         @delete="handleDeleteSubgroup"
         @save="handleSaveEditedSubgroup"
+        @error="handleError"
     />
     <ErrorPopup
         :message="errorMessage"
