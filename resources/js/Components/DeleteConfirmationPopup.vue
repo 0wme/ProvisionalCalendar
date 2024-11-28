@@ -7,13 +7,31 @@ defineProps<{
 </script>
 
 <template>
-    <Popup title="Suppression" :show @close="$emit('cancel')">
-        <div class="flex flex-col gap-4">
-            <p>Etes-vous sûr de vouloir supprimer cet élément ?</p>
-            <div class="flex gap-4">
-                <Button class="bg-red-500 text-white" @click="$emit('delete')">Supprimer</Button>
-                <Button @click="$emit('cancel')">Annuler</Button>
-            </div>
+  <div class="fixed inset-0" style="z-index: 1100">
+    <Popup 
+      title="Confirmation de suppression" 
+      :show="show"
+      custom-class="max-w-sm"
+      @close="$emit('close')"
+    >
+      <div class="flex flex-col gap-4">
+        <p>Êtes-vous sûr de vouloir supprimer cet élément ?</p>
+        
+        <div class="flex justify-end gap-4">
+          <Button 
+            class="bg-gray-500 text-white" 
+            @click="$emit('cancel')"
+          >
+            Annuler
+          </Button>
+          <Button 
+            class="bg-red-500 text-white" 
+            @click="$emit('delete')"
+          >
+            Supprimer
+          </Button>
         </div>
+      </div>
     </Popup>
+  </div>
 </template>

@@ -1,36 +1,23 @@
 <script setup lang="ts">
 import Popup from '../Popup/Popup.vue';
 import Button from '@/Components/Button.vue';
-import BaseTeachingForm from '@/Components/Popup/BaseTeachingPopup.vue';
+import BaseTeacherForm from '@/Components/Popup/BaseTeacherPopup.vue';
 import CloseWithoutSaveConfirmationPopup from '@/Components/CloseWithoutSaveConfirmationPopup.vue';
-import type { Teaching } from '@/types/models';
+import type { Teacher } from '@/types/models';
 import { ref, watch } from 'vue';
 
 const emit = defineEmits(['close', 'add']);
 
-const formData = ref<Partial<Teaching>>({
-  name: '',
-  apogee_code: '',
-  initial_cm: 0,
-  initial_td: 0,
-  initial_tp: 0,
-  continuing_cm: 0,
-  continuing_td: 0,
-  continuing_tp: 0
+const formData = ref<Partial<Teacher>>({
+  firstname: '',
+  lastname: ''
 });
 
 const showCloseConfirmation = ref(false);
 const hasChanges = ref(false);
 
 watch(formData, (newValue) => {
-  hasChanges.value = newValue.name !== '' || 
-                     newValue.apogee_code !== '' ||
-                     newValue.initial_cm !== 0 ||
-                     newValue.initial_td !== 0 ||
-                     newValue.initial_tp !== 0 ||
-                     newValue.continuing_cm !== 0 ||
-                     newValue.continuing_td !== 0 ||
-                     newValue.continuing_tp !== 0;
+  hasChanges.value = newValue.firstname !== '' || newValue.lastname !== '';
 }, { deep: true });
 
 const closePopup = () => {
@@ -55,12 +42,12 @@ const handlers = {
 <template>
   <div class="fixed inset-0" style="z-index: 1000">
     <Popup 
-      title="Ajouter une ressource" 
+      title="Ajouter un enseignant" 
       :show="true"
       custom-class="max-w-md"
       @close="closePopup"
     >
-      <BaseTeachingForm v-model="formData">
+      <BaseTeacherForm v-model="formData">
         <template #actions>
           <div class="flex justify-end">
             <Button class="bg-green-500 text-white" @click="handlers.submit">
@@ -68,7 +55,7 @@ const handlers = {
             </Button>
           </div>
         </template>
-      </BaseTeachingForm>
+      </BaseTeacherForm>
     </Popup>
 
     <CloseWithoutSaveConfirmationPopup
@@ -81,4 +68,4 @@ const handlers = {
       @confirm="handlers.confirmationConfirm"
     />
   </div>
-</template>
+</template> 

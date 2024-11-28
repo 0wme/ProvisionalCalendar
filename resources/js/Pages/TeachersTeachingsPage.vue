@@ -5,6 +5,7 @@ import AdminLayout from '@/Layouts/AdminLayout.vue';
 import TeachersListManager from '../Features/ListManager/TeachersListManager.vue';
 import TeachingsListManager from '../Features/ListManager/TeachingsListManager.vue';
 import { Teacher, Teaching, Period } from '@/types/models';
+import EditTeachingPopup from '@/Components/Popup/EditTeachingPopup.vue';
 
 // Données des enseignants et enseignements
 const teachers = ref<Teacher[]>([]);
@@ -13,6 +14,10 @@ const teachings = ref<Teaching[]>([]);
 // Popups
 const showPopup = ref(false);
 const showPopupEdit = ref(false);
+
+// État pour le popup d'édition d'enseignement
+const selectedTeaching = ref<Teaching | null>(null);
+const showEditTeachingPopup = ref(false);
 
 onMounted(async () => {
   try {
@@ -71,6 +76,87 @@ const buttonClicked = ref(false);
 const toggleButton = () => {
   buttonClicked.value = !buttonClicked.value;
 };
+
+// Méthodes pour gérer les popups
+const openEditTeachingPopup = (teaching: Teaching) => {
+  selectedTeaching.value = teaching;
+  showEditTeachingPopup.value = true;
+};
+
+const handleTeachingUpdate = async (teaching: Teaching) => {
+  try {
+    await axios.put(`/api/teachings/${teaching.id}`, teaching);
+    // Rafraîchir la liste
+    await loadTeachings();
+  } catch (error) {
+    console.error('Erreur lors de la mise à jour:', error);
+  }
+};
+
+const handleTeachingDelete = async (teaching: Teaching) => {
+  try {
+    await axios.delete(`/api/teachings/${teaching.id}`);
+    // Rafraîchir la liste
+    await loadTeachings();
+  } catch (error) {
+    console.error('Erreur lors de la suppression:', error);
+  }
+};
+
+// Méthodes pour gérer les enseignants
+const handleTeacherAdd = async (teacher: Partial<Teacher>) => {
+  try {
+    await axios.post('/api/enseignants', {
+      first_name: teacher.firstname,
+      last_name: teacher.lastname,
+      // Ajoutez d'autres champs si nécessaire
+    });
+    // Rafraîchir la liste
+    await loadTeachers();
+  } catch (error) {
+    console.error('Erreur lors de l\'ajout:', error);
+  }
+};
+
+const handleTeacherUpdate = async (teacher: Teacher) => {
+  try {
+    await axios.put(`/api/enseignants/${teacher.id}`, {
+      first_name: teacher.firstname,
+      last_name: teacher.lastname,
+      // Ajoutez d'autres champs si nécessaire
+    });
+    // Rafraîchir la liste
+    await loadTeachers();
+  } catch (error) {
+    console.error('Erreur lors de la mise à jour:', error);
+  }
+};
+
+const handleTeacherDelete = async (teacher: Teacher) => {
+  try {
+    await axios.delete(`/api/enseignants/${teacher.id}`);
+    // Rafraîchir la liste
+    await loadTeachers();
+  } catch (error) {
+    console.error('Erreur lors de la suppression:', error);
+  }
+};
+
+// Fonction pour recharger les enseignants
+const loadTeachers = async () => {
+  try {
+    const response = await axios.get('/api/enseignants/1');
+    teachers.value = response.data.map((teacher: any) => ({
+      id: teacher.id,
+      name: `${teacher.first_name} ${teacher.last_name}`,
+      firstname: teacher.first_name,
+      lastname: teacher.last_name,
+      code: teacher.acronym,
+    }));
+  } catch (error) {
+    console.error('Erreur lors du rechargement des enseignants:', error);
+  }
+};
 </script>
 
 <template>
@@ -87,30 +173,28 @@ const toggleButton = () => {
         <TeachersListManager
           class="flex-1 h-full w-full"
           :teachers="teachers"
+          @add="handleTeacherAdd"
+          @update="handleTeacherUpdate"
+          @delete="handleTeacherDelete"
         />
         <TeachingsListManager
           title="Liste des Enseignements"
           class="flex-1 h-full w-full"
           :teachings="filteredTeachings"
           :periods="periods"
+          @update="handleTeachingUpdate"
+          @delete="handleTeachingDelete"
         />
       </div>
     </div>
+    <EditTeachingPopup
+      v-if="showEditTeachingPopup && selectedTeaching"
+      :initial-values="selectedTeaching"
+      @close="showEditTeachingPopup = false"
+      @update="handleTeachingUpdate"
+      @delete="handleTeachingDelete"
+    />
   </AdminLayout>
-
-  <TeacherPopup
-    class="z-50"
-    v-if="showPopup"
-    :is-editing="false"
-    @close="showPopup = false"
-  />
-
-  <TeacherPopup
-    class="z-50"
-    v-if="showPopupEdit"
-    :is-editing="true"
-    @close="showPopupEdit = false"
-  />
 </template>
 
 <style scoped>

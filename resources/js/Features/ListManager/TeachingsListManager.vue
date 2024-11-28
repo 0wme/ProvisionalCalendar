@@ -1,26 +1,42 @@
 <script setup lang="ts">
 import ListManager from '@/Components/ListManager/ListManager.vue';
 import { Teaching, Period } from '@/types/models';
-import { defineProps } from 'vue';
 import AddTeachingPopup from '@/Components/Popup/AddTeachingPopup.vue';
 import EditTeachingPopup from '@/Components/Popup/EditTeachingPopup.vue';
 import { ref } from 'vue';
 
-defineProps<{
+const props = defineProps<{
     title: string;
     periods: Period[];
     teachings: Teaching[];
 }>();
 
+const emit = defineEmits(['update', 'delete']);
+
 const showPopup = ref(false);
 const showPopupEdit = ref(false);
+const selectedTeaching = ref<Teaching | null>(null);
+
 const openPopup = () => {
     showPopup.value = true;
-}
+};
 
 const handleEdit = (teaching: Teaching) => {
+    selectedTeaching.value = teaching;
     showPopupEdit.value = true;
-}
+};
+
+const handleUpdate = (updatedTeaching: Teaching) => {
+    emit('update', updatedTeaching);
+    showPopupEdit.value = false;
+};
+
+const handleDelete = () => {
+    if (selectedTeaching.value) {
+        emit('delete', selectedTeaching.value);
+    }
+    showPopupEdit.value = false;
+};
 </script>
 
 <template>
@@ -29,7 +45,7 @@ const handleEdit = (teaching: Teaching) => {
             title="Enseignements"
             hasAdd
             hasImport
-            :periods
+            :periods="periods"
             :items="teachings"
             @add="openPopup"
             @edit="handleEdit"
@@ -37,16 +53,17 @@ const handleEdit = (teaching: Teaching) => {
         
         <AddTeachingPopup 
             class="z-50"
-            v-if="showPopup" 
-            :is-editing="false"
+            v-if="showPopup"
             @close="showPopup = false" 
         />
 
         <EditTeachingPopup 
+            v-if="showPopupEdit && selectedTeaching"
             class="z-50"
-            v-if="showPopupEdit" 
-            :is-editing="true"
-            @close="showPopupEdit = false" 
-            />
+            :initial-values="selectedTeaching"
+            @close="showPopupEdit = false"
+            @update="handleUpdate"
+            @delete="handleDelete"
+        />
     </div>
 </template>
