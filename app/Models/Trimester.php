@@ -10,4 +10,14 @@ class Trimester extends Model
         'trimester_number',
         'year_id'
     ];
+
+    public function year()
+    {
+        return $this->belongsTo(Year::class);
+    }
+
+    public function teachings()
+    {
+        return $this->hasMany(Teaching::class);
+    }
 }

@@ -11,7 +11,7 @@ class TeacherTeachingSeeder extends Seeder
     public function run(): void
     {
         $teacher = Teacher::where('acronym', 'LD')->first();
-        $teaching = Teaching::where('apogee_code', 'WEB_R1.05')->first();
-        $teacher->teachings()->attach($teaching->id);
+        $teaching = Teaching::first();
+        $teacher->teachings()->attach($teaching);
     }
 }

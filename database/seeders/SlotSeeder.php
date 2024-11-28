@@ -2,24 +2,45 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
 use App\Models\Slot;
+use App\Models\Teacher;
+use App\Models\Teaching;
+use App\Models\AcademicPromotion;
+use App\Models\Week;
+use Illuminate\Database\Seeder;
 
 class SlotSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
+        // Vérifier si les dépendances existent
+        if (Teacher::count() === 0) {
+            $this->call(TeacherSeeder::class);
+        }
+        if (Teaching::count() === 0) {
+            $this->call(TeachingSeeder::class);
+        }
+        if (AcademicPromotion::count() === 0) {
+            $this->call(\Database\Seeders\PromotionSeeder::class);
+        }
+        if (Week::count() === 0) {
+            $this->call(WeekSeeder::class);
+        }
+
+        $teacher = Teacher::first();
+        $teaching = Teaching::first();
+        $promotion = AcademicPromotion::first();
+        $week = Week::first();
+        $substituteTeacher = Teacher::skip(1)->first() ?? $teacher;
+
         Slot::create([
-            'duration' => 1.5,
-            'teacher_id' => 1,
-            'teaching_id' => 2,
-            'substitute_teacher_id' => 3,
-            'academic_promotion_id' => 2,
-            'week_id' => 2,
+            'type' => 'CM',
+            'duration' => 2,
+            'teacher_id' => $teacher->id,
+            'teaching_id' => $teaching->id,
+            'substitute_teacher_id' => $substituteTeacher->id,
+            'academic_promotion_id' => $promotion->id,
+            'week_id' => $week->id,
         ]);
     }
 }

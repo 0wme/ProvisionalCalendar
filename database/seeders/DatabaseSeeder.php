@@ -8,21 +8,23 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+        // 1. Création des rôles et de l'année universitaire en premier
         $this->call([
             RoleSeeder::class,
-            UserSeeder::class,
             YearSeeder::class,
-            WeekSeeder::class,
-            AcademicPromotionSeeder::class,
-            AcademicGroupSeeder::class,
-            AcademicSubgroupSeeder::class,
-            AlertSeeder::class,
             SemesterSeeder::class,
             TrimesterSeeder::class,
-            TeachingSeeder::class,
+        ]);
+
+        // 2. Création des utilisateurs
+        $this->call(UserSeeder::class);
+
+        // 4. Création des autres données
+        $this->call([
+            WeekSeeder::class,
             TeacherSeeder::class,
+            TeachingSeeder::class,
             TeacherTeachingSeeder::class,
-            SlotSeeder::class,
         ]);
     }
 } 
