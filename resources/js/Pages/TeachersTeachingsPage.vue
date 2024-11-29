@@ -90,8 +90,8 @@ const handleTeacherSelect = (selectedItemId: number) => {
 }
 
 const handleTeachingSelect = (selectedItemId: number) => {
-    // if (isTeachingMode.value) {
-        if (!selectedTeachingIds.value.length) {
+    if (isTeachingMode.value) {
+        // if (!selectedTeachingIds.value.length) {
             if (selectedTeachingIds.value.includes(selectedItemId)) {
                 selectedTeachingIds.value = selectedTeachingIds.value.filter(id => id !== selectedItemId);
                 selectedTeacherIds.value = [];
