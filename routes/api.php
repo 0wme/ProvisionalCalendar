@@ -62,6 +62,8 @@ Route::get('/years', [YearController::class, 'index']);
     Route::put('/enseignant/{teacher}', [TeacherTeachingController::class, 'updateTeacher']);
     Route::put('/enseignement/{teaching}', [TeacherTeachingController::class, 'updateTeaching']);
 
+    Route::put('/enseignant/enseignement/{teacher}/{teaching}', [TeacherTeachingController::class, 'updateTeacherTeaching']);
+
     //Suppression des données
 
     Route::delete('/enseignant/{teacher}', [TeacherTeachingController::class, 'deleteTeacher']);
