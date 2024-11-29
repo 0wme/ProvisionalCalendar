@@ -8,6 +8,7 @@ use App\Models\Year;
 use App\Models\Teaching;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class TeacherTeachingController extends Controller
 {
@@ -535,4 +536,200 @@ class TeacherTeachingController extends Controller
             ], 500);
         }
     }
+
+    public function getTeacherTeaching($teacher_id, $teaching_id): JsonResponse
+    {
+        try {
+            $teacher = Teacher::findOrFail($teacher_id);
+            $teaching = Teaching::findOrFail($teaching_id);
+
+            // Vérifie si la relation existe dans la table pivot
+            $relation = DB::table('teachers_teachings')
+                ->where('teacher_id', $teacher_id)
+                ->where('teaching_id', $teaching_id)
+                ->first();
+
+            if (!$relation) {
+                return response()->json([
+                    'error' => 'Relation entre enseignant et enseignement non trouvée'
+                ], 404);
+            }
+
+            return response()->json([
+                'teacher' => [
+                    'id' => $teacher->id,
+                    'acronym' => $teacher->acronym,
+                    'first_name' => $teacher->first_name,
+                    'last_name' => $teacher->last_name
+                ],
+                'teaching' => [
+                    'id' => $teaching->id,
+                    'title' => $teaching->title,
+                    'apogee_code' => $teaching->apogee_code,
+                    'tp_hours_initial' => $teaching->tp_hours_initial,
+                    'tp_hours_continued' => $teaching->tp_hours_continued,
+                    'td_hours_intial' => $teaching->td_hours_intial,
+                    'td_hours_continued' => $teaching->td_hours_continued,
+                    'cm_hours_initial' => $teaching->cm_hours_initial,
+                    'cm_hours_continued' => $teaching->cm_hours_continued
+                ],
+                'created_at' => $relation->created_at,
+                'updated_at' => $relation->updated_at
+            ]);
+
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'error' => 'Enseignant ou enseignement non trouvé'
+            ], 404);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Une erreur est survenue',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function storeTeacherTeaching(Request $request): JsonResponse
+    {
+        try {
+            $request->validate([
+                'teacher_id' => 'required|exists:teachers,id',
+                'teaching_id' => 'required|exists:teachings,id'
+            ]);
+
+            // Vérifie si la relation existe déjà
+            $existingRelation = DB::table('teachers_teachings')
+                ->where('teacher_id', $request->teacher_id)
+                ->where('teaching_id', $request->teaching_id)
+                ->first();
+
+            if ($existingRelation) {
+                return response()->json([
+                    'error' => 'Relation entre enseignant et enseignement existe déjà'
+                ], 422);
+            }
+
+            DB::table('teachers_teachings')
+                ->insert([
+                    'teacher_id' => $request->teacher_id,
+                    'teaching_id' => $request->teaching_id,
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ]);
+
+            return response()->json([
+                'message' => 'Relation enseignant-enseignement créée avec succès'
+            ], 201);
+
+        } catch (\Illuminate\Database\QueryException $e) {
+            return response()->json([
+                'error' => 'Une erreur est survenue',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function deleteTeacherTeaching($teacher_id, $teaching_id): JsonResponse
+    {
+        try {
+
+            $teacher = Teacher::findOrFail($teacher_id);
+            $teaching = Teaching::findOrFail($teaching_id);
+
+            // Vérifie si la relation existe dans la table pivot
+            $relation = DB::table('teachers_teachings')
+                ->where('teacher_id', $teacher_id)
+                ->where('teaching_id', $teaching_id)
+                ->first();
+
+            if (!$relation) {
+                return response()->json([
+                    'error' => 'Relation entre enseignant et enseignement non trouvée'
+                ], 404);
+            }
+
+            DB::table('teachers_teachings')
+                ->where('teacher_id', $teacher_id)
+                ->where('teaching_id', $teaching_id)
+                ->delete();
+
+            return response()->json([
+                'message' => 'Relation enseignant-enseignement supprimée avec succès'
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Une erreur est survenue',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function updateTeacherTeaching(Request $request, $teacher_id, $teaching_id): JsonResponse
+    {
+        try {
+            $teacher = Teacher::findOrFail($teacher_id);
+            $teaching = Teaching::findOrFail($teaching_id);
+
+            // Vérifie si la relation existe dans la table pivot
+            $relation = DB::table('teachers_teachings')
+                ->where('teacher_id', $teacher_id)
+                ->where('teaching_id', $teaching_id)
+                ->first();
+
+            if (!$relation) {
+                return response()->json([
+                    'error' => 'Relation entre enseignant et enseignement non trouvée'
+                ], 404);
+            }
+
+            // Met à jour les timestamps
+            DB::table('teachers_teachings')
+                ->where('teacher_id', $teacher_id)
+                ->where('teaching_id', $teaching_id)
+                ->update([
+                    'updated_at' => now()
+                ]);
+
+            // Récupère la relation mise à jour
+            $updatedRelation = DB::table('teachers_teachings')
+                ->where('teacher_id', $teacher_id)
+                ->where('teaching_id', $teaching_id)
+                ->first();
+
+            return response()->json([
+                'message' => 'Relation enseignant-enseignement mise à jour avec succès',
+                'teacher' => [
+                    'id' => $teacher->id,
+                    'acronym' => $teacher->acronym,
+                    'first_name' => $teacher->first_name,
+                    'last_name' => $teacher->last_name
+                ],
+                'teaching' => [
+                    'id' => $teaching->id,
+                    'title' => $teaching->title,
+                    'apogee_code' => $teaching->apogee_code,
+                    'tp_hours_initial' => $teaching->tp_hours_initial,
+                    'tp_hours_continued' => $teaching->tp_hours_continued,
+                    'td_hours_initial' => $teaching->td_hours_initial,
+                    'td_hours_continued' => $teaching->td_hours_continued,
+                    'cm_hours_initial' => $teaching->cm_hours_initial,
+                    'cm_hours_continued' => $teaching->cm_hours_continued
+                ],
+                'created_at' => $updatedRelation->created_at,
+                'updated_at' => $updatedRelation->updated_at
+            ]);
+
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'error' => 'Enseignant ou enseignement non trouvé'
+            ], 404);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Une erreur est survenue',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
 }
