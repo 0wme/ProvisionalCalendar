@@ -54,15 +54,13 @@ Route::get('/years', [YearController::class, 'index']);
     Route::post('/enseignant/{year}', [TeacherTeachingController::class, 'storeTeacher']);
     Route::post('/enseignement/{year}', [TeacherTeachingController::class, 'storeTeaching']);
 
-    Route::post('/enseignant/enseignement/{teacher}/{teaching}', [TeacherTeachingController::class, 'storeTeacherTeaching']);
+    Route::post('/enseignant/enseignement/{teacher_id}/{teaching_id}', [TeacherTeachingController::class, 'storeTeacherTeaching']);
 
 
     //Modification des données
 
     Route::put('/enseignant/{teacher}', [TeacherTeachingController::class, 'updateTeacher']);
     Route::put('/enseignement/{teaching}', [TeacherTeachingController::class, 'updateTeaching']);
-
-    Route::put('/enseignant/enseignement/{teacher}/{teaching}', [TeacherTeachingController::class, 'updateTeacherTeaching']);
 
     //Suppression des données
 
