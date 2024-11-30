@@ -22,9 +22,9 @@ defineProps<{
                 </ul>
             </p>
             <div class="flex gap-4">
-                <Button class="bg-green-400 text-white" @click="$emit('save')">Sauvegarder</Button>
-                <Button class="bg-red-500 text-white" @click="$emit('quitWithoutSave')">Continuer sans sauvegarder</Button>
                 <Button class="text-gray-500" @click="$emit('cancel')">Annuler</Button>
+                <Button class="bg-red-500 text-white" @click="$emit('quitWithoutSave')">Continuer sans sauvegarder</Button>
+                <Button class="bg-green-400 text-white" @click="$emit('save')">Sauvegarder</Button>
             </div>
         </div>
     </Popup>
