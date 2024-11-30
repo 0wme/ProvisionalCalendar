@@ -17,7 +17,7 @@ const props = defineProps<{
 
 const emit = defineEmits(['select', 'edit', 'add']);
 
-const selectedPeriodId = ref(0);
+const selectedPeriodId = ref(1);
 
 const searchValue = ref('');
 
@@ -27,7 +27,7 @@ const visibleItems = computed(() => {
     
     if (props.periods) 
         return props.items
-            .filter(item => item.period?.id === selectedPeriodId.value)
+            .filter(item => item.period?.id! - 1 === selectedPeriodId.value)
             .filter(item => item.name.toLowerCase().includes(searchValue.value.toLowerCase()));
     else
         return props.items

@@ -7,10 +7,12 @@ import EditTeachingPopup from '@/Features/Popup/Teachings/EditTeachingPopup.vue'
 import { ref } from 'vue';
 
 defineProps<{
-    title: string;
     periods: Period[];
     teachings: Teaching[];
+    selectedTeachingIds: number[];
 }>();
+
+const emit = defineEmits(['select']);
 
 const showPopup = ref(false);
 const showPopupEdit = ref(false);
@@ -20,6 +22,10 @@ const openPopup = () => {
 
 const handleEdit = (teaching: Teaching) => {
     showPopupEdit.value = true;
+}
+
+const handleSelect = (teaching: Teaching) => {
+    emit('select', teaching);
 }
 </script>
 
@@ -31,11 +37,13 @@ const handleEdit = (teaching: Teaching) => {
             hasImport
             :periods
             :items="teachings"
+            :selectedItemsId="selectedTeachingIds"
             @add="openPopup"
             @edit="handleEdit"
+            @select="handleSelect"
         />
         
-        <AddTeachingPopup 
+        <!--<AddTeachingPopup 
             class="z-50"
             v-if="showPopup" 
             :is-editing="false"
@@ -47,6 +55,6 @@ const handleEdit = (teaching: Teaching) => {
             v-if="showPopupEdit" 
             :is-editing="true"
             @close="showPopupEdit = false" 
-            />
+            />-->
     </div>
 </template>

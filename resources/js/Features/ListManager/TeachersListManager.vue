@@ -2,12 +2,12 @@
 import ListManager from '@/Components/ListManager/ListManager.vue';
 import { Teacher } from '@/types/models';
 import { defineProps, defineEmits } from 'vue';
-import TeacherPopup from '@/Components/Popup/TeacherPopup.vue';
 import { ref } from 'vue';
 
 defineProps<{
   title?: string;
   teachers: Teacher[];
+  selectedTeacherIds: number[];
 }>();
 
 const emit = defineEmits(['select', 'add', 'edit']);
@@ -33,6 +33,7 @@ const openPopup = () => {
         title="Enseignants"
          hasAdd
         :items="teachers"
+        :selectedItemsId="selectedTeacherIds"
         @select="handleSelect"
         @add="emit('add')"
         @edit="emit('edit', $event)"

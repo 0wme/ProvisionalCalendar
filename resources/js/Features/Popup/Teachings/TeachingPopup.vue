@@ -106,12 +106,12 @@ const emit = defineEmits([
                                 @input="emit('updateInitialTP', ($event.target as HTMLInputElement).value)"
                             />
                         </td>
-                        <td class="p-0 border-b border-x border-gray-300 w-32">
+                        <td class="p-0 border-b border-x border-gray-300 rounded-br-lg w-32">
                             <input
                                 :value="teaching?.continuing_tp"
                                 type="number"
                                 min="0"
-                                class="p-2 bg-gray-200 text-center border-none w-full"
+                                class="p-2 bg-gray-200 text-center border-none rounded-br-lg w-full"
                                 @input="emit('updateContinuingTP', ($event.target as HTMLInputElement).value)"
                             />
                         </td>

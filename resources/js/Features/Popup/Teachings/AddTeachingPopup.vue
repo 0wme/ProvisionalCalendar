@@ -1,13 +1,18 @@
 <script setup lang="ts">
-import Popup from '@/Components/Popup/Popup.vue';
 import Button from '@/Components/Button.vue';
 import CloseWithoutSaveConfirmationPopup from '@/Components/CloseWithoutSaveConfirmationPopup.vue';
 import type { Teaching } from '@/types/models';
-import { ref, watch } from 'vue';
+import { ref } from 'vue';
+import TeachingPopup from './TeachingPopup.vue';
 
-const emit = defineEmits(['close', 'add']);
+const props = defineProps<{ show: boolean }>();
+const emit = defineEmits(['close', 'cancel']);
 
-const formData = ref<Partial<Teaching>>({
+const teaching = ref<Teaching>({
+  id: 0,
+  semester: 0,
+  trimester: 0,
+  teachers: [],
   name: '',
   apogee_code: '',
   initial_cm: 0,
@@ -18,63 +23,95 @@ const formData = ref<Partial<Teaching>>({
   continuing_tp: 0
 });
 
-const showCloseConfirmation = ref(false);
-const hasChanges = ref(false);
+const isCloseWithoutSaveConfirmationPopupVisible = ref(false);
 
-watch(formData, (newValue) => {
-  hasChanges.value = newValue.name !== '' || 
-                     newValue.apogee_code !== '' ||
-                     newValue.initial_cm !== 0 ||
-                     newValue.initial_td !== 0 ||
-                     newValue.initial_tp !== 0 ||
-                     newValue.continuing_cm !== 0 ||
-                     newValue.continuing_td !== 0 ||
-                     newValue.continuing_tp !== 0;
-}, { deep: true });
-
-const closePopup = () => {
-  if (hasChanges.value) {
-    showCloseConfirmation.value = true;
-  } else {
-    emit('close');
-  }
+const showCloseWithoutSaveConfirmationPopup = () => {
+    isCloseWithoutSaveConfirmationPopupVisible.value = true;
 };
 
-const handlers = {
-  submit: () => emit('add', formData.value),
-  confirmationClose: () => showCloseConfirmation.value = false,
-  confirmationCancel: () => showCloseConfirmation.value = false,
-  confirmationConfirm: () => {
-    showCloseConfirmation.value = false;
-    emit('close');
-  }
+const hideCloseWithoutSaveConfirmationPopup = () => {
+    isCloseWithoutSaveConfirmationPopupVisible.value = false;
+};
+
+const handleUpdateTeachingName = (name: string) => {
+    teaching.value.name = name;
+};
+
+const handleUpdateApogeeCode = (apogeeCode: string) => {
+    teaching.value.apogee_code = apogeeCode;
+};
+
+const handleUpdateInitialCM = (initialCM: number) => {
+    teaching.value.initial_cm = initialCM;
+};
+
+const handleUpdateInitialTD = (initialTD: number) => {
+    teaching.value.initial_td = initialTD;
+};
+
+const handleUpdateInitialTP = (initialTP: number) => {
+    teaching.value.initial_tp = initialTP;
+};
+
+const handleUpdateContinuingCM = (continuingCM: number) => {
+    teaching.value.continuing_cm = continuingCM;
+};
+
+const handleUpdateContinuingTD = (continuingTD: number) => {
+    teaching.value.continuing_td = continuingTD;
+};
+
+const handleUpdateContinuingTP = (continuingTP: number) => {
+    teaching.value.continuing_tp = continuingTP;
+};
+
+const handleClose = () => {
+    if (
+        teaching.value.name !== '' ||
+        teaching.value.apogee_code !== '' ||
+        teaching.value.initial_cm !== 0 ||
+        teaching.value.initial_td !== 0 ||
+        teaching.value.initial_tp !== 0 ||
+        teaching.value.continuing_cm !== 0 ||
+        teaching.value.continuing_td !== 0 ||
+        teaching.value.continuing_tp !== 0
+    ) {
+        showCloseWithoutSaveConfirmationPopup();
+    } else {
+        emit('close');
+    }
+};
+
+const handleCloseWithoutSaving = () => {
+    hideCloseWithoutSaveConfirmationPopup();
+    emit('cancel');
+};
+
+const handleAdd = () => {
+    // TODO : API CALL
 };
 </script>
 
 <template>
-  <div>
-    <Popup 
-      title="Ajouter une ressource" 
-      :show="true"
-      @close="closePopup"
+    <TeachingPopup
+        title="Ajouter un enseignement"
+        :teaching
+        :show
+        @updateTeachingName="handleUpdateTeachingName"
+        @updateApogeeCode="handleUpdateApogeeCode"
+        @updateInitialCM="handleUpdateInitialCM"
+        @updateInitialTD="handleUpdateInitialTD"
+        @updateInitialTP="handleUpdateInitialTP"
+        @updateContinuingCM="handleUpdateContinuingCM"
+        @updateContinuingTD="handleUpdateContinuingTD"
+        @updateContinuingTP="handleUpdateContinuingTP"
+        @close="handleClose"
     >
-      <BaseTeachingForm v-model="formData">
-        <template #actions>
-          <div class="flex justify-end">
-            <Button class="bg-green-500 text-white" @click="handlers.submit">
-              Ajouter
-            </Button>
-          </div>
-        </template>
-      </BaseTeachingForm>
-    </Popup>
-
+        <Button class="bg-green-500 text-white" @click="handleAdd">Ajouter</Button>
+    </TeachingPopup>
     <CloseWithoutSaveConfirmationPopup
-      v-if="showCloseConfirmation"
-      :show="showCloseConfirmation"
-      @close="handlers.confirmationClose"
-      @cancel="handlers.confirmationCancel"
-      @confirm="handlers.confirmationConfirm"
+        :show="isCloseWithoutSaveConfirmationPopupVisible"
+        @close="handleCloseWithoutSaving"
+        @cancel="hideCloseWithoutSaveConfirmationPopup"
     />
-  </div>
 </template>
