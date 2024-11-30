@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, watch } from 'vue';
 import axios from 'axios';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import TeachersListManager from '../Features/ListManager/TeachersListManager.vue';
@@ -47,59 +47,107 @@ const isErrorPopupVisible = ref(false);
 const modifications = ref<EditedItem[] | undefined>();
 const isSaveConfirmationPopupVisible = ref(false);
 
+watch(selectedTeacherIds, () => {
+    if (isTeachingMode.value) {
+        modifications.value = [
+                    ...(teachers.value.find(teacher => selectedTeacherIds.value.includes(teacher.id))?.teachings || [])
+                        .filter(teaching => !selectedTeachingIds.value.includes(teaching.id))
+                        .map(teaching => ({
+                            ...teaching,
+                            editStatus: EditedItemStatus.DELETED
+                        })),
+                    ...selectedTeachingIds.value
+                        .filter(id => {
+                            const teaching = teachings.value.find(t => t.id === id);
+                            return teaching && !teachers.value
+                                .find(teacher => selectedTeacherIds.value.includes(teacher.id))
+                                ?.teachings?.some(t => t.id === id);
+                        })
+                        .map(id => {
+                            const teaching = teachings.value.find(t => t.id === id)!;
+                            return {
+                                ...teaching,
+                                editStatus: EditedItemStatus.ADDED
+                            };
+                        })
+                ];
+    }
+});
+
+watch(selectedTeachingIds, () => {
+    if (!isTeachingMode.value) {
+        modifications.value = [
+            ...(teachers.value.find(teacher => selectedTeacherIds.value.includes(teacher.id))?.teachings || [])
+                .filter(teaching => !selectedTeachingIds.value.includes(teaching.id))
+                .map(teaching => ({
+                    ...teaching,
+                    editStatus: EditedItemStatus.DELETED
+                })),
+            ...selectedTeachingIds.value
+                .filter(id => {
+                    const teaching = teachings.value.find(t => t.id === id);
+                    return teaching && !teachers.value
+                        .find(teacher => selectedTeacherIds.value.includes(teacher.id))
+                        ?.teachings?.some(t => t.id === id);
+                })
+                .map(id => {
+                    const teaching = teachings.value.find(t => t.id === id)!;
+                    return {
+                        ...teaching,
+                        editStatus: EditedItemStatus.ADDED
+                    };
+                })
+        ];
+    }
+});
+
 const handleTeacherSelect = (selectedItemId: number) => {
     if (isTeachingMode.value) {
-        if (selectedTeachingIds.value.length) {
-            if (selectedTeacherIds.value.includes(selectedItemId)) {
-                selectedTeacherIds.value = selectedTeacherIds.value.filter(id => id !== selectedItemId);
-            } else {
-                selectedTeacherIds.value = [...selectedTeacherIds.value, selectedItemId];
-            }
-        }
+        // if (selectedTeachingIds.value.length) {
+        //     if (selectedTeacherIds.value.includes(selectedItemId)) {
+        //         selectedTeacherIds.value = selectedTeacherIds.value.filter(id => id !== selectedItemId);
+        //     } else {
+        //         selectedTeacherIds.value = [...selectedTeacherIds.value, selectedItemId];
+        //     }
+        // }
     } else {
-        // if (!selectedTeacherIds.value.length) {
+        if (!selectedTeacherIds.value.length) {
             if (selectedTeacherIds.value.includes(selectedItemId)) {
                 selectedTeacherIds.value = selectedTeacherIds.value.filter(id => id !== selectedItemId);
-            selectedTeachingIds.value = [];
+                selectedTeachingIds.value = [];
             } else {
                 selectedTeacherIds.value = [selectedItemId];
                 selectedTeachingIds.value = teachers.value.find(teacher => teacher.id === selectedItemId)?.teachings.map(teaching => teaching.id) || [];
             }
-        // } else {
-            // if (!selectedTeacherIds.value.includes(selectedItemId)) {
-            //     modifications.value = [
-            //         ...teachers.value
-            //             .filter(teacher => !selectedTeachingIds.value.find(ids => ids === teacher.id))
-            //             .flatMap(teacher => teacher.teachings.filter(teaching => 
-            //                 !selectedTeachingIds.value.find(ids => ids === teaching.id))
-            //                 .map(teaching => ({
-            //                     ...teaching,
-            //                     editStatus: EditedItemStatus.DELETED
-            //                 }))),
-            //         ...selectedTeachingIds.value
-            //             .filter(id => !teachers.value.find(teacher =>selectedTeacherIds.value.includes(teacher.id))?.teachings.some(t => t.id !== id))
-            //             .map(id => ({
-            //                 ...teachings.value.find(t => t.id === id)!,
-            //                 editStatus: EditedItemStatus.ADDED
-            //             }))
-            //     ];
-            //     showSaveConfirmationPopup(modifications.value);
-            // }
-        // }
+        } else {
+            if (!selectedTeacherIds.value.includes(selectedItemId)) {
+                if (modifications.value?.length) {
+                    showSaveConfirmationPopup(modifications.value);
+                } else {
+                    if (selectedTeacherIds.value.includes(selectedItemId)) {
+                        selectedTeacherIds.value = selectedTeacherIds.value.filter(id => id !== selectedItemId);
+                        selectedTeachingIds.value = [];
+                    } else {
+                        selectedTeacherIds.value = [selectedItemId];
+                        selectedTeachingIds.value = teachers.value.find(teacher => teacher.id === selectedItemId)?.teachings.map(teaching => teaching.id) || [];
+                    }
+                }
+            }
+        }
     }
 }
 
 const handleTeachingSelect = (selectedItemId: number) => {
     if (isTeachingMode.value) {
         // if (!selectedTeachingIds.value.length) {
-            if (selectedTeachingIds.value.includes(selectedItemId)) {
-                selectedTeachingIds.value = selectedTeachingIds.value.filter(id => id !== selectedItemId);
-                selectedTeacherIds.value = [];
-            } else {
-                selectedTeachingIds.value = [selectedItemId];
-                selectedTeacherIds.value = teachers.value.find(teacher => teacher.teachings.some(teaching => teaching.id === selectedItemId))?.id ?
-                    [teachers.value.find(teacher => teacher.teachings.some(teaching => teaching.id === selectedItemId))!.id] : [];
-            }
+            // if (selectedTeachingIds.value.includes(selectedItemId)) {
+            //     selectedTeachingIds.value = selectedTeachingIds.value.filter(id => id !== selectedItemId);
+            //     selectedTeacherIds.value = [];
+            // } else {
+            //     selectedTeachingIds.value = [selectedItemId];
+            //     selectedTeacherIds.value = teachers.value.find(teacher => teacher.teachings.some(teaching => teaching.id === selectedItemId))?.id ?
+            //         [teachers.value.find(teacher => teacher.teachings.some(teaching => teaching.id === selectedItemId))!.id] : [];
+            // }
         // } else {
         //     modifications.value = teachings.value.find(teaching => teaching.id === selectedItemId)?.teachers.filter(teacher => teacher.editStatus !== undefined);
         // }
@@ -124,7 +172,15 @@ const hideSaveConfirmationPopup = () => {
 }
 
 const handleSave = async () => {
-    // TODO
+    if (modifications.value) {  
+        for (const modification of modifications.value) {
+            if (modification.editStatus === EditedItemStatus.ADDED) {
+                const response = await axios.post(`/api/enseignant/enseignement/${teachers.value.find(teacher => selectedTeacherIds.value.includes(teacher.id))?.id}/${modification.id}`)
+            } else if (modification.editStatus === EditedItemStatus.DELETED) {
+                const response = await axios.delete(`/api/enseignant/enseignement/${teachers.value.find(teacher => selectedTeacherIds.value.includes(teacher.id))?.id}/${modification.id}`);
+            }
+        }
+    }
 }
 
 const handleQuitWithoutSave = () => {
@@ -148,7 +204,11 @@ onMounted(async () => {
                 id: teacher.id,
                 name: `${teacher.first_name} ${teacher.last_name}`,
                 acronym: teacher.acronym,
-                teachings: teacher.teachings
+                teachings: teacher.teachings.map((teaching: any) => ({
+                    id: teaching.id,
+                    name: teaching.title,
+                    apogee_code: teaching.apogee_code
+                }))
             };
         });
     } catch (error: any) {
