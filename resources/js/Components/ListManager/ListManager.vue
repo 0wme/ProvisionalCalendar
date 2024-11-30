@@ -17,7 +17,7 @@ const props = defineProps<{
 
 const emit = defineEmits(['select', 'edit', 'add']);
 
-const selectedPeriodId = ref(1);
+const selectedPeriodId = ref(0);
 
 const searchValue = ref('');
 
