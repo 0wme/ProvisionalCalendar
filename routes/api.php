@@ -3,6 +3,12 @@
 use App\Http\Controllers\Api\GroupController;
 use App\Http\Controllers\Api\TeacherTeachingController;
 
+use App\Http\Controllers\Api\YearController;
+
+//Years
+
+Route::get('/years', [YearController::class, 'index']);
+
 //Groupes
 
     //Récupération des données
@@ -41,19 +47,28 @@ use App\Http\Controllers\Api\TeacherTeachingController;
     Route::get('/enseignant/{teacher}', [TeacherTeachingController::class, 'getTeacher']);
     Route::get('/enseignement/{teaching}', [TeacherTeachingController::class, 'getTeaching']);
 
+    Route::get('/enseignant/enseignement/{teacher}/{teaching}', [TeacherTeachingController::class, 'getTeacherTeaching']);
+
     //Création des données
 
     Route::post('/enseignant/{year}', [TeacherTeachingController::class, 'storeTeacher']);
     Route::post('/enseignement/{year}', [TeacherTeachingController::class, 'storeTeaching']);
+
+    Route::post('/enseignant/enseignement/{teacher_id}/{teaching_id}', [TeacherTeachingController::class, 'storeTeacherTeaching']);
+
 
     //Modification des données
 
     Route::put('/enseignant/{teacher}', [TeacherTeachingController::class, 'updateTeacher']);
     Route::put('/enseignement/{teaching}', [TeacherTeachingController::class, 'updateTeaching']);
 
+    Route::put('/enseignant/enseignement/{teacher}/{teaching}', [TeacherTeachingController::class, 'updateTeacherTeaching']);
+
     //Suppression des données
 
     Route::delete('/enseignant/{teacher}', [TeacherTeachingController::class, 'deleteTeacher']);
     Route::delete('/enseignement/{teaching}', [TeacherTeachingController::class, 'deleteTeaching']);
+
+    Route::delete('/enseignant/enseignement/{teacher}/{teaching}', [TeacherTeachingController::class, 'deleteTeacherTeaching']);
     
 

@@ -35,4 +35,14 @@ class Year extends Model
     {
         return $this->hasMany(Alert::class);
     }
+
+    public function semesters()
+    {
+        return $this->hasMany(Semester::class);
+    }
+
+    public function trimesters()
+    {
+        return $this->hasMany(Trimester::class);
+    }
 }

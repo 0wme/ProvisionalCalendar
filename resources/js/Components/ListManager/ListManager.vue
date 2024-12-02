@@ -27,7 +27,7 @@ const visibleItems = computed(() => {
     
     if (props.periods) 
         return props.items
-            .filter(item => item.period?.id === selectedPeriodId.value)
+            .filter(item => item.period?.id! - 1 === selectedPeriodId.value)
             .filter(item => item.name.toLowerCase().includes(searchValue.value.toLowerCase()));
     else
         return props.items
