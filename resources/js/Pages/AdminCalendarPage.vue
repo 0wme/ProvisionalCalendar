@@ -21,10 +21,12 @@
   onMounted(async () => {
     try {
       const teachersResponse = await axios.get('/api/enseignants/1');
-      teachers.value = teachersResponse.data.map((teacher: any) => ({
-        id: teacher.id,
-        name: `${teacher.first_name} ${teacher.last_name}`,
-      }));
+      teachers.value = teachersResponse.data
+        .filter((teacher: any) => teacher.teachings && teacher.teachings.length > 0)
+        .map((teacher: any) => ({
+          id: teacher.id,
+          name: `${teacher.first_name} ${teacher.last_name}`,
+        }));
     } catch (error) {
       console.error('Erreur lors de la récupération des enseignants:', error);
     }
