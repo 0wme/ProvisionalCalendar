@@ -1,10 +1,14 @@
 <template>
     <AdminLayout>
-        <h1>Configurations Page</h1>
+        <TestComponent>
+          <TestComponent><TestComponent /></TestComponent>
+          <TestComponent><TestComponent /><TestComponent /></TestComponent>
+        </TestComponent>
     </AdminLayout>
 </template>
   
   <script setup lang="ts">
+import TestComponent from '@/Components/TestComponent.vue';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 </script>
   
