@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import Popup from "@/Components/Popup/Popup.vue";
 import { Class } from "@/types/models";
+import Popup from "@/Components/Popup/Popup.vue";
 
 defineProps<{
     title: string;

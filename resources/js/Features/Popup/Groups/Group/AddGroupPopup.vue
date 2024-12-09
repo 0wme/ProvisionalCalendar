@@ -1,58 +1,44 @@
 <script setup lang="ts">
-import GroupPopup from "./GroupPopup.vue";
-import { Group } from "@/types/models";
-import Button from "@/Components/Button.vue";
 import { ref, watch } from "vue";
-import CloseWithoutSaveConfirmationPopup from "@/Features/Popup/CloseWithoutSaveConfirmationPopup.vue";
 import axios from "axios";
+
+import { Group } from "@/types/models";
 import { API_ENDPOINTS, MESSAGES } from "@/constants";
 
-const props = defineProps<{ show?: boolean }>();
+import Button from "@/Components/Button.vue";
+import GroupPopup from "./GroupPopup.vue";
+import CloseWithoutSaveConfirmationPopup from "@/Features/Popup/CloseWithoutSaveConfirmationPopup.vue";
+
+const props = defineProps<{ show?: boolean; classId?: number }>();
 const emit = defineEmits(["cancel", "add", "error"]);
 
 const group = ref<Group>({ id: 0, name: "", subgroups: [] });
 const isCloseWithoutSaveConfirmationPopupVisible = ref<boolean>(false);
 
-const resetGroup = () => {
-    group.value = { id: 0, name: "", subgroups: [] };
-};
+const resetGroup = () => (group.value = { id: 0, name: "", subgroups: [] });
 
 watch(
     () => props.show,
-    () => {
-        if (props.show) {
-            resetGroup();
-        }
-    }
+    () => props.show && resetGroup()
 );
 
-const showCloseWithoutSaveConfirmationPopup = () => {
-    isCloseWithoutSaveConfirmationPopupVisible.value = true;
-};
+const showCloseWithoutSaveConfirmationPopup = () =>
+    (isCloseWithoutSaveConfirmationPopupVisible.value = true);
 
-const hideCloseWithoutSaveConfirmationPopup = () => {
-    isCloseWithoutSaveConfirmationPopupVisible.value = false;
-};
+const hideCloseWithoutSaveConfirmationPopup = () =>
+    (isCloseWithoutSaveConfirmationPopupVisible.value = false);
 
-const handleUpdateGroupName = (newGroupName: string) => {
-    group.value.name = newGroupName;
-};
+const handleUpdateGroupName = (newGroupName: string) =>
+    (group.value.name = newGroupName);
 
-const handleCancel = () => {
-    if (group.value.name !== "") {
-        showCloseWithoutSaveConfirmationPopup();
-    } else {
-        emit("cancel");
-    }
-};
+const handleCancel = () =>
+    group.value.name !== ""
+        ? showCloseWithoutSaveConfirmationPopup()
+        : emit("cancel");
 
 const handleCloseWithoutSaving = () => {
     hideCloseWithoutSaveConfirmationPopup();
     emit("cancel");
-};
-
-const handleCancelCloseWithoutSaving = () => {
-    hideCloseWithoutSaveConfirmationPopup();
 };
 
 const handleAdd = async () => {
@@ -62,16 +48,14 @@ const handleAdd = async () => {
     }
     try {
         const response = await axios.post(
-            `${API_ENDPOINTS.GROUP}/1`,
+            `${API_ENDPOINTS.GROUP}/${props.classId}`,
             group.value
         );
         emit("add", response.data.group);
     } catch (error: any) {
-        if (error.response?.data?.error) {
-            emit("error", error.response.data.error);
-        } else {
-            emit("error", MESSAGES.DEFAULT_ERROR_MESSAGE);
-        }
+        error.response?.data?.error
+            ? emit("error", error.response.data.error)
+            : emit("error", MESSAGES.DEFAULT_ERROR_MESSAGE);
     }
 };
 </script>
@@ -92,7 +76,7 @@ const handleAdd = async () => {
         <CloseWithoutSaveConfirmationPopup
             :show="isCloseWithoutSaveConfirmationPopupVisible"
             @close="handleCloseWithoutSaving"
-            @cancel="handleCancelCloseWithoutSaving"
+            @cancel="hideCloseWithoutSaveConfirmationPopup"
         />
     </GroupPopup>
 </template>

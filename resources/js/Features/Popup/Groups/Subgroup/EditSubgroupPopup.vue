@@ -1,12 +1,16 @@
 <script setup lang="ts">
+import { ref, watch } from "vue";
+import axios from "axios";
+
+import { Subgroup } from "@/types/models";
+import { API_ENDPOINTS, MESSAGES } from "@/constants";
+
+import Button from "@/Components/Button.vue";
 import SubgroupPopup from "./SubgroupPopup.vue";
 import DeleteConfirmationPopup from "@/Features/Popup/DeleteConfirmationPopup.vue";
-import { Subgroup } from "@/types/models";
-import Button from "@/Components/Button.vue";
-import { ref, watch } from "vue";
 import CloseWithoutSaveConfirmationPopup from "@/Features/Popup/CloseWithoutSaveConfirmationPopup.vue";
 
-const emit = defineEmits(["cancel", "delete", "save"]);
+const emit = defineEmits(["cancel", "delete", "save", "error"]);
 
 const props = defineProps<{
     subgroup?: Subgroup;
@@ -17,13 +21,11 @@ const isDeleteConfirmationPopupVisible = ref<boolean>(false);
 const editedSubgroup = ref<Subgroup | undefined>();
 const isCloseWithoutSaveConfirmationPopupVisible = ref<boolean>(false);
 
-const showDeleteConfirmationPopup = () => {
-    isDeleteConfirmationPopupVisible.value = true;
-};
+const showDeleteConfirmationPopup = () =>
+    (isDeleteConfirmationPopupVisible.value = true);
 
-const hideDeleteConfirmationPopup = () => {
-    isDeleteConfirmationPopupVisible.value = false;
-};
+const hideDeleteConfirmationPopup = () =>
+    (isDeleteConfirmationPopupVisible.value = false);
 
 const handleCloseWithoutSaving = () => {
     hideCloseWithoutSaveConfirmationPopup();
@@ -34,18 +36,11 @@ const handleCancelCloseWithoutSaving = () => {
     hideCloseWithoutSaveConfirmationPopup();
 };
 
-const hideCloseWithoutSaveConfirmationPopup = () => {
-    isCloseWithoutSaveConfirmationPopupVisible.value = false;
-};
+const hideCloseWithoutSaveConfirmationPopup = () =>
+    (isCloseWithoutSaveConfirmationPopupVisible.value = false);
 
-const handleDelete = () => {
-    hideDeleteConfirmationPopup();
-    emit("delete", editedSubgroup.value);
-};
-
-const handleUpdateSubgroupName = (groupName: string) => {
-    editedSubgroup.value!.name = groupName;
-};
+const handleUpdateSubgroupName = (groupName: string) =>
+    (editedSubgroup.value!.name = groupName);
 
 watch(
     () => props.show,
@@ -56,20 +51,44 @@ watch(
     }
 );
 
-const showCloseWithoutSaveConfirmationPopup = () => {
-    isCloseWithoutSaveConfirmationPopupVisible.value = true;
-};
+const showCloseWithoutSaveConfirmationPopup = () =>
+    (isCloseWithoutSaveConfirmationPopupVisible.value = true);
 
-const handleClose = () => {
-    if (editedSubgroup.value?.name !== props.subgroup?.name) {
-        showCloseWithoutSaveConfirmationPopup();
-    } else {
-        emit("cancel");
+const handleClose = () =>
+    editedSubgroup.value?.name !== props.subgroup?.name
+        ? showCloseWithoutSaveConfirmationPopup()
+        : emit("cancel");
+
+const handleDelete = async () => {
+    try {
+        const response = await axios.delete(
+            `${API_ENDPOINTS.SUBGROUP}/${props.subgroup!.id}`
+        );
+        hideDeleteConfirmationPopup();
+        emit("delete", response.data.subgroup);
+    } catch (error: any) {
+        error.response?.data?.error
+            ? emit("error", error.response.data.error)
+            : emit("error", MESSAGES.DEFAULT_ERROR_MESSAGE);
     }
 };
 
-const handleSave = () => {
-    emit("save", editedSubgroup.value);
+const handleSave = async () => {
+    if (editedSubgroup.value?.name === "") {
+        emit("error", MESSAGES.EMPTY_GROUP_NAME_ERROR_MESSAGE);
+        return;
+    }
+    try {
+        const response = await axios.put(
+            `${API_ENDPOINTS.SUBGROUP}/${editedSubgroup.value!.id}`,
+            editedSubgroup.value
+        );
+        emit("save", response.data.subgroup);
+    } catch (error: any) {
+        error.response?.data?.error
+            ? emit("error", error.response.data.error)
+            : emit("error", MESSAGES.DEFAULT_ERROR_MESSAGE);
+    }
 };
 </script>
 

@@ -1,58 +1,44 @@
 <script setup lang="ts">
-import ClassPopup from "./ClassPopup.vue";
-import { Class } from "@/types/models";
-import Button from "@/Components/Button.vue";
 import { ref, watch } from "vue";
-import CloseWithoutSaveConfirmationPopup from "@/Features/Popup/CloseWithoutSaveConfirmationPopup.vue";
 import axios from "axios";
+
+import { Class } from "@/types/models";
 import { API_ENDPOINTS, MESSAGES } from "@/constants";
 
-const props = defineProps<{ show?: boolean }>();
+import Button from "@/Components/Button.vue";
+import ClassPopup from "./ClassPopup.vue";
+import CloseWithoutSaveConfirmationPopup from "@/Features/Popup/CloseWithoutSaveConfirmationPopup.vue";
+
+const props = defineProps<{ show?: boolean; yearId?: number }>();
 const emit = defineEmits(["cancel", "add", "error"]);
 
 const classe = ref<Class>({ id: 0, name: "", groups: [] });
 const isCloseWithoutSaveConfirmationPopupVisible = ref<boolean>(false);
 
-const resetClass = () => {
-    classe.value = { id: 0, name: "", groups: [] };
-};
+const resetClass = () => (classe.value = { id: 0, name: "", groups: [] });
 
 watch(
     () => props.show,
-    () => {
-        if (props.show) {
-            resetClass();
-        }
-    }
+    () => props.show && resetClass()
 );
 
-const showCloseWithoutSaveConfirmationPopup = () => {
-    isCloseWithoutSaveConfirmationPopupVisible.value = true;
-};
+const showCloseWithoutSaveConfirmationPopup = () =>
+    (isCloseWithoutSaveConfirmationPopupVisible.value = true);
 
-const hideCloseWithoutSaveConfirmationPopup = () => {
-    isCloseWithoutSaveConfirmationPopupVisible.value = false;
-};
+const hideCloseWithoutSaveConfirmationPopup = () =>
+    (isCloseWithoutSaveConfirmationPopupVisible.value = false);
 
-const handleUpdateClassName = (newClassName: string) => {
-    classe.value.name = newClassName;
-};
+const handleUpdateClassName = (newClassName: string) =>
+    (classe.value.name = newClassName);
 
-const handleCancel = () => {
-    if (classe.value.name !== "") {
-        showCloseWithoutSaveConfirmationPopup();
-    } else {
-        emit("cancel");
-    }
-};
+const handleCancel = () =>
+    classe.value.name !== ""
+        ? showCloseWithoutSaveConfirmationPopup()
+        : emit("cancel");
 
 const handleCloseWithoutSaving = () => {
     hideCloseWithoutSaveConfirmationPopup();
     emit("cancel");
-};
-
-const handleCancelCloseWithoutSaving = () => {
-    hideCloseWithoutSaveConfirmationPopup();
 };
 
 const handleAdd = async () => {
@@ -67,11 +53,9 @@ const handleAdd = async () => {
         );
         emit("add", response.data.group);
     } catch (error: any) {
-        if (error.response?.data?.error) {
-            emit("error", error.response.data.error);
-        } else {
-            emit("error", MESSAGES.DEFAULT_ERROR_MESSAGE);
-        }
+        error.response?.data?.error
+            ? emit("error", error.response.data.error)
+            : emit("error", MESSAGES.DEFAULT_ERROR_MESSAGE);
     }
 };
 </script>
@@ -92,7 +76,7 @@ const handleAdd = async () => {
         <CloseWithoutSaveConfirmationPopup
             :show="isCloseWithoutSaveConfirmationPopupVisible"
             @close="handleCloseWithoutSaving"
-            @cancel="handleCancelCloseWithoutSaving"
+            @cancel="hideCloseWithoutSaveConfirmationPopup"
         />
     </ClassPopup>
 </template>

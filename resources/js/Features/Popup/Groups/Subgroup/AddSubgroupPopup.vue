@@ -1,66 +1,63 @@
 <script setup lang="ts">
-import SubgroupPopup from "./SubgroupPopup.vue";
-import { Subgroup } from "@/types/models";
-import Button from "@/Components/Button.vue";
 import { ref, watch } from "vue";
+import axios from "axios";
+
+import { Subgroup } from "@/types/models";
+import { API_ENDPOINTS, MESSAGES } from "@/constants";
+
+import Button from "@/Components/Button.vue";
+import SubgroupPopup from "./SubgroupPopup.vue";
 import CloseWithoutSaveConfirmationPopup from "@/Features/Popup/CloseWithoutSaveConfirmationPopup.vue";
 
-const emit = defineEmits(["cancel", "add"]);
+const emit = defineEmits(["cancel", "add", "error"]);
 
-const props = defineProps<{
-    show?: boolean;
-}>();
+const props = defineProps<{ show?: boolean; groupId?: number }>();
 
-const subgroup = ref<Subgroup>({
-    id: 0,
-    name: "",
-});
+const isCloseWithoutSaveConfirmationPopupVisible = ref<boolean>(false);
+const subgroup = ref<Subgroup>({ id: 0, name: "" });
+
+const resetSubgroup = () => (subgroup.value = { id: 0, name: "" });
 
 watch(
     () => props.show,
-    () => {
-        if (props.show) {
-            subgroup.value = {
-                id: 0,
-                name: "",
-            };
-        }
-    }
+    () => props.show && resetSubgroup()
 );
 
-const isCloseWithoutSaveConfirmationPopupVisible = ref<boolean>(false);
+const showCloseWithoutSaveConfirmationPopup = () =>
+    (isCloseWithoutSaveConfirmationPopupVisible.value = true);
 
-const handleUpdateSubgroupName = (newSubgroupName: string) => {
-    subgroup.value.name = newSubgroupName;
-};
+const hideCloseWithoutSaveConfirmationPopup = () =>
+    (isCloseWithoutSaveConfirmationPopupVisible.value = false);
+
+const handleUpdateSubgroupName = (newSubgroupName: string) =>
+    (subgroup.value.name = newSubgroupName);
+
+const handleCancel = () =>
+    subgroup.value.name !== ""
+        ? showCloseWithoutSaveConfirmationPopup()
+        : emit("cancel");
 
 const handleCloseWithoutSaving = () => {
     hideCloseWithoutSaveConfirmationPopup();
     emit("cancel");
 };
 
-const handleCancelCloseWithoutSaving = () => {
-    hideCloseWithoutSaveConfirmationPopup();
-};
-
-const showCloseWithoutSaveConfirmationPopup = () => {
-    isCloseWithoutSaveConfirmationPopupVisible.value = true;
-};
-
-const hideCloseWithoutSaveConfirmationPopup = () => {
-    isCloseWithoutSaveConfirmationPopupVisible.value = false;
-};
-
-const handleClose = () => {
-    if (subgroup.value.name !== "") {
-        showCloseWithoutSaveConfirmationPopup();
-    } else {
-        emit("cancel");
+const handleAdd = async () => {
+    if (subgroup.value.name === "") {
+        emit("error", MESSAGES.EMPTY_GROUP_NAME_ERROR_MESSAGE);
+        return;
     }
-};
-
-const handleAdd = () => {
-    emit("add", subgroup.value);
+    try {
+        const response = await axios.post(
+            `${API_ENDPOINTS.SUBGROUP}/${props.groupId}`,
+            subgroup.value
+        );
+        emit("add", response.data.subgroup);
+    } catch (error: any) {
+        error.response?.data?.error
+            ? emit("error", error.response.data.error)
+            : emit("error", MESSAGES.DEFAULT_ERROR_MESSAGE);
+    }
 };
 </script>
 
@@ -70,7 +67,7 @@ const handleAdd = () => {
         :subgroup
         title="Ajouter un sous-groupe"
         @updateSubgroupName="handleUpdateSubgroupName"
-        @close="handleClose"
+        @close="handleCancel"
     >
         <div class="flex gap-4">
             <Button class="bg-green-500 text-white w-full" @click="handleAdd"
@@ -80,7 +77,7 @@ const handleAdd = () => {
         <CloseWithoutSaveConfirmationPopup
             :show="isCloseWithoutSaveConfirmationPopupVisible"
             @close="handleCloseWithoutSaving"
-            @cancel="handleCancelCloseWithoutSaving"
+            @cancel="hideCloseWithoutSaveConfirmationPopup"
         />
     </SubgroupPopup>
 </template>

@@ -14,19 +14,25 @@ import EditSubgroupPopup from "@/Features/Popup/Groups/Subgroup/EditSubgroupPopu
 import axios from "axios";
 import ErrorPopup from "@/Features/Popup/ErrorPopup.vue";
 
-const classes = ref<Class[]>([]);
-
 onMounted(async () => {
-    const response = await axios.get("/api/groupes/" + 1);
+    const response = await axios.get("/api/groupes/1");
     classes.value = response.data;
 });
 
+const classes = ref<Class[]>([]);
 const isAddGroupPopupVisible = ref<boolean>(false);
 const isVisibleEditGroupPopup = ref<boolean>(false);
 const groupToEdit = ref<Group | undefined>();
-
 const selectedClassId = ref<number | undefined>();
 const selectedGroupId = ref<number | undefined>();
+const isAddSubgroupPopupVisible = ref<boolean>(false);
+const isVisibleEditSubgroupPopup = ref<boolean>(false);
+const subgroupToEdit = ref<Subgroup | undefined>();
+const isAddClassPopupVisible = ref<boolean>(false);
+const isVisibleEditClassPopup = ref<boolean>(false);
+const editedClass = ref<Class | undefined>();
+const errorMessage = ref<string>("");
+const isErrorPopupVisible = ref<boolean>(false);
 
 const groups = computed(
     () =>
@@ -124,16 +130,8 @@ const handleAddGroup = async (group: Group) => {
     });
 };
 
-const isAddSubgroupPopupVisible = ref<boolean>(false);
-const isVisibleEditSubgroupPopup = ref<boolean>(false);
-const subgroupToEdit = ref<Subgroup | undefined>();
-
 const handleAddSubgroup = async (subgroup: Subgroup) => {
     hideAddSubgroupPopup();
-    const response = await axios.post(
-        "/api/groupes/sous-groupe/" + selectedGroupId.value,
-        subgroup
-    );
     classes.value = classes.value.map((classe) => {
         if (classe.id === selectedClassId.value) {
             return {
@@ -142,10 +140,7 @@ const handleAddSubgroup = async (subgroup: Subgroup) => {
                     group.id === selectedGroupId.value
                         ? {
                               ...group,
-                              subgroups: [
-                                  ...group.subgroups,
-                                  response.data.subgroup,
-                              ],
+                              subgroups: [...group.subgroups, subgroup],
                           }
                         : group
                 ),
@@ -157,7 +152,6 @@ const handleAddSubgroup = async (subgroup: Subgroup) => {
 
 const handleDeleteSubgroup = async (subgroup: Subgroup) => {
     hideEditSubgroupPopup();
-    await axios.delete("/api/groupes/sous-groupe/" + subgroup.id);
     classes.value = classes.value.map((classe) => {
         if (classe.id === selectedClassId.value) {
             return {
@@ -198,10 +192,6 @@ const hideEditSubgroupPopup = () => {
 
 const handleSaveEditedSubgroup = async (subgroup: Subgroup) => {
     hideEditSubgroupPopup();
-    const response = await axios.put(
-        "/api/groupes/sous-groupe/" + subgroup.id,
-        subgroup
-    );
     classes.value = classes.value.map((classe) => {
         if (classe.id === selectedClassId.value) {
             return {
@@ -214,7 +204,7 @@ const handleSaveEditedSubgroup = async (subgroup: Subgroup) => {
                                   s.id === subgroup.id
                                       ? {
                                             ...s,
-                                            name: response.data.subgroup.name,
+                                            name: subgroup.name,
                                         }
                                       : s
                               ),
@@ -232,10 +222,6 @@ const showAddSubgroupPopup = () => {
         isAddSubgroupPopupVisible.value = true;
     }
 };
-
-const isAddClassPopupVisible = ref<boolean>(false);
-const isVisibleEditClassPopup = ref<boolean>(false);
-const editedClass = ref<Class | undefined>();
 
 const showAddClassPopup = () => {
     isAddClassPopupVisible.value = true;
@@ -292,9 +278,6 @@ const showErrorPopup = () => {
 const hideErrorPopup = () => {
     isErrorPopupVisible.value = false;
 };
-
-const errorMessage = ref<string>("");
-const isErrorPopupVisible = ref<boolean>(false);
 </script>
 
 <template>
@@ -326,6 +309,7 @@ const isErrorPopupVisible = ref<boolean>(false);
     </AdminLayout>
     <AddClassPopup
         :show="isAddClassPopupVisible"
+        :yearId="1"
         @cancel="hideAddClassPopup"
         @add="handleAddClass"
         @error="handleError"
@@ -340,6 +324,7 @@ const isErrorPopupVisible = ref<boolean>(false);
     />
     <AddGroupPopup
         :show="isAddGroupPopupVisible"
+        :classId="selectedClassId"
         @cancel="hideAddGroupPopup"
         @add="handleAddGroup"
         @error="handleError"
@@ -354,6 +339,7 @@ const isErrorPopupVisible = ref<boolean>(false);
     />
     <AddSubgroupPopup
         :show="isAddSubgroupPopupVisible"
+        :groupId="selectedGroupId"
         @cancel="hideAddSubgroupPopup"
         @add="handleAddSubgroup"
         @error="handleError"

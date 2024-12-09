@@ -1,12 +1,14 @@
 <script setup lang="ts">
+import { ref, watch } from "vue";
+import axios from "axios";
+
+import { Group } from "@/types/models";
+import { API_ENDPOINTS, MESSAGES } from "@/constants";
+
+import Button from "@/Components/Button.vue";
 import GroupPopup from "./GroupPopup.vue";
 import DeleteConfirmationPopup from "@/Features/Popup/DeleteConfirmationPopup.vue";
-import { Group } from "@/types/models";
-import Button from "@/Components/Button.vue";
-import { ref, watch } from "vue";
 import CloseWithoutSaveConfirmationPopup from "@/Features/Popup/CloseWithoutSaveConfirmationPopup.vue";
-import axios from "axios";
-import { API_ENDPOINTS, MESSAGES } from "@/constants";
 
 const props = defineProps<{ group?: Group; show?: boolean }>();
 const emit = defineEmits(["cancel", "delete", "save", "error"]);
@@ -15,67 +17,50 @@ const isDeleteConfirmationPopupVisible = ref<boolean>(false);
 const editedGroup = ref<Group | undefined>();
 const isCloseWithoutSaveConfirmationPopupVisible = ref<boolean>(false);
 
-const clonePropsGroup = () => {
-    if (props.group) {
-        editedGroup.value = { ...props.group };
-    }
-};
+const clonePropsGroup = () =>
+    props.group && (editedGroup.value = { ...props.group });
 
 watch(
     () => props.show,
-    () => {
-        if (props.show) {
-            clonePropsGroup();
-        }
-    }
+    () => props.show && clonePropsGroup()
 );
 
-const showCloseWithoutSaveConfirmationPopup = () => {
-    isCloseWithoutSaveConfirmationPopupVisible.value = true;
-};
+const showCloseWithoutSaveConfirmationPopup = () =>
+    (isCloseWithoutSaveConfirmationPopupVisible.value = true);
 
-const hideCloseWithoutSaveConfirmationPopup = () => {
-    isCloseWithoutSaveConfirmationPopupVisible.value = false;
-};
+const hideCloseWithoutSaveConfirmationPopup = () =>
+    (isCloseWithoutSaveConfirmationPopupVisible.value = false);
 
-const showDeleteConfirmationPopup = () => {
-    isDeleteConfirmationPopupVisible.value = true;
-};
+const showDeleteConfirmationPopup = () =>
+    (isDeleteConfirmationPopupVisible.value = true);
 
-const hideDeleteConfirmationPopup = () => {
-    isDeleteConfirmationPopupVisible.value = false;
-};
+const hideDeleteConfirmationPopup = () =>
+    (isDeleteConfirmationPopupVisible.value = false);
 
-const updateGroupName = (groupName: string) => {
-    editedGroup.value!.name = groupName;
-};
+const updateGroupName = (groupName: string) =>
+    (editedGroup.value!.name = groupName);
 
 const handleCloseWithoutSaving = () => {
     hideCloseWithoutSaveConfirmationPopup();
     emit("cancel");
 };
 
-const handleCancel = () => {
-    if (editedGroup.value?.name !== props.group?.name) {
-        showCloseWithoutSaveConfirmationPopup();
-    } else {
-        emit("cancel");
-    }
-};
+const handleCancel = () =>
+    editedGroup.value?.name !== props.group?.name
+        ? showCloseWithoutSaveConfirmationPopup()
+        : emit("cancel");
 
 const handleDelete = async () => {
     try {
         const response = await axios.delete(
-            `${API_ENDPOINTS.PROMOTION}/${props.group!.id}`
+            `${API_ENDPOINTS.GROUP}/${props.group!.id}`
         );
         hideDeleteConfirmationPopup();
         emit("delete", response.data.group);
     } catch (error: any) {
-        if (error.response?.data?.error) {
-            emit("error", error.response.data.error);
-        } else {
-            emit("error", MESSAGES.DEFAULT_ERROR_MESSAGE);
-        }
+        error.response?.data?.error
+            ? emit("error", error.response.data.error)
+            : emit("error", MESSAGES.DEFAULT_ERROR_MESSAGE);
     }
 };
 
@@ -86,16 +71,14 @@ const handleSave = async () => {
     }
     try {
         const response = await axios.put(
-            "/api/groupes/groupe/" + editedGroup.value!.id,
+            `${API_ENDPOINTS.GROUP}/${editedGroup.value!.id}`,
             editedGroup.value
         );
         emit("save", response.data.group);
     } catch (error: any) {
-        if (error.response?.data?.error) {
-            emit("error", error.response.data.error);
-        } else {
-            emit("error", MESSAGES.DEFAULT_ERROR_MESSAGE);
-        }
+        error.response?.data?.error
+            ? emit("error", error.response.data.error)
+            : emit("error", MESSAGES.DEFAULT_ERROR_MESSAGE);
     }
 };
 </script>
