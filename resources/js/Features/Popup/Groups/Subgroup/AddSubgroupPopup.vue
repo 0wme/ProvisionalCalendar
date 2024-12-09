@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import SubgroupPopup from './SubgroupPopup.vue';
-import { Subgroup } from '@/types/models';
-import Button from '@/Components/Button.vue';
-import { ref, watch } from 'vue';
-import CloseWithoutSaveConfirmationPopup from '@/Features/Popup/CloseWithoutSaveConfirmationPopup.vue';
+import SubgroupPopup from "./SubgroupPopup.vue";
+import { Subgroup } from "@/types/models";
+import Button from "@/Components/Button.vue";
+import { ref, watch } from "vue";
+import CloseWithoutSaveConfirmationPopup from "@/Features/Popup/CloseWithoutSaveConfirmationPopup.vue";
 
-const emit = defineEmits(['cancel', 'add']);
+const emit = defineEmits(["cancel", "add"]);
 
 const props = defineProps<{
     show?: boolean;
@@ -13,17 +13,20 @@ const props = defineProps<{
 
 const subgroup = ref<Subgroup>({
     id: 0,
-    name: ''
+    name: "",
 });
 
-watch(() => props.show, () => {
-    if (props.show) {
-        subgroup.value = {
-            id: 0,
-            name: ''
-        };
+watch(
+    () => props.show,
+    () => {
+        if (props.show) {
+            subgroup.value = {
+                id: 0,
+                name: "",
+            };
+        }
     }
-});
+);
 
 const isCloseWithoutSaveConfirmationPopupVisible = ref<boolean>(false);
 
@@ -33,7 +36,7 @@ const handleUpdateSubgroupName = (newSubgroupName: string) => {
 
 const handleCloseWithoutSaving = () => {
     hideCloseWithoutSaveConfirmationPopup();
-    emit('cancel');
+    emit("cancel");
 };
 
 const handleCancelCloseWithoutSaving = () => {
@@ -49,22 +52,30 @@ const hideCloseWithoutSaveConfirmationPopup = () => {
 };
 
 const handleClose = () => {
-    if (subgroup.value.name !== '') {
+    if (subgroup.value.name !== "") {
         showCloseWithoutSaveConfirmationPopup();
     } else {
-        emit('cancel');
+        emit("cancel");
     }
 };
 
 const handleAdd = () => {
-    emit('add', subgroup.value);
+    emit("add", subgroup.value);
 };
 </script>
 
 <template>
-    <SubgroupPopup :show :subgroup title="Ajouter un sous-groupe" @updateSubgroupName="handleUpdateSubgroupName" @close="handleClose">
+    <SubgroupPopup
+        :show
+        :subgroup
+        title="Ajouter un sous-groupe"
+        @updateSubgroupName="handleUpdateSubgroupName"
+        @close="handleClose"
+    >
         <div class="flex gap-4">
-            <Button class="bg-green-500 text-white w-full" @click="handleAdd">Ajouter</Button>
+            <Button class="bg-green-500 text-white w-full" @click="handleAdd"
+                >Ajouter</Button
+            >
         </div>
         <CloseWithoutSaveConfirmationPopup
             :show="isCloseWithoutSaveConfirmationPopupVisible"

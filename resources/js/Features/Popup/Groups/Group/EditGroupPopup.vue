@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import GroupPopup from './GroupPopup.vue';
-import DeleteConfirmationPopup from '@/Features/Popup/DeleteConfirmationPopup.vue';
-import { Group } from '@/types/models';
-import Button from '@/Components/Button.vue';
-import { ref, watch } from 'vue';
-import CloseWithoutSaveConfirmationPopup from '@/Features/Popup/CloseWithoutSaveConfirmationPopup.vue';
+import GroupPopup from "./GroupPopup.vue";
+import DeleteConfirmationPopup from "@/Features/Popup/DeleteConfirmationPopup.vue";
+import { Group } from "@/types/models";
+import Button from "@/Components/Button.vue";
+import { ref, watch } from "vue";
+import CloseWithoutSaveConfirmationPopup from "@/Features/Popup/CloseWithoutSaveConfirmationPopup.vue";
 
-const emit = defineEmits(['cancel', 'delete', 'save']);
+const emit = defineEmits(["cancel", "delete", "save"]);
 
 const props = defineProps<{
     group?: Group;
@@ -27,7 +27,7 @@ const hideDeleteConfirmationPopup = () => {
 
 const handleCloseWithoutSaving = () => {
     hideCloseWithoutSaveConfirmationPopup();
-    emit('cancel');
+    emit("cancel");
 };
 
 const handleCancelCloseWithoutSaving = () => {
@@ -40,18 +40,21 @@ const hideCloseWithoutSaveConfirmationPopup = () => {
 
 const handleDelete = () => {
     hideDeleteConfirmationPopup();
-    emit('delete', editedGroup.value);
+    emit("delete", editedGroup.value);
 };
 
 const handleUpdateGroupName = (groupName: string) => {
     editedGroup.value!.name = groupName;
 };
 
-watch(() => props.show, () => {
-    if (props.show && props.group) {
-        editedGroup.value = { ...props.group };
+watch(
+    () => props.show,
+    () => {
+        if (props.show && props.group) {
+            editedGroup.value = { ...props.group };
+        }
     }
-});
+);
 
 const showCloseWithoutSaveConfirmationPopup = () => {
     isCloseWithoutSaveConfirmationPopupVisible.value = true;
@@ -61,20 +64,32 @@ const handleClose = () => {
     if (editedGroup.value?.name !== props.group?.name) {
         showCloseWithoutSaveConfirmationPopup();
     } else {
-        emit('cancel');
+        emit("cancel");
     }
 };
 
 const handleSave = () => {
-    emit('save', editedGroup.value);
+    emit("save", editedGroup.value);
 };
 </script>
 
 <template>
-    <GroupPopup :group="editedGroup" :show title="Modifier un groupe" @updateGroupName="handleUpdateGroupName" @close="handleClose">
+    <GroupPopup
+        :group="editedGroup"
+        :show
+        title="Modifier un groupe"
+        @updateGroupName="handleUpdateGroupName"
+        @close="handleClose"
+    >
         <div class="flex gap-4">
-            <Button class="bg-green-500 text-white w-full" @click="handleSave">Sauvegarder</Button>
-            <Button class="bg-red-500 text-white w-full" @click="showDeleteConfirmationPopup">Supprimer</Button>
+            <Button class="bg-green-500 text-white w-full" @click="handleSave"
+                >Sauvegarder</Button
+            >
+            <Button
+                class="bg-red-500 text-white w-full"
+                @click="showDeleteConfirmationPopup"
+                >Supprimer</Button
+            >
         </div>
     </GroupPopup>
     <CloseWithoutSaveConfirmationPopup
@@ -82,5 +97,9 @@ const handleSave = () => {
         @close="handleCloseWithoutSaving"
         @cancel="handleCancelCloseWithoutSaving"
     />
-    <DeleteConfirmationPopup :show="isDeleteConfirmationPopupVisible" @delete="handleDelete" @cancel="hideDeleteConfirmationPopup" />
+    <DeleteConfirmationPopup
+        :show="isDeleteConfirmationPopupVisible"
+        @delete="handleDelete"
+        @cancel="hideDeleteConfirmationPopup"
+    />
 </template>

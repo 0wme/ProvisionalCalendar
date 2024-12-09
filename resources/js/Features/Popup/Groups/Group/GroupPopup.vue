@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import Popup from '@/Components/Popup/Popup.vue';
-import { Group } from '@/types/models';
+import Popup from "@/Components/Popup/Popup.vue";
+import { Group } from "@/types/models";
 
 defineProps<{
     title: string;
@@ -8,16 +8,11 @@ defineProps<{
     show?: boolean;
 }>();
 
-const emit = defineEmits(['close', 'updateGroupName']);
-
+const emit = defineEmits(["close", "updateGroupName"]);
 </script>
 
 <template>
-    <Popup
-        :title
-        :show
-        @close="emit('close')"
-    >
+    <Popup :title :show @close="emit('close')">
         <div class="flex flex-col gap-6">
             <div class="flex flex-col gap-2">
                 <p class="text-lg font-medium">Nom du groupe</p>
@@ -25,7 +20,12 @@ const emit = defineEmits(['close', 'updateGroupName']);
                     :value="group?.name"
                     class="border border-gray-300 rounded-lg p-2"
                     :placeholder="'ex : G1'"
-                    @input="emit('updateGroupName', ($event.target as HTMLInputElement).value)"
+                    @input="
+                        emit(
+                            'updateGroupName',
+                            ($event.target as HTMLInputElement).value
+                        )
+                    "
                 />
             </div>
 

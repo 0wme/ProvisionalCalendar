@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import Popup from '@/Components/Popup/Popup.vue';
+import Popup from "@/Components/Popup/Popup.vue";
 
-const emit = defineEmits(['close']);
+const emit = defineEmits(["close"]);
 
 defineProps<{
     message: string;
@@ -10,11 +10,7 @@ defineProps<{
 </script>
 
 <template>
-    <Popup
-        title="Erreur"
-        :show="show"
-        @close="emit('close')"
-    >
+    <Popup title="Erreur" :show="show" @close="emit('close')">
         <p>{{ message }}</p>
     </Popup>
 </template>

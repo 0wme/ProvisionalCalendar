@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import SubgroupPopup from './SubgroupPopup.vue';
-import DeleteConfirmationPopup from '@/Features/Popup/DeleteConfirmationPopup.vue';
-import { Subgroup } from '@/types/models';
-import Button from '@/Components/Button.vue';
-import { ref, watch } from 'vue';
-import CloseWithoutSaveConfirmationPopup from '@/Features/Popup/CloseWithoutSaveConfirmationPopup.vue';
+import SubgroupPopup from "./SubgroupPopup.vue";
+import DeleteConfirmationPopup from "@/Features/Popup/DeleteConfirmationPopup.vue";
+import { Subgroup } from "@/types/models";
+import Button from "@/Components/Button.vue";
+import { ref, watch } from "vue";
+import CloseWithoutSaveConfirmationPopup from "@/Features/Popup/CloseWithoutSaveConfirmationPopup.vue";
 
-const emit = defineEmits(['cancel', 'delete', 'save']);
+const emit = defineEmits(["cancel", "delete", "save"]);
 
 const props = defineProps<{
     subgroup?: Subgroup;
@@ -27,7 +27,7 @@ const hideDeleteConfirmationPopup = () => {
 
 const handleCloseWithoutSaving = () => {
     hideCloseWithoutSaveConfirmationPopup();
-    emit('cancel');
+    emit("cancel");
 };
 
 const handleCancelCloseWithoutSaving = () => {
@@ -40,18 +40,21 @@ const hideCloseWithoutSaveConfirmationPopup = () => {
 
 const handleDelete = () => {
     hideDeleteConfirmationPopup();
-    emit('delete', editedSubgroup.value);
+    emit("delete", editedSubgroup.value);
 };
 
 const handleUpdateSubgroupName = (groupName: string) => {
     editedSubgroup.value!.name = groupName;
 };
 
-watch(() => props.show, () => {
-    if (props.show && props.subgroup) {
-        editedSubgroup.value = { ...props.subgroup };
+watch(
+    () => props.show,
+    () => {
+        if (props.show && props.subgroup) {
+            editedSubgroup.value = { ...props.subgroup };
+        }
     }
-});
+);
 
 const showCloseWithoutSaveConfirmationPopup = () => {
     isCloseWithoutSaveConfirmationPopupVisible.value = true;
@@ -61,20 +64,32 @@ const handleClose = () => {
     if (editedSubgroup.value?.name !== props.subgroup?.name) {
         showCloseWithoutSaveConfirmationPopup();
     } else {
-        emit('cancel');
+        emit("cancel");
     }
 };
 
 const handleSave = () => {
-    emit('save', editedSubgroup.value);
+    emit("save", editedSubgroup.value);
 };
 </script>
 
 <template>
-    <SubgroupPopup :subgroup="editedSubgroup" :show title="Modifier un sous-groupe" @updateSubgroupName="handleUpdateSubgroupName" @close="handleClose">
+    <SubgroupPopup
+        :subgroup="editedSubgroup"
+        :show
+        title="Modifier un sous-groupe"
+        @updateSubgroupName="handleUpdateSubgroupName"
+        @close="handleClose"
+    >
         <div class="flex gap-4">
-            <Button class="bg-green-500 text-white w-full" @click="handleSave">Sauvegarder</Button>
-            <Button class="bg-red-500 text-white w-full" @click="showDeleteConfirmationPopup">Supprimer</Button>
+            <Button class="bg-green-500 text-white w-full" @click="handleSave"
+                >Sauvegarder</Button
+            >
+            <Button
+                class="bg-red-500 text-white w-full"
+                @click="showDeleteConfirmationPopup"
+                >Supprimer</Button
+            >
         </div>
     </SubgroupPopup>
     <CloseWithoutSaveConfirmationPopup
@@ -82,5 +97,9 @@ const handleSave = () => {
         @close="handleCloseWithoutSaving"
         @cancel="handleCancelCloseWithoutSaving"
     />
-    <DeleteConfirmationPopup :show="isDeleteConfirmationPopupVisible" @delete="handleDelete" @cancel="hideDeleteConfirmationPopup" />
+    <DeleteConfirmationPopup
+        :show="isDeleteConfirmationPopupVisible"
+        @delete="handleDelete"
+        @cancel="hideDeleteConfirmationPopup"
+    />
 </template>
