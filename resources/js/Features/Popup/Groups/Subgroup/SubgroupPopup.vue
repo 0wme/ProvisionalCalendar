@@ -7,12 +7,10 @@ defineProps<{
     subgroup?: Subgroup;
     show?: boolean;
 }>();
-
-const emit = defineEmits(["close", "updateSubgroupName"]);
 </script>
 
 <template>
-    <Popup :title :show @close="emit('close')">
+    <Popup :title :show @close="$emit('close')">
         <div class="flex flex-col gap-6">
             <div class="flex flex-col gap-2">
                 <p class="text-lg font-medium">Nom du groupe</p>
@@ -21,7 +19,7 @@ const emit = defineEmits(["close", "updateSubgroupName"]);
                     class="border border-gray-300 rounded-lg p-2"
                     :placeholder="'ex : G1'"
                     @input="
-                        emit(
+                        $emit(
                             'updateSubgroupName',
                             ($event.target as HTMLInputElement).value
                         )
