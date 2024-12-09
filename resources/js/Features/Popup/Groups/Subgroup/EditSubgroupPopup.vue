@@ -10,20 +10,27 @@ import SubgroupPopup from "./SubgroupPopup.vue";
 import DeleteConfirmationPopup from "@/Features/Popup/DeleteConfirmationPopup.vue";
 import CloseWithoutSaveConfirmationPopup from "@/Features/Popup/CloseWithoutSaveConfirmationPopup.vue";
 
-const props = defineProps<{ subgroup?: Subgroup; show?: boolean }>();
+const props = defineProps<{ subgroupToEditId?: number; show?: boolean }>();
 const emit = defineEmits(["cancel", "delete", "save", "error"]);
 
+const actualSubgroup = ref<Subgroup | undefined>();
 const editedSubgroup = ref<Subgroup | undefined>();
 
 const isCloseWithoutSaveConfirmationPopupVisible = ref<boolean>(false);
 const isDeleteConfirmationPopupVisible = ref<boolean>(false);
 
-const clonePropsSubgroup = () =>
-    props.subgroup && (editedSubgroup.value = { ...props.subgroup });
+const cloneActualSubgroup = async () => {
+    const response = await axios.get(
+        `${API_ENDPOINTS.SUBGROUP}/${props.subgroupToEditId}`
+    );
+    actualSubgroup.value = response.data;
+    actualSubgroup.value &&
+        (editedSubgroup.value = { ...actualSubgroup.value });
+};
 
 watch(
     () => props.show,
-    () => props.show && clonePropsSubgroup()
+    () => props.show && cloneActualSubgroup()
 );
 
 const showCloseWithoutSaveConfirmationPopup = () =>
@@ -47,14 +54,14 @@ const handleCloseWithoutSaving = () => {
 };
 
 const handleCancel = () =>
-    editedSubgroup.value?.name !== props.subgroup?.name
+    editedSubgroup.value?.name !== actualSubgroup.value?.name
         ? showCloseWithoutSaveConfirmationPopup()
         : emit("cancel");
 
 const handleDelete = async () => {
     try {
         const response = await axios.delete(
-            `${API_ENDPOINTS.SUBGROUP}/${props.subgroup!.id}`
+            `${API_ENDPOINTS.SUBGROUP}/${actualSubgroup.value!.id}`
         );
         hideDeleteConfirmationPopup();
         emit("delete", response.data.subgroup);

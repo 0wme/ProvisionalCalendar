@@ -20,39 +20,23 @@ onMounted(async () => {
 });
 
 const classes = ref<Class[]>([]);
-const isAddGroupPopupVisible = ref<boolean>(false);
-const isVisibleEditGroupPopup = ref<boolean>(false);
-const groupToEdit = ref<Group | undefined>();
+
 const selectedClassId = ref<number | undefined>();
 const selectedGroupId = ref<number | undefined>();
-const isAddSubgroupPopupVisible = ref<boolean>(false);
-const isVisibleEditSubgroupPopup = ref<boolean>(false);
-const subgroupToEdit = ref<Subgroup | undefined>();
+
 const isAddClassPopupVisible = ref<boolean>(false);
-const isVisibleEditClassPopup = ref<boolean>(false);
-const editedClass = ref<Class | undefined>();
-const errorMessage = ref<string>("");
+const isEditClassPopupVisible = ref<boolean>(false);
+const isAddGroupPopupVisible = ref<boolean>(false);
+const isEditGroupPopupVisible = ref<boolean>(false);
+const isAddSubgroupPopupVisible = ref<boolean>(false);
+const isEditSubgroupPopupVisible = ref<boolean>(false);
 const isErrorPopupVisible = ref<boolean>(false);
 
-const showErrorPopup = () => {
-    isErrorPopupVisible.value = true;
-};
+const classToEditId = ref<number | undefined>();
+const groupToEditId = ref<number | undefined>();
+const subgroupToEditId = ref<number | undefined>();
 
-const hideErrorPopup = () => {
-    isErrorPopupVisible.value = false;
-};
-
-const showEditGroupPopup = () => {
-    isVisibleEditGroupPopup.value = true;
-};
-
-const hideEditGroupPopup = () => {
-    isVisibleEditGroupPopup.value = false;
-};
-
-const hideAddGroupPopup = () => {
-    isAddGroupPopupVisible.value = false;
-};
+const errorMessage = ref<string>("");
 
 const groups = computed(
     () =>
@@ -64,6 +48,26 @@ const subgroups = computed(
         []
 );
 
+const showAddClassPopup = () => (isAddClassPopupVisible.value = true);
+const hideAddClassPopup = () => (isAddClassPopupVisible.value = false);
+const showEditClassPopup = () => (isEditClassPopupVisible.value = true);
+const hideEditClassPopup = () => (isEditClassPopupVisible.value = false);
+
+const showAddGroupPopup = () =>
+    selectedClassId.value && (isAddGroupPopupVisible.value = true);
+const hideAddGroupPopup = () => (isAddGroupPopupVisible.value = false);
+const showEditGroupPopup = () => (isEditGroupPopupVisible.value = true);
+const hideEditGroupPopup = () => (isEditGroupPopupVisible.value = false);
+
+const showAddSubgroupPopup = () =>
+    selectedGroupId.value && (isAddSubgroupPopupVisible.value = true);
+const hideAddSubgroupPopup = () => (isAddSubgroupPopupVisible.value = false);
+const showEditSubgroupPopup = () => (isEditSubgroupPopupVisible.value = true);
+const hideEditSubgroupPopup = () => (isEditSubgroupPopupVisible.value = false);
+
+const showErrorPopup = () => (isErrorPopupVisible.value = true);
+const hideErrorPopup = () => (isErrorPopupVisible.value = false);
+
 const handleClassSelect = (id: number) => {
     if (id === selectedClassId.value) {
         selectedClassId.value = undefined;
@@ -74,17 +78,52 @@ const handleClassSelect = (id: number) => {
     }
 };
 
-const handleGroupSelect = (id: number) => {
-    if (id === selectedGroupId.value) {
+const handleGroupSelect = (id: number) =>
+    id === selectedGroupId.value
+        ? (selectedGroupId.value = undefined)
+        : (selectedGroupId.value = id);
+
+const handleAddClass = async (classe: Class) => {
+    hideAddClassPopup();
+    classes.value = [...classes.value, classe];
+};
+
+const handleEditClass = async (id: number) => {
+    classToEditId.value = id;
+    showEditClassPopup();
+};
+
+const handleSaveEditedClass = async (classe: Class) => {
+    hideEditClassPopup();
+    classes.value = classes.value.map((c) =>
+        c.id === classe.id ? { ...c, name: classe.name } : c
+    );
+};
+
+const handleDeleteClass = async (classe: Class) => {
+    hideEditClassPopup();
+    classes.value = classes.value.filter((c) => c.id !== classe.id);
+    if (selectedClassId.value === classe.id) {
+        selectedClassId.value = undefined;
         selectedGroupId.value = undefined;
-    } else {
-        selectedGroupId.value = id;
     }
 };
 
+const handleAddGroup = async (group: Group) => {
+    hideAddGroupPopup();
+    classes.value = classes.value.map((classe) => {
+        if (classe.id === selectedClassId.value) {
+            return {
+                ...classe,
+                groups: [...classe.groups, group],
+            };
+        }
+        return classe;
+    });
+};
+
 const handleEditGroup = async (id: number) => {
-    const response = await axios.get("/api/groupes/groupe/" + id);
-    groupToEdit.value = response.data;
+    groupToEditId.value = id;
     showEditGroupPopup();
 };
 
@@ -114,28 +153,7 @@ const handleDeleteGroup = async (group: Group) => {
         }
         return classe;
     });
-    if (selectedGroupId.value === group.id) {
-        selectedGroupId.value = undefined;
-    }
-};
-
-const showAddGroupPopup = () => {
-    if (selectedClassId.value) {
-        isAddGroupPopupVisible.value = true;
-    }
-};
-
-const handleAddGroup = async (group: Group) => {
-    hideAddGroupPopup();
-    classes.value = classes.value.map((classe) => {
-        if (classe.id === selectedClassId.value) {
-            return {
-                ...classe,
-                groups: [...classe.groups, group],
-            };
-        }
-        return classe;
-    });
+    selectedGroupId.value === group.id && (selectedGroupId.value = undefined);
 };
 
 const handleAddSubgroup = async (subgroup: Subgroup) => {
@@ -158,44 +176,9 @@ const handleAddSubgroup = async (subgroup: Subgroup) => {
     });
 };
 
-const handleDeleteSubgroup = async (subgroup: Subgroup) => {
-    hideEditSubgroupPopup();
-    classes.value = classes.value.map((classe) => {
-        if (classe.id === selectedClassId.value) {
-            return {
-                ...classe,
-                groups: classe.groups.map((group) =>
-                    group.id === selectedGroupId.value
-                        ? {
-                              ...group,
-                              subgroups: group.subgroups.filter(
-                                  (s) => s.id !== subgroup.id
-                              ),
-                          }
-                        : group
-                ),
-            };
-        }
-        return classe;
-    });
-};
-
-const hideAddSubgroupPopup = () => {
-    isAddSubgroupPopupVisible.value = false;
-};
-
-const showEditSubgroupPopup = () => {
-    isVisibleEditSubgroupPopup.value = true;
-};
-
 const handleEditSubgroup = async (id: number) => {
-    const response = await axios.get("/api/groupes/sous-groupe/" + id);
-    subgroupToEdit.value = response.data;
+    subgroupToEditId.value = id;
     showEditSubgroupPopup();
-};
-
-const hideEditSubgroupPopup = () => {
-    isVisibleEditSubgroupPopup.value = false;
 };
 
 const handleSaveEditedSubgroup = async (subgroup: Subgroup) => {
@@ -225,53 +208,26 @@ const handleSaveEditedSubgroup = async (subgroup: Subgroup) => {
     });
 };
 
-const showAddSubgroupPopup = () => {
-    if (selectedGroupId.value) {
-        isAddSubgroupPopupVisible.value = true;
-    }
-};
-
-const showAddClassPopup = () => {
-    isAddClassPopupVisible.value = true;
-};
-
-const hideAddClassPopup = () => {
-    isAddClassPopupVisible.value = false;
-};
-
-const showEditClassPopup = () => {
-    isVisibleEditClassPopup.value = true;
-};
-
-const hideEditClassPopup = () => {
-    isVisibleEditClassPopup.value = false;
-};
-
-const handleAddClass = async (classe: Class) => {
-    hideAddClassPopup();
-    classes.value = [...classes.value, classe];
-};
-
-const handleDeleteClass = async (classe: Class) => {
-    hideEditClassPopup();
-    classes.value = classes.value.filter((c) => c.id !== classe.id);
-    if (selectedClassId.value === classe.id) {
-        selectedClassId.value = undefined;
-        selectedGroupId.value = undefined;
-    }
-};
-
-const handleSaveEditedClass = async (classe: Class) => {
-    hideEditClassPopup();
-    classes.value = classes.value.map((c) =>
-        c.id === classe.id ? { ...c, name: classe.name } : c
-    );
-};
-
-const handleEditClass = async (id: number) => {
-    const response = await axios.get("/api/groupes/promotion/" + id);
-    editedClass.value = response.data;
-    showEditClassPopup();
+const handleDeleteSubgroup = async (subgroup: Subgroup) => {
+    hideEditSubgroupPopup();
+    classes.value = classes.value.map((classe) => {
+        if (classe.id === selectedClassId.value) {
+            return {
+                ...classe,
+                groups: classe.groups.map((group) =>
+                    group.id === selectedGroupId.value
+                        ? {
+                              ...group,
+                              subgroups: group.subgroups.filter(
+                                  (s) => s.id !== subgroup.id
+                              ),
+                          }
+                        : group
+                ),
+            };
+        }
+        return classe;
+    });
 };
 
 const handleError = (error: string) => {
@@ -315,8 +271,8 @@ const handleError = (error: string) => {
         @error="handleError"
     />
     <EditClassPopup
-        :classe="editedClass"
-        :show="isVisibleEditClassPopup"
+        :classToEditId
+        :show="isEditClassPopupVisible"
         @cancel="hideEditClassPopup"
         @delete="handleDeleteClass"
         @save="handleSaveEditedClass"
@@ -330,8 +286,8 @@ const handleError = (error: string) => {
         @error="handleError"
     />
     <EditGroupPopup
-        :group="groupToEdit"
-        :show="isVisibleEditGroupPopup"
+        :groupToEditId
+        :show="isEditGroupPopupVisible"
         @cancel="hideEditGroupPopup"
         @delete="handleDeleteGroup"
         @save="handleSaveEditedGroup"
@@ -345,8 +301,8 @@ const handleError = (error: string) => {
         @error="handleError"
     />
     <EditSubgroupPopup
-        :subgroup="subgroupToEdit"
-        :show="isVisibleEditSubgroupPopup"
+        :subgroupToEditId
+        :show="isEditSubgroupPopupVisible"
         @cancel="hideEditSubgroupPopup"
         @delete="handleDeleteSubgroup"
         @save="handleSaveEditedSubgroup"

@@ -51,7 +51,7 @@ const handleAdd = async () => {
             `${API_ENDPOINTS.PROMOTION}/1`,
             classe.value
         );
-        emit("add", response.data.group);
+        emit("add", response.data.promotion);
     } catch (error: any) {
         error.response?.data?.error
             ? emit("error", error.response.data.error)

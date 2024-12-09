@@ -10,20 +10,26 @@ import ClassPopup from "./ClassPopup.vue";
 import DeleteConfirmationPopup from "@/Features/Popup/DeleteConfirmationPopup.vue";
 import CloseWithoutSaveConfirmationPopup from "@/Features/Popup/CloseWithoutSaveConfirmationPopup.vue";
 
-const props = defineProps<{ classe?: Class; show?: boolean }>();
+const props = defineProps<{ classToEditId?: number; show?: boolean }>();
 const emit = defineEmits(["cancel", "delete", "save", "error"]);
 
+const actualClass = ref<Class | undefined>();
 const editedClass = ref<Class | undefined>();
 
 const isCloseWithoutSaveConfirmationPopupVisible = ref<boolean>(false);
 const isDeleteConfirmationPopupVisible = ref<boolean>(false);
 
-const clonePropsClass = () =>
-    props.classe && (editedClass.value = { ...props.classe });
+const cloneActualClass = async () => {
+    const response = await axios.get(
+        `${API_ENDPOINTS.PROMOTION}/${props.classToEditId}`
+    );
+    actualClass.value = response.data;
+    actualClass.value && (editedClass.value = { ...actualClass.value });
+};
 
 watch(
     () => props.show,
-    () => props.show && clonePropsClass()
+    () => props.show && cloneActualClass()
 );
 
 const showCloseWithoutSaveConfirmationPopup = () =>
@@ -47,14 +53,14 @@ const handleCloseWithoutSaving = () => {
 };
 
 const handleCancel = () =>
-    editedClass.value?.name !== props.classe?.name
+    editedClass.value?.name !== actualClass.value?.name
         ? showCloseWithoutSaveConfirmationPopup()
         : emit("cancel");
 
 const handleDelete = async () => {
     try {
         const response = await axios.delete(
-            `${API_ENDPOINTS.PROMOTION}/${props.classe!.id}`
+            `${API_ENDPOINTS.PROMOTION}/${actualClass.value!.id}`
         );
         hideDeleteConfirmationPopup();
         emit("delete", response.data.promotion);

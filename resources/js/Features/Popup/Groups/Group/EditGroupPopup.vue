@@ -10,20 +10,26 @@ import GroupPopup from "./GroupPopup.vue";
 import DeleteConfirmationPopup from "@/Features/Popup/DeleteConfirmationPopup.vue";
 import CloseWithoutSaveConfirmationPopup from "@/Features/Popup/CloseWithoutSaveConfirmationPopup.vue";
 
-const props = defineProps<{ group?: Group; show?: boolean }>();
+const props = defineProps<{ groupToEditId?: number; show?: boolean }>();
 const emit = defineEmits(["cancel", "delete", "save", "error"]);
 
+const actualGroup = ref<Group | undefined>();
 const editedGroup = ref<Group | undefined>();
 
 const isCloseWithoutSaveConfirmationPopupVisible = ref<boolean>(false);
 const isDeleteConfirmationPopupVisible = ref<boolean>(false);
 
-const clonePropsGroup = () =>
-    props.group && (editedGroup.value = { ...props.group });
+const cloneActualGroup = async () => {
+    const response = await axios.get(
+        `${API_ENDPOINTS.GROUP}/${props.groupToEditId}`
+    );
+    actualGroup.value = response.data;
+    actualGroup.value && (editedGroup.value = { ...actualGroup.value });
+};
 
 watch(
     () => props.show,
-    () => props.show && clonePropsGroup()
+    () => props.show && cloneActualGroup()
 );
 
 const showCloseWithoutSaveConfirmationPopup = () =>
@@ -47,14 +53,14 @@ const handleCloseWithoutSaving = () => {
 };
 
 const handleCancel = () =>
-    editedGroup.value?.name !== props.group?.name
+    editedGroup.value?.name !== actualGroup.value?.name
         ? showCloseWithoutSaveConfirmationPopup()
         : emit("cancel");
 
 const handleDelete = async () => {
     try {
         const response = await axios.delete(
-            `${API_ENDPOINTS.GROUP}/${props.group!.id}`
+            `${API_ENDPOINTS.GROUP}/${actualGroup.value!.id}`
         );
         hideDeleteConfirmationPopup();
         emit("delete", response.data.group);
