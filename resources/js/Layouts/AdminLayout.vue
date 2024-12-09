@@ -5,6 +5,8 @@ import { sidebarMenuItems } from '@/config/navigation';
 import MainLayout from './MainLayout.vue';
 import Button from '@/Components/Button.vue';
 import AddYearPopup from '@/Components/Popup/AddYearPopup.vue';
+import IconButton from '@/Components/IconButton.vue';
+import Filter from '@/Components/Filter.vue';
 
 const contentHeight = ref<number>(0);
 const mainLayout = ref<HTMLElement | null>(null);
@@ -57,9 +59,14 @@ onUnmounted(() => {
         <div ref="mainLayout" class="flex flex-col gap-10 -mt-10">
             <div class="flex justify-between items-center px-6">
                 <HeaderMenu :items="getCurrentSubmenu()!" />
-                <Button class="bg-green-500 text-white" @click="handleAddYear">
-                    Ajouter une année
-                </Button>
+                <IconButton 
+                    @click="handleAddYear"
+                    icon-class="Plus"
+                    bg-color="#FFD8E4"
+                    icon-color="black"
+                    :small="false"
+                    :style="{ borderRadius: '8px', height: '42px', width: '42px', padding: '0' }"
+                />
             </div>
             <div class="content w-full" :style="{ '--header-menu-height': contentHeight + 'px' }">
                 <slot />
