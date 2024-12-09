@@ -13,8 +13,8 @@ const emit = defineEmits(["cancel", "add", "error"]);
 
 const props = defineProps<{ show?: boolean; groupId?: number }>();
 
-const isCloseWithoutSaveConfirmationPopupVisible = ref<boolean>(false);
 const subgroup = ref<Subgroup>({ id: 0, name: "" });
+const isCloseWithoutSaveConfirmationPopupVisible = ref<boolean>(false);
 
 const resetSubgroup = () => (subgroup.value = { id: 0, name: "" });
 
@@ -29,7 +29,7 @@ const showCloseWithoutSaveConfirmationPopup = () =>
 const hideCloseWithoutSaveConfirmationPopup = () =>
     (isCloseWithoutSaveConfirmationPopupVisible.value = false);
 
-const handleUpdateSubgroupName = (newSubgroupName: string) =>
+const updateSubgroupName = (newSubgroupName: string) =>
     (subgroup.value.name = newSubgroupName);
 
 const handleCancel = () =>
@@ -66,7 +66,7 @@ const handleAdd = async () => {
         :show
         :subgroup
         title="Ajouter un sous-groupe"
-        @updateSubgroupName="handleUpdateSubgroupName"
+        @updateSubgroupName="updateSubgroupName"
         @close="handleCancel"
     >
         <div class="flex gap-4">

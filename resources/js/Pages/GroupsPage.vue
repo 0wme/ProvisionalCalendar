@@ -34,6 +34,26 @@ const editedClass = ref<Class | undefined>();
 const errorMessage = ref<string>("");
 const isErrorPopupVisible = ref<boolean>(false);
 
+const showErrorPopup = () => {
+    isErrorPopupVisible.value = true;
+};
+
+const hideErrorPopup = () => {
+    isErrorPopupVisible.value = false;
+};
+
+const showEditGroupPopup = () => {
+    isVisibleEditGroupPopup.value = true;
+};
+
+const hideEditGroupPopup = () => {
+    isVisibleEditGroupPopup.value = false;
+};
+
+const hideAddGroupPopup = () => {
+    isAddGroupPopupVisible.value = false;
+};
+
 const groups = computed(
     () =>
         classes.value.find((c) => c.id === selectedClassId.value)?.groups ?? []
@@ -68,14 +88,6 @@ const handleEditGroup = async (id: number) => {
     showEditGroupPopup();
 };
 
-const showEditGroupPopup = () => {
-    isVisibleEditGroupPopup.value = true;
-};
-
-const hideEditGroupPopup = () => {
-    isVisibleEditGroupPopup.value = false;
-};
-
 const handleSaveEditedGroup = async (group: Group) => {
     hideEditGroupPopup();
     classes.value = classes.value.map((classe) => {
@@ -89,10 +101,6 @@ const handleSaveEditedGroup = async (group: Group) => {
         }
         return classe;
     });
-};
-
-const hideAddGroupPopup = () => {
-    isAddGroupPopupVisible.value = false;
 };
 
 const handleDeleteGroup = async (group: Group) => {
@@ -269,14 +277,6 @@ const handleEditClass = async (id: number) => {
 const handleError = (error: string) => {
     errorMessage.value = error;
     showErrorPopup();
-};
-
-const showErrorPopup = () => {
-    isErrorPopupVisible.value = true;
-};
-
-const hideErrorPopup = () => {
-    isErrorPopupVisible.value = false;
 };
 </script>
 

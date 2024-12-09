@@ -13,9 +13,10 @@ import CloseWithoutSaveConfirmationPopup from "@/Features/Popup/CloseWithoutSave
 const props = defineProps<{ group?: Group; show?: boolean }>();
 const emit = defineEmits(["cancel", "delete", "save", "error"]);
 
-const isDeleteConfirmationPopupVisible = ref<boolean>(false);
 const editedGroup = ref<Group | undefined>();
+
 const isCloseWithoutSaveConfirmationPopupVisible = ref<boolean>(false);
+const isDeleteConfirmationPopupVisible = ref<boolean>(false);
 
 const clonePropsGroup = () =>
     props.group && (editedGroup.value = { ...props.group });
