@@ -8,6 +8,9 @@ use App\Http\Controllers\Api\YearController;
 //Years
 
 Route::get('/years', [YearController::class, 'index']);
+Route::post('/years', [YearController::class, 'store']);
+Route::get('/years/{year}', [YearController::class, 'show']);
+Route::post('/years/{id}/clone', [YearController::class, 'clone']);
 
 //Groupes
 
