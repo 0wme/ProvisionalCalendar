@@ -80,6 +80,10 @@ const handleDelete = async () => {
 };
 
 const handleSave = async () => {
+    if (editedClass.value?.name === '') {
+        emit('error', MESSAGES.EMPTY_GROUP_NAME_ERROR_MESSAGE);
+        return;
+    }
     try {
         const response = await axios.put('/api/groupes/promotion/' + editedClass.value!.id, editedClass.value);
         emit('save', response.data.promotion);

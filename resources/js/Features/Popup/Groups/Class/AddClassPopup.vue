@@ -55,6 +55,10 @@ const handleCancelCloseWithoutSaving = () => {
 };
 
 const handleAdd = async () => {
+    if (classe.value.name === '') {
+        emit('error', MESSAGES.EMPTY_GROUP_NAME_ERROR_MESSAGE);
+        return;
+    }
     try {
         const response = await axios.post(`${API_ENDPOINTS.PROMOTION}/1`, classe.value);
         emit('add', response.data.promotion);
