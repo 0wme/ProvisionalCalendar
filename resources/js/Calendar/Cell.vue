@@ -1,6 +1,6 @@
 <template>
   <div :class="['cell', sizeClass]" :style="{ height: `${height}rem` }">
-    <slot></slot>
+    <slot />
   </div>
 </template>
 
@@ -35,12 +35,5 @@ const sizeClass = computed(() => {
   box-sizing: border-box;
   border: 1px solid #000000;
   border-radius: 5px;
-}
-
-
-.flex-col {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
 }
 </style>

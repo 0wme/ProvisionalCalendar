@@ -1,7 +1,11 @@
 <template>
     <AdminLayout>
       <div class="h-full flex mt-10">
-        <TeachersListManager :teachers="teachers" class="w-1/5" />
+        <TeachersListManager 
+          :teachers="teachers" 
+          :selectedTeacherIds="selectedTeacherIds" 
+          class="w-1/5" 
+        />
         <div class="w-3/4 ml-4 overflow-auto h-full">
           <CalendarTable />
         </div>
@@ -17,6 +21,7 @@
   import CalendarTable from '@/Calendar/CalendarTable.vue';
   
   const teachers = ref([]);
+  const selectedTeacherIds = ref<number[]>([]);
   
   onMounted(async () => {
     try {
