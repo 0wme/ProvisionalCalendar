@@ -1,86 +1,122 @@
 <script setup lang="ts">
-import GroupPopup from './GroupPopup.vue';
-import DeleteConfirmationPopup from '@/Features/Popup/DeleteConfirmationPopup.vue';
-import { Group } from '@/types/models';
-import Button from '@/Components/Button.vue';
-import { ref, watch } from 'vue';
-import CloseWithoutSaveConfirmationPopup from '@/Features/Popup/CloseWithoutSaveConfirmationPopup.vue';
+import { ref, watch } from "vue";
+import axios from "axios";
 
-const emit = defineEmits(['cancel', 'delete', 'save']);
+import { Group } from "@/types/models";
+import { API_ENDPOINTS, MESSAGES } from "@/constants";
 
-const props = defineProps<{
-    group?: Group;
-    show?: boolean;
-}>();
+import Button from "@/Components/Button.vue";
+import GroupPopup from "./GroupPopup.vue";
+import DeleteConfirmationPopup from "@/Features/Popup/DeleteConfirmationPopup.vue";
+import CloseWithoutSaveConfirmationPopup from "@/Features/Popup/CloseWithoutSaveConfirmationPopup.vue";
 
-const isDeleteConfirmationPopupVisible = ref<boolean>(false);
+const props = defineProps<{ groupToEditId?: number; show?: boolean }>();
+const emit = defineEmits(["cancel", "delete", "save", "error"]);
+
+const actualGroup = ref<Group | undefined>();
 const editedGroup = ref<Group | undefined>();
+
 const isCloseWithoutSaveConfirmationPopupVisible = ref<boolean>(false);
+const isDeleteConfirmationPopupVisible = ref<boolean>(false);
 
-const showDeleteConfirmationPopup = () => {
-    isDeleteConfirmationPopupVisible.value = true;
+const cloneActualGroup = async () => {
+    const response = await axios.get(
+        `${API_ENDPOINTS.GROUP}/${props.groupToEditId}`
+    );
+    actualGroup.value = response.data;
+    actualGroup.value && (editedGroup.value = { ...actualGroup.value });
 };
 
-const hideDeleteConfirmationPopup = () => {
-    isDeleteConfirmationPopupVisible.value = false;
-};
+watch(
+    () => props.show,
+    () => props.show && cloneActualGroup()
+);
+
+const showCloseWithoutSaveConfirmationPopup = () =>
+    (isCloseWithoutSaveConfirmationPopupVisible.value = true);
+
+const hideCloseWithoutSaveConfirmationPopup = () =>
+    (isCloseWithoutSaveConfirmationPopupVisible.value = false);
+
+const showDeleteConfirmationPopup = () =>
+    (isDeleteConfirmationPopupVisible.value = true);
+
+const hideDeleteConfirmationPopup = () =>
+    (isDeleteConfirmationPopupVisible.value = false);
+
+const updateGroupName = (groupName: string) =>
+    (editedGroup.value!.name = groupName);
 
 const handleCloseWithoutSaving = () => {
     hideCloseWithoutSaveConfirmationPopup();
-    emit('cancel');
+    emit("cancel");
 };
 
-const handleCancelCloseWithoutSaving = () => {
-    hideCloseWithoutSaveConfirmationPopup();
-};
+const handleCancel = () =>
+    editedGroup.value?.name !== actualGroup.value?.name
+        ? showCloseWithoutSaveConfirmationPopup()
+        : emit("cancel");
 
-const hideCloseWithoutSaveConfirmationPopup = () => {
-    isCloseWithoutSaveConfirmationPopupVisible.value = false;
-};
-
-const handleDelete = () => {
-    hideDeleteConfirmationPopup();
-    emit('delete', editedGroup.value);
-};
-
-const handleUpdateGroupName = (groupName: string) => {
-    editedGroup.value!.name = groupName;
-};
-
-watch(() => props.show, () => {
-    if (props.show && props.group) {
-        editedGroup.value = { ...props.group };
-    }
-});
-
-const showCloseWithoutSaveConfirmationPopup = () => {
-    isCloseWithoutSaveConfirmationPopupVisible.value = true;
-};
-
-const handleClose = () => {
-    if (editedGroup.value?.name !== props.group?.name) {
-        showCloseWithoutSaveConfirmationPopup();
-    } else {
-        emit('cancel');
+const handleDelete = async () => {
+    try {
+        const response = await axios.delete(
+            `${API_ENDPOINTS.GROUP}/${actualGroup.value!.id}`
+        );
+        hideDeleteConfirmationPopup();
+        emit("delete", response.data.group);
+    } catch (error: any) {
+        error.response?.data?.error
+            ? emit("error", error.response.data.error)
+            : emit("error", MESSAGES.DEFAULT_ERROR_MESSAGE);
     }
 };
 
-const handleSave = () => {
-    emit('save', editedGroup.value);
+const handleSave = async () => {
+    if (editedGroup.value?.name === "") {
+        emit("error", MESSAGES.EMPTY_GROUP_NAME_ERROR_MESSAGE);
+        return;
+    }
+    try {
+        const response = await axios.put(
+            `${API_ENDPOINTS.GROUP}/${editedGroup.value!.id}`,
+            editedGroup.value
+        );
+        emit("save", response.data.group);
+    } catch (error: any) {
+        error.response?.data?.error
+            ? emit("error", error.response.data.error)
+            : emit("error", MESSAGES.DEFAULT_ERROR_MESSAGE);
+    }
 };
 </script>
 
 <template>
-    <GroupPopup :group="editedGroup" :show title="Modifier un groupe" @updateGroupName="handleUpdateGroupName" @close="handleClose">
+    <GroupPopup
+        :group="editedGroup"
+        :show
+        title="Modifier un groupe"
+        @updateGroupName="updateGroupName"
+        @close="handleCancel"
+    >
         <div class="flex gap-4">
-            <Button class="bg-green-500 text-white w-full" @click="handleSave">Sauvegarder</Button>
-            <Button class="bg-red-500 text-white w-full" @click="showDeleteConfirmationPopup">Supprimer</Button>
+            <Button class="bg-green-500 text-white w-full" @click="handleSave"
+                >Sauvegarder</Button
+            >
+            <Button
+                class="bg-red-500 text-white w-full"
+                @click="showDeleteConfirmationPopup"
+                >Supprimer</Button
+            >
         </div>
     </GroupPopup>
     <CloseWithoutSaveConfirmationPopup
         :show="isCloseWithoutSaveConfirmationPopupVisible"
         @close="handleCloseWithoutSaving"
-        @cancel="handleCancelCloseWithoutSaving"
+        @cancel="hideCloseWithoutSaveConfirmationPopup"
     />
-    <DeleteConfirmationPopup :show="isDeleteConfirmationPopupVisible" @delete="handleDelete" @cancel="hideDeleteConfirmationPopup" />
+    <DeleteConfirmationPopup
+        :show="isDeleteConfirmationPopupVisible"
+        @delete="handleDelete"
+        @cancel="hideDeleteConfirmationPopup"
+    />
 </template>

@@ -2,25 +2,24 @@
 import { ref, watch } from "vue";
 import axios from "axios";
 
-import { Subgroup } from "@/types/models";
+import { Class } from "@/types/models";
 import { API_ENDPOINTS, MESSAGES } from "@/constants";
 
 import Button from "@/Components/Button.vue";
-import SubgroupPopup from "./SubgroupPopup.vue";
+import ClassPopup from "./ClassPopup.vue";
 import CloseWithoutSaveConfirmationPopup from "@/Features/Popup/CloseWithoutSaveConfirmationPopup.vue";
 
+const props = defineProps<{ show?: boolean; yearId?: number }>();
 const emit = defineEmits(["cancel", "add", "error"]);
 
-const props = defineProps<{ show?: boolean; groupId?: number }>();
-
-const subgroup = ref<Subgroup>({ id: 0, name: "" });
+const classe = ref<Class>({ id: 0, name: "", groups: [] });
 const isCloseWithoutSaveConfirmationPopupVisible = ref<boolean>(false);
 
-const resetSubgroup = () => (subgroup.value = { id: 0, name: "" });
+const resetClass = () => (classe.value = { id: 0, name: "", groups: [] });
 
 watch(
     () => props.show,
-    () => props.show && resetSubgroup()
+    () => props.show && resetClass()
 );
 
 const showCloseWithoutSaveConfirmationPopup = () =>
@@ -29,11 +28,11 @@ const showCloseWithoutSaveConfirmationPopup = () =>
 const hideCloseWithoutSaveConfirmationPopup = () =>
     (isCloseWithoutSaveConfirmationPopupVisible.value = false);
 
-const updateSubgroupName = (newSubgroupName: string) =>
-    (subgroup.value.name = newSubgroupName);
+const handleUpdateClassName = (newClassName: string) =>
+    (classe.value.name = newClassName);
 
 const handleCancel = () =>
-    subgroup.value.name !== ""
+    classe.value.name !== ""
         ? showCloseWithoutSaveConfirmationPopup()
         : emit("cancel");
 
@@ -43,16 +42,16 @@ const handleCloseWithoutSaving = () => {
 };
 
 const handleAdd = async () => {
-    if (subgroup.value.name === "") {
+    if (classe.value.name === "") {
         emit("error", MESSAGES.EMPTY_GROUP_NAME_ERROR_MESSAGE);
         return;
     }
     try {
         const response = await axios.post(
-            `${API_ENDPOINTS.SUBGROUP}/${props.groupId}`,
-            subgroup.value
+            `${API_ENDPOINTS.PROMOTION}/1`,
+            classe.value
         );
-        emit("add", response.data.subgroup);
+        emit("add", response.data.promotion);
     } catch (error: any) {
         error.response?.data?.error
             ? emit("error", error.response.data.error)
@@ -62,11 +61,11 @@ const handleAdd = async () => {
 </script>
 
 <template>
-    <SubgroupPopup
+    <ClassPopup
         :show
-        :subgroup
+        :classe
         title="Ajouter un sous-groupe"
-        @updateSubgroupName="updateSubgroupName"
+        @updateClassName="handleUpdateClassName"
         @close="handleCancel"
     >
         <div class="flex gap-4">
@@ -79,5 +78,5 @@ const handleAdd = async () => {
             @close="handleCloseWithoutSaving"
             @cancel="hideCloseWithoutSaveConfirmationPopup"
         />
-    </SubgroupPopup>
+    </ClassPopup>
 </template>

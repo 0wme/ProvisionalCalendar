@@ -2,35 +2,34 @@
 import { ref, watch } from "vue";
 import axios from "axios";
 
-import { Subgroup } from "@/types/models";
+import { Class } from "@/types/models";
 import { API_ENDPOINTS, MESSAGES } from "@/constants";
 
 import Button from "@/Components/Button.vue";
-import SubgroupPopup from "./SubgroupPopup.vue";
+import ClassPopup from "./ClassPopup.vue";
 import DeleteConfirmationPopup from "@/Features/Popup/DeleteConfirmationPopup.vue";
 import CloseWithoutSaveConfirmationPopup from "@/Features/Popup/CloseWithoutSaveConfirmationPopup.vue";
 
-const props = defineProps<{ subgroupToEditId?: number; show?: boolean }>();
+const props = defineProps<{ classToEditId?: number; show?: boolean }>();
 const emit = defineEmits(["cancel", "delete", "save", "error"]);
 
-const actualSubgroup = ref<Subgroup | undefined>();
-const editedSubgroup = ref<Subgroup | undefined>();
+const actualClass = ref<Class | undefined>();
+const editedClass = ref<Class | undefined>();
 
 const isCloseWithoutSaveConfirmationPopupVisible = ref<boolean>(false);
 const isDeleteConfirmationPopupVisible = ref<boolean>(false);
 
-const cloneActualSubgroup = async () => {
+const cloneActualClass = async () => {
     const response = await axios.get(
-        `${API_ENDPOINTS.SUBGROUP}/${props.subgroupToEditId}`
+        `${API_ENDPOINTS.PROMOTION}/${props.classToEditId}`
     );
-    actualSubgroup.value = response.data;
-    actualSubgroup.value &&
-        (editedSubgroup.value = { ...actualSubgroup.value });
+    actualClass.value = response.data;
+    actualClass.value && (editedClass.value = { ...actualClass.value });
 };
 
 watch(
     () => props.show,
-    () => props.show && cloneActualSubgroup()
+    () => props.show && cloneActualClass()
 );
 
 const showCloseWithoutSaveConfirmationPopup = () =>
@@ -45,8 +44,8 @@ const showDeleteConfirmationPopup = () =>
 const hideDeleteConfirmationPopup = () =>
     (isDeleteConfirmationPopupVisible.value = false);
 
-const updateSubgroupName = (subgroupName: string) =>
-    (editedSubgroup.value!.name = subgroupName);
+const updateClassName = (groupName: string) =>
+    (editedClass.value!.name = groupName);
 
 const handleCloseWithoutSaving = () => {
     hideCloseWithoutSaveConfirmationPopup();
@@ -54,17 +53,17 @@ const handleCloseWithoutSaving = () => {
 };
 
 const handleCancel = () =>
-    editedSubgroup.value?.name !== actualSubgroup.value?.name
+    editedClass.value?.name !== actualClass.value?.name
         ? showCloseWithoutSaveConfirmationPopup()
         : emit("cancel");
 
 const handleDelete = async () => {
     try {
         const response = await axios.delete(
-            `${API_ENDPOINTS.SUBGROUP}/${actualSubgroup.value!.id}`
+            `${API_ENDPOINTS.PROMOTION}/${actualClass.value!.id}`
         );
         hideDeleteConfirmationPopup();
-        emit("delete", response.data.subgroup);
+        emit("delete", response.data.promotion);
     } catch (error: any) {
         error.response?.data?.error
             ? emit("error", error.response.data.error)
@@ -73,16 +72,16 @@ const handleDelete = async () => {
 };
 
 const handleSave = async () => {
-    if (editedSubgroup.value?.name === "") {
+    if (editedClass.value?.name === "") {
         emit("error", MESSAGES.EMPTY_GROUP_NAME_ERROR_MESSAGE);
         return;
     }
     try {
         const response = await axios.put(
-            `${API_ENDPOINTS.SUBGROUP}/${editedSubgroup.value!.id}`,
-            editedSubgroup.value
+            `${API_ENDPOINTS.PROMOTION}/${editedClass.value!.id}`,
+            editedClass.value
         );
-        emit("save", response.data.subgroup);
+        emit("save", response.data.promotion);
     } catch (error: any) {
         error.response?.data?.error
             ? emit("error", error.response.data.error)
@@ -92,11 +91,11 @@ const handleSave = async () => {
 </script>
 
 <template>
-    <SubgroupPopup
-        :subgroup="editedSubgroup"
+    <ClassPopup
+        :classe="editedClass"
         :show
         title="Modifier un sous-groupe"
-        @updateSubgroupName="updateSubgroupName"
+        @updateClassName="updateClassName"
         @close="handleCancel"
     >
         <div class="flex gap-4">
@@ -109,7 +108,7 @@ const handleSave = async () => {
                 >Supprimer</Button
             >
         </div>
-    </SubgroupPopup>
+    </ClassPopup>
     <CloseWithoutSaveConfirmationPopup
         :show="isCloseWithoutSaveConfirmationPopupVisible"
         @close="handleCloseWithoutSaving"
