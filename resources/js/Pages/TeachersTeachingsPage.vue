@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, computed, watch } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import axios from 'axios';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import TeachersListManager from '../Features/ListManager/TeachersListManager.vue';
@@ -47,90 +47,51 @@ const isErrorPopupVisible = ref(false);
 const modifications = ref<EditedItem[] | undefined>();
 const isSaveConfirmationPopupVisible = ref(false);
 
-watch(selectedTeacherIds, () => {
-    if (isTeachingMode.value) {
-        modifications.value = [
-                    ...(teachers.value.find(teacher => selectedTeacherIds.value.includes(teacher.id))?.teachings || [])
-                        .filter(teaching => !selectedTeachingIds.value.includes(teaching.id))
-                        .map(teaching => ({
-                            ...teaching,
-                            editStatus: EditedItemStatus.DELETED
-                        })),
-                    ...selectedTeachingIds.value
-                        .filter(id => {
-                            const teaching = teachings.value.find(t => t.id === id);
-                            return teaching && !teachers.value
-                                .find(teacher => selectedTeacherIds.value.includes(teacher.id))
-                                ?.teachings?.some(t => t.id === id);
-                        })
-                        .map(id => {
-                            const teaching = teachings.value.find(t => t.id === id)!;
-                            return {
-                                ...teaching,
-                                editStatus: EditedItemStatus.ADDED
-                            };
-                        })
-                ];
-    }
-});
-
-watch(selectedTeachingIds, () => {
-    if (!isTeachingMode.value) {
-        modifications.value = [
-            ...(teachers.value.find(teacher => selectedTeacherIds.value.includes(teacher.id))?.teachings || [])
-                .filter(teaching => !selectedTeachingIds.value.includes(teaching.id))
-                .map(teaching => ({
+const fetchModifications = () => {
+    modifications.value = [
+        ...(teachers.value.find(teacher => selectedTeacherIds.value.includes(teacher.id))?.teachings || [])
+            .filter(teaching => !selectedTeachingIds.value.includes(teaching.id))
+            .map(teaching => ({
+                ...teaching,
+                editStatus: EditedItemStatus.DELETED
+            })),
+        ...selectedTeachingIds.value
+            .filter(id => {
+                const teaching = teachings.value.find(t => t.id === id);
+                return teaching && !teachers.value
+                    .find(teacher => selectedTeacherIds.value.includes(teacher.id))
+                    ?.teachings?.some(t => t.id === id);
+            })
+            .map(id => {
+                const teaching = teachings.value.find(t => t.id === id)!;
+                return {
                     ...teaching,
-                    editStatus: EditedItemStatus.DELETED
-                })),
-            ...selectedTeachingIds.value
-                .filter(id => {
-                    const teaching = teachings.value.find(t => t.id === id);
-                    return teaching && !teachers.value
-                        .find(teacher => selectedTeacherIds.value.includes(teacher.id))
-                        ?.teachings?.some(t => t.id === id);
-                })
-                .map(id => {
-                    const teaching = teachings.value.find(t => t.id === id)!;
-                    return {
-                        ...teaching,
-                        editStatus: EditedItemStatus.ADDED
-                    };
-                })
-        ];
-    }
-});
+                    editStatus: EditedItemStatus.ADDED
+                };
+            })
+    ];
+}
 
 const handleTeacherSelect = (selectedItemId: number) => {
-    if (isTeachingMode.value) {
-        // if (selectedTeachingIds.value.length) {
-        //     if (selectedTeacherIds.value.includes(selectedItemId)) {
-        //         selectedTeacherIds.value = selectedTeacherIds.value.filter(id => id !== selectedItemId);
-        //     } else {
-        //         selectedTeacherIds.value = [...selectedTeacherIds.value, selectedItemId];
-        //     }
-        // }
-    } else {
-        if (!selectedTeacherIds.value.length) {
-            if (selectedTeacherIds.value.includes(selectedItemId)) {
-                selectedTeacherIds.value = selectedTeacherIds.value.filter(id => id !== selectedItemId);
-                selectedTeachingIds.value = [];
-            } else {
-                selectedTeacherIds.value = [selectedItemId];
-                selectedTeachingIds.value = teachers.value.find(teacher => teacher.id === selectedItemId)?.teachings.map(teaching => teaching.id) || [];
-            }
+    if (!selectedTeacherIds.value.length) {
+        if (selectedTeacherIds.value.includes(selectedItemId)) {
+            selectedTeacherIds.value = selectedTeacherIds.value.filter(id => id !== selectedItemId);
+            selectedTeachingIds.value = [];
         } else {
-            if (!selectedTeacherIds.value.includes(selectedItemId)) {
-                if (modifications.value?.length) {
-                    showSaveConfirmationPopup(modifications.value);
+            selectedTeacherIds.value = [selectedItemId];
+            selectedTeachingIds.value = teachers.value.find(teacher => teacher.id === selectedItemId)?.teachings.map(teaching => teaching.id) || [];
+        }
+    } else {
+        if (!selectedTeacherIds.value.includes(selectedItemId)) {
+            if (modifications.value?.length) {
+                showSaveConfirmationPopup();
+            } else {
+                if (selectedTeacherIds.value.includes(selectedItemId)) {
+                    selectedTeacherIds.value = selectedTeacherIds.value.filter(id => id !== selectedItemId);
+                    selectedTeachingIds.value = [];
                 } else {
-                    if (selectedTeacherIds.value.includes(selectedItemId)) {
-                        selectedTeacherIds.value = selectedTeacherIds.value.filter(id => id !== selectedItemId);
-                        selectedTeachingIds.value = [];
-                    } else {
-                        selectedTeacherIds.value = [selectedItemId];
-                        selectedTeachingIds.value = teachers.value.find(teacher => teacher.id === selectedItemId)?.teachings.map(teaching => teaching.id) || [];
-                    }
+                    selectedTeacherIds.value = [selectedItemId];
+                    selectedTeachingIds.value = teachers.value.find(teacher => teacher.id === selectedItemId)?.teachings.map(teaching => teaching.id) || [];
                 }
             }
         }
@@ -138,32 +99,17 @@ const handleTeacherSelect = (selectedItemId: number) => {
 }
 
 const handleTeachingSelect = (selectedItemId: number) => {
-    if (isTeachingMode.value) {
-        // if (!selectedTeachingIds.value.length) {
-            // if (selectedTeachingIds.value.includes(selectedItemId)) {
-            //     selectedTeachingIds.value = selectedTeachingIds.value.filter(id => id !== selectedItemId);
-            //     selectedTeacherIds.value = [];
-            // } else {
-            //     selectedTeachingIds.value = [selectedItemId];
-            //     selectedTeacherIds.value = teachers.value.find(teacher => teacher.teachings.some(teaching => teaching.id === selectedItemId))?.id ?
-            //         [teachers.value.find(teacher => teacher.teachings.some(teaching => teaching.id === selectedItemId))!.id] : [];
-            // }
-        // } else {
-        //     modifications.value = teachings.value.find(teaching => teaching.id === selectedItemId)?.teachers.filter(teacher => teacher.editStatus !== undefined);
-        // }
-    } else {
-        if (selectedTeacherIds.value.length) {
-            if (selectedTeachingIds.value.includes(selectedItemId)) {
-                selectedTeachingIds.value = selectedTeachingIds.value.filter(id => id !== selectedItemId);
-            } else {
-                selectedTeachingIds.value = [...selectedTeachingIds.value, selectedItemId];
-            }
+    if (selectedTeacherIds.value.length) {
+        if (selectedTeachingIds.value.includes(selectedItemId)) {
+            selectedTeachingIds.value = selectedTeachingIds.value.filter(id => id !== selectedItemId);
+        } else {
+            selectedTeachingIds.value = [...selectedTeachingIds.value, selectedItemId];
         }
     }
 }
 
-const showSaveConfirmationPopup = (newModifications: EditedItem[]) => {
-    modifications.value = newModifications;
+const showSaveConfirmationPopup = () => {
+    fetchModifications();
     isSaveConfirmationPopupVisible.value = true;
 }
 
@@ -172,6 +118,7 @@ const hideSaveConfirmationPopup = () => {
 }
 
 const handleSave = async () => {
+    fetchModifications();
     if (modifications.value) {  
         for (const modification of modifications.value) {
             if (modification.editStatus === EditedItemStatus.ADDED) {
@@ -188,12 +135,7 @@ const handleQuitWithoutSave = () => {
 }
 
 const handleCancel = () => {
-    if (isTeachingMode.value) {
-        // selectedTeacherIds.value = teachings.value.find(teaching => teaching.id === selectedTeachingIds.value[0])?.teachers.map(teacher => teacher.id) || [];
-        //     .map(teaching => teaching.teachers.map(teacher => teacher.id));
-    } else {
-        selectedTeachingIds.value = teachers.value.find(teacher => teacher.id === selectedTeacherIds.value[0])?.teachings.map(teaching => teaching.id) || [];
-    }
+    selectedTeachingIds.value = teachers.value.find(teacher => teacher.id === selectedTeacherIds.value[0])?.teachings.map(teaching => teaching.id) || [];
 }
 
 onMounted(async () => {
@@ -255,24 +197,12 @@ const showErrorPopup = (message: string) => {
 const hideErrorPopup = () => {
     isErrorPopupVisible.value = false;
 }
-
-const isTeachingMode = ref(false);
-const toggleTeachingMode = () => {
-    isTeachingMode.value = !isTeachingMode.value;
-};
 </script>
 
 <template>
     <AdminLayout>
         <div class="flex flex-col h-full gap-8 items-end">
-            <Button
-                :class="['text-white', isTeachingMode ? 'bg-red-300' : 'bg-blue-400']"
-                @click="toggleTeachingMode"
-            >
-                {{ isTeachingMode ? 'Mode Enseignements' : 'Mode Enseignants' }}
-            </Button>
-
-            <div :class="['flex gap-8 flex-1 w-full min-h-0', {'flex-row-reverse': isTeachingMode}]">
+            <div class="flex gap-8 flex-1 w-full min-h-0">
                 <TeachersListManager
                     class="h-full w-1/3"
                     :teachers
