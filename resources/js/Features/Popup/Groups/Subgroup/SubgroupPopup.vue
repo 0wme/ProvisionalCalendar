@@ -28,7 +28,6 @@ const emit = defineEmits(["close", "updateSubgroupName"]);
                     "
                 />
             </div>
-
             <slot />
         </div>
     </Popup>

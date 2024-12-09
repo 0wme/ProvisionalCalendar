@@ -14,17 +14,15 @@ const classe = ref<Class>({ id: 0, name: "", groups: [] });
 const isCloseWithoutSaveConfirmationPopupVisible = ref<boolean>(false);
 
 const resetClass = () => {
-    classe.value = {
-        id: 0,
-        name: "",
-        groups: [],
-    };
+    classe.value = { id: 0, name: "", groups: [] };
 };
 
 watch(
     () => props.show,
     () => {
-        resetClass();
+        if (props.show) {
+            resetClass();
+        }
     }
 );
 
@@ -67,7 +65,7 @@ const handleAdd = async () => {
             `${API_ENDPOINTS.PROMOTION}/1`,
             classe.value
         );
-        emit("add", response.data.promotion);
+        emit("add", response.data.group);
     } catch (error: any) {
         if (error.response?.data?.error) {
             emit("error", error.response.data.error);

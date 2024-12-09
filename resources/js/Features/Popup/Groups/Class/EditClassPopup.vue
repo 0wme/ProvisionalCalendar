@@ -6,8 +6,7 @@ import Button from "@/Components/Button.vue";
 import { ref, watch } from "vue";
 import CloseWithoutSaveConfirmationPopup from "@/Features/Popup/CloseWithoutSaveConfirmationPopup.vue";
 import axios from "axios";
-import { API_ENDPOINTS } from "@/constants";
-import { MESSAGES } from "@/constants";
+import { API_ENDPOINTS, MESSAGES } from "@/constants";
 
 const props = defineProps<{ classe?: Class; show?: boolean }>();
 const emit = defineEmits(["cancel", "delete", "save", "error"]);
@@ -47,17 +46,13 @@ const hideDeleteConfirmationPopup = () => {
     isDeleteConfirmationPopupVisible.value = false;
 };
 
-const handleUpdateClassName = (groupName: string) => {
+const updateClassName = (groupName: string) => {
     editedClass.value!.name = groupName;
 };
 
 const handleCloseWithoutSaving = () => {
     hideCloseWithoutSaveConfirmationPopup();
     emit("cancel");
-};
-
-const handleCancelCloseWithoutSaving = () => {
-    hideCloseWithoutSaveConfirmationPopup();
 };
 
 const handleCancel = () => {
@@ -110,7 +105,7 @@ const handleSave = async () => {
         :classe="editedClass"
         :show
         title="Modifier un sous-groupe"
-        @updateClassName="handleUpdateClassName"
+        @updateClassName="updateClassName"
         @close="handleCancel"
     >
         <div class="flex gap-4">
@@ -127,7 +122,7 @@ const handleSave = async () => {
     <CloseWithoutSaveConfirmationPopup
         :show="isCloseWithoutSaveConfirmationPopupVisible"
         @close="handleCloseWithoutSaving"
-        @cancel="handleCancelCloseWithoutSaving"
+        @cancel="hideCloseWithoutSaveConfirmationPopup"
     />
     <DeleteConfirmationPopup
         :show="isDeleteConfirmationPopupVisible"

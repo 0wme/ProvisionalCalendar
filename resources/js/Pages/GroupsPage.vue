@@ -72,15 +72,12 @@ const hideEditGroupPopup = () => {
 
 const handleSaveEditedGroup = async (group: Group) => {
     hideEditGroupPopup();
-    const response = await axios.put("/api/groupes/groupe/" + group.id, group);
     classes.value = classes.value.map((classe) => {
         if (classe.id === selectedClassId.value) {
             return {
                 ...classe,
                 groups: classe.groups.map((g) =>
-                    g.id === group.id
-                        ? { ...g, name: response.data.group.name }
-                        : g
+                    g.id === group.id ? { ...g, name: group.name } : g
                 ),
             };
         }
@@ -94,7 +91,6 @@ const hideAddGroupPopup = () => {
 
 const handleDeleteGroup = async (group: Group) => {
     hideEditGroupPopup();
-    await axios.delete("/api/groupes/groupe/" + group.id);
     classes.value = classes.value.map((classe) => {
         if (classe.id === selectedClassId.value) {
             return {
@@ -117,15 +113,11 @@ const showAddGroupPopup = () => {
 
 const handleAddGroup = async (group: Group) => {
     hideAddGroupPopup();
-    const response = await axios.post(
-        "/api/groupes/groupe/" + selectedClassId.value,
-        group
-    );
     classes.value = classes.value.map((classe) => {
         if (classe.id === selectedClassId.value) {
             return {
                 ...classe,
-                groups: [...classe.groups, response.data.group],
+                groups: [...classe.groups, group],
             };
         }
         return classe;
