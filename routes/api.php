@@ -46,6 +46,7 @@ Route::get('/years', [YearController::class, 'index']);
     Route::get('/enseignant/enseignements/{teacher}', [TeacherTeachingController::class, 'getTeachingsByTeacher']);
     Route::get('/enseignant/{teacher}', [TeacherTeachingController::class, 'getTeacher']);
     Route::get('/enseignement/{teaching}', [TeacherTeachingController::class, 'getTeaching']);
+    Route::get('/enseignement/{teaching}/check-hours', [TeacherTeachingController::class, 'checkTeachingHours']);
 
     Route::get('/enseignant/enseignement/{teacher}/{teaching}', [TeacherTeachingController::class, 'getTeacherTeaching']);
 
@@ -68,5 +69,4 @@ Route::get('/years', [YearController::class, 'index']);
     Route::delete('/enseignement/{teaching}', [TeacherTeachingController::class, 'deleteTeaching']);
 
     Route::delete('/enseignant/enseignement/{teacher}/{teaching}', [TeacherTeachingController::class, 'deleteTeacherTeaching']);
-    
 
