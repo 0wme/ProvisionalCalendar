@@ -20,7 +20,8 @@ class TeacherNotificationMail extends Mailable
 
     public function build()
     {
-        return $this->subject('Notification de modification')
+        return $this
+                    ->subject('Notification de modification')
                     ->view('mail_notification');
     }
 }
