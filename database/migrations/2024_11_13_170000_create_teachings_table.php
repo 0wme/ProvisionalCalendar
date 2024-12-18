@@ -31,7 +31,7 @@ return new class extends Migration
             $table->string('apogee_code', 10);
             $table->decimal('tp_hours_initial', 5, 2);
             $table->decimal('tp_hours_continued', 5, 2)->nullable();
-            $table->decimal('td_hours_intial', 5, 2);
+            $table->decimal('td_hours_initial', 5, 2);
             $table->decimal('td_hours_continued', 5, 2)->nullable();
             $table->decimal('cm_hours_initial', 5, 2);
             $table->decimal('cm_hours_continued', 5, 2)->nullable();

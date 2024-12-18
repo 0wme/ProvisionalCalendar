@@ -11,7 +11,7 @@ class Teaching extends Model
         'apogee_code',
         'tp_hours_initial',
         'tp_hours_continued',
-        'td_hours_intial',
+        'td_hours_initial',
         'td_hours_continued',
         'cm_hours_initial',
         'cm_hours_continued',
@@ -30,6 +30,12 @@ class Teaching extends Model
                 throw new \InvalidArgumentException(
                     'Un enseignement doit avoir soit un semestre, soit un trimestre, mais pas les deux.'
                 );
+            }
+        });
+
+        static::updated(function ($teaching) {
+            foreach ($teaching->teachers as $teacher) {
+                app(\App\Services\TeacherNotificationService::class)->handleModification($teacher);
             }
         });
     }
