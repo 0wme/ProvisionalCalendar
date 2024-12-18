@@ -5,134 +5,135 @@
         <div class="config-section">
           <h2 class="text-xl font-bold mb-4">Groupes</h2>
           <div class="flex flex-col gap-4">
-            <div class="flex justify-between items-center">
-              <span>Promotion</span>
-              <input type="text" v-model="texts.promo" class="border p-2 rounded" />
-            </div>
-            <div class="flex justify-between items-center">
-              <span>Groupe</span>
-              <input type="text" v-model="texts.group" class="border p-2 rounded" />
-            </div>
-            <div class="flex justify-between items-center">
-              <span>Demi-groupe</span>
-              <input type="text" v-model="texts.subgroup" class="border p-2 rounded" />
+            <div v-for="label in groupLabels" :key="label.id" class="flex justify-between items-center">
+              <span>{{ label.original_name }}</span>
+              <input 
+                type="text" 
+                v-model="labelValues[label.id]" 
+                class="border p-2 rounded" 
+              />
             </div>
           </div>
         </div>
+
         <div class="config-section">
           <h2 class="text-xl font-bold mb-4">Enseignants/Enseignements</h2>
           <div class="flex flex-col gap-4">
-            <div class="flex justify-between items-center">
-              <span>Enseignants</span>
-              <input type="text" v-model="texts.teachers" class="border p-2 rounded" />
-            </div>
-            <div class="flex justify-between items-center">
-              <span>Enseignements</span>
-              <input type="text" v-model="texts.teachings" class="border p-2 rounded" />
-            </div>
-            <div class="flex justify-between items-center">
-              <span>Mode Enseignants</span>
-              <input type="text" v-model="texts.teachersMode" class="border p-2 rounded" />
-            </div>
-            <div class="flex justify-between items-center">
-              <span>Mode Enseignements</span>
-              <input type="text" v-model="texts.teachingsMode" class="border p-2 rounded" />
+            <div v-for="label in teachingLabels" :key="label.id" class="flex justify-between items-center">
+              <span>{{ label.original_name }}</span>
+              <input 
+                type="text" 
+                v-model="labelValues[label.id]" 
+                class="border p-2 rounded" 
+              />
             </div>
           </div>
         </div>
+
         <div class="config-section">
           <h2 class="text-xl font-bold mb-4">Calendrier Prévisionnel</h2>
           <div class="flex flex-col gap-4">
-            <div class="flex justify-between items-center">
-              <span>S</span>
-              <input type="text" v-model="texts.s" class="border p-2 rounded" />
-            </div>
-            <div class="flex justify-between items-center">
-              <span>CM</span>
-              <input type="text" v-model="texts.cm" class="border p-2 rounded" />
-            </div>
-            <div class="flex justify-between items-center">
-              <span>TD</span>
-              <input type="text" v-model="texts.td" class="border p-2 rounded" />
-            </div>
-            <div class="flex justify-between items-center">
-              <span>TP</span>
-              <input type="text" v-model="texts.tp" class="border p-2 rounded" />
+            <div v-for="label in calendarLabels" :key="label.id" class="flex justify-between items-center">
+              <span>{{ label.original_name }}</span>
+              <input 
+                type="text" 
+                v-model="labelValues[label.id]" 
+                class="border p-2 rounded" 
+              />
             </div>
           </div>
         </div>
-        <div class="config-section">
-          <h2 class="text-xl font-bold mb-4">Configurations</h2>
-          <div class="flex flex-col gap-4">
-            <div class="flex justify-between items-center">
-              <span>Mode Édition</span>
-              <input type="text" v-model="texts.editMode" class="border p-2 rounded" />
-            </div>
-            <div class="flex justify-between items-center">
-              <span>Panneau de configuration</span>
-              <input type="text" v-model="texts.configPanel" class="border p-2 rounded" />
-            </div>
-          </div>
-        </div>
+
         <div class="config-section">
           <h2 class="text-xl font-bold mb-4">Menu Latéral</h2>
           <div class="flex flex-col gap-4">
-            <div class="flex justify-between items-center">
-              <span>Calendrier Prévisionnel</span>
-              <input type="text" v-model="texts.sidebarCalendar" class="border p-2 rounded" />
-            </div>
-            <div class="flex justify-between items-center">
-              <span>EDT</span>
-              <input type="text" v-model="texts.sidebarEdt" class="border p-2 rounded" />
-            </div>
-            <div class="flex justify-between items-center">
-              <span>Service</span>
-              <input type="text" v-model="texts.sidebarService" class="border p-2 rounded" />
-            </div>
-            <div class="flex justify-between items-center">
-              <span>Déconnexion</span>
-              <input type="text" v-model="texts.sidebarLogout" class="border p-2 rounded" />
+            <div v-for="label in sidebarLabels" :key="label.id" class="flex justify-between items-center">
+              <span>{{ label.original_name }}</span>
+              <input 
+                type="text" 
+                v-model="labelValues[label.id]" 
+                class="border p-2 rounded" 
+              />
             </div>
           </div>
         </div>
       </div>
       <div class="validate-button-container">
-        <button class="validate-button">Valider</button>
+        <button class="validate-button" @click="handleSave">Valider</button>
       </div>
     </div>
   </AdminLayout>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
+import axios from 'axios';
 
-const texts = ref({
-  teachers: 'Enseignants',
-  teachings: 'Enseignements',
-  teachersMode: 'Mode Enseignants',
-  teachingsMode: 'Mode Enseignements',
-  provisionalCalendar: 'Calendrier Prévisionnel',
-  teachersTeachings: 'Enseignants/Enseignements',
-  editMode: 'Mode Édition',
-  configPanel: 'Panneau de configuration',
-  s: 'S',
-  cm: 'CM',
-  td: 'TD',
-  tp: 'TP',
-  groupSettings: 'Paramétrage des groupes',
-  textSettings: 'Paramétrage des textes',
-  alertHistory: 'Historique des alertes',
-  m3c: 'M3C',
-  initial: 'Initiale',
-  continuous: 'Continue',
-  promo: 'Promo',
-  group: 'Groupe',
-  subgroup: 'Demi-groupe',
-  sidebarCalendar: 'Calendrier Prévisionnel',
-  sidebarEdt: 'EDT',
-  sidebarService: 'Service',
-  sidebarLogout: 'Déconnexion',
+interface Label {
+  id: number;
+  original_name: string;
+  name: string | null;
+}
+
+const labels = ref<Label[]>([]);
+const labelValues = ref<{[key: number]: string}>({});
+
+// Grouper les labels par catégorie
+const groupLabels = computed(() => {
+  return labels.value.filter(label => 
+    ['Promotion', 'Groupe', 'Demi-goupe'].includes(label.original_name)
+  );
+});
+
+const teachingLabels = computed(() => {
+  return labels.value.filter(label => 
+    ['Enseignants', 'Enseignements', 'Mode Enseignants', 'Mode Enseignements'].includes(label.original_name)
+  );
+});
+
+const calendarLabels = computed(() => {
+  return labels.value.filter(label => 
+    ['S', 'CM', 'TD', 'TP'].includes(label.original_name)
+  );
+});
+
+const sidebarLabels = computed(() => {
+  return labels.value.filter(label => 
+    ['EDT', 'Services', 'Déconnexion'].includes(label.original_name)
+  );
+});
+
+const fetchLabels = async () => {
+  try {
+    const response = await axios.get('/api/labels');
+    labels.value = response.data;
+    
+    // Initialiser les valeurs des labels
+    labels.value.forEach(label => {
+      labelValues.value[label.id] = label.name || label.original_name;
+    });
+  } catch (error) {
+    console.error('Erreur lors de la récupération des labels:', error);
+  }
+};
+
+const handleSave = async () => {
+  try {
+    for (const label of labels.value) {
+      if (labelValues.value[label.id] !== label.name) {
+        await axios.put(`/api/labels/${label.id}`, {
+          name: labelValues.value[label.id]
+        });
+      }
+    }
+  } catch (error) {
+    console.error('Erreur lors de la sauvegarde des labels:', error);
+  }
+};
+
+onMounted(() => {
+  fetchLabels();
 });
 </script>
 
