@@ -1,7 +1,7 @@
 <template>
   <AdminLayout>
     <div class="config-page-container">
-      <div class="config-page grid grid-cols-2 gap-8 p-8 overflow-y-auto">
+      <div class="config-page grid grid-cols-2 gap-8 p-8">
         <div class="config-section">
           <h2 class="text-xl font-bold mb-4">Page Enseignants/Enseignements</h2>
           <div class="flex flex-col gap-4">
@@ -129,7 +129,9 @@
           </div>
         </div>
       </div>
-      <button class="validate-button">Valider</button>
+      <div class="validate-button-container">
+        <button class="validate-button">Valider</button>
+      </div>
     </div>
   </AdminLayout>
 </template>
@@ -164,12 +166,26 @@ const texts = ref({
 </script>
 
 <style scoped>
+.config-page-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  max-height: calc(100vh - 2rem);
+}
 
+.config-page {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.validate-button-container {
+  padding: 1rem;
+  display: flex;
+  justify-content: flex-end;
+}
 
 .validate-button {
-  position: absolute;
-  bottom: 1rem;
-  right: 1rem;
   background-color: #4CAF50;
   color: white;
   padding: 0.5rem 1rem;
