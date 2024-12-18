@@ -6,11 +6,11 @@
         </TestComponent>
     </AdminLayout>
 </template>
-  
+
   <script setup lang="ts">
-import TestComponent from '@/Components/TestComponent.vue';
+import TestComponent from '@/Components/CalendarCell.vue';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 </script>
-  
+
   <style scoped>
   </style>
