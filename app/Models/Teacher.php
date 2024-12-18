@@ -14,6 +14,15 @@ class Teacher extends Model
         'year_id'
     ];
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::updated(function ($teacher) {
+            app(\App\Services\TeacherNotificationService::class)->handleModification($teacher);
+        });
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);

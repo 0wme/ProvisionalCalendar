@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('acronym', 3);
             $table->string('first_name');
             $table->string('last_name');
+            $table->string('email')->unique(); // Ajout de la colonne email
             $table->timestamps();
         });
     }

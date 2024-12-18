@@ -668,5 +668,130 @@ class TeacherTeachingController extends Controller
         }
     }
 
+    /**
+     * Vérifie la répartition des heures des lots d'un enseignement
+     */
+    public function checkTeachingHours($teaching_id): JsonResponse
+    {
+        try {
+            $teaching = Teaching::with(['slots'])->findOrFail($teaching_id);
+            
+            // Initialisation des compteurs
+            $totalTP = 0;
+            $totalTD = 0;
+            $totalCM = 0;
+            $groupHours = [];
+            $slotDetails = [];
+            
+            // Calcul des heures par groupe et total
+            foreach ($teaching->slots as $slot) {
+                switch($slot->type) {
+                    case 'TP':
+                        $totalTP += $slot->duration;
+                        break;
+                    case 'TD':
+                        $totalTD += $slot->duration;
+                        break;
+                    case 'CM':
+                        $totalCM += $slot->duration;
+                        break;
+                }
+                
+                if (!isset($groupHours[$slot->academic_promotion_id])) {
+                    $groupHours[$slot->academic_promotion_id] = [
+                        'total' => 0,
+                        'CM' => 0,
+                        'TD' => 0,
+                        'TP' => 0
+                    ];
+                }
+                $groupHours[$slot->academic_promotion_id]['total'] += $slot->duration;
+                $groupHours[$slot->academic_promotion_id][$slot->type] += $slot->duration;
+                
+                // Ajoute les détails du slot
+                $slotDetails[] = [
+                    'id' => $slot->id,
+                    'type' => $slot->type,
+                    'duration' => $slot->duration,
+                    'promotion_id' => $slot->academic_promotion_id,
+                    'week_id' => $slot->week_id,
+                    'teacher_id' => $slot->teacher_id,
+                    'substitute_teacher_id' => $slot->substitute_teacher_id
+                ];
+            }
 
+            $hoursMatch = true;
+            $errors = [];
+            
+            // Vérifie les heures définies
+            $definedHours = [
+                'TP' => [
+                    'initial' => $teaching->tp_hours_initial,
+                    'continued' => $teaching->tp_hours_continued,
+                    'total' => $teaching->tp_hours_initial + ($teaching->tp_hours_continued ?? 0),
+                    'actual' => $totalTP
+                ],
+                'TD' => [
+                    'initial' => $teaching->td_hours_initial,
+                    'continued' => $teaching->td_hours_continued,
+                    'total' => $teaching->td_hours_initial + ($teaching->td_hours_continued ?? 0),
+                    'actual' => $totalTD
+                ],
+                'CM' => [
+                    'initial' => $teaching->cm_hours_initial,
+                    'continued' => $teaching->cm_hours_continued,
+                    'total' => $teaching->cm_hours_initial + ($teaching->cm_hours_continued ?? 0),
+                    'actual' => $totalCM
+                ]
+            ];
+            
+            // Vérifie chaque type d'heures
+            foreach (['TP', 'TD', 'CM'] as $type) {
+                if ($definedHours[$type]['actual'] !== $definedHours[$type]['total']) {
+                    $hoursMatch = false;
+                    $errors[] = "Le total des heures de {$type} ({$definedHours[$type]['actual']}h) ne correspond pas aux heures définies dans l'enseignement ({$definedHours[$type]['total']}h)";
+                }
+            }
+
+            // Vérifie l'équité entre les groupes
+            $groupsBalanced = true;
+            if (count($groupHours) > 1) {
+                $firstGroupHours = reset($groupHours)['total'];
+                foreach ($groupHours as $groupId => $hours) {
+                    if ($hours['total'] !== $firstGroupHours) {
+                        $groupsBalanced = false;
+                        $errors[] = "Le groupe {$groupId} a {$hours['total']}h alors que d'autres groupes ont {$firstGroupHours}h";
+                    }
+                }
+            }
+
+            return response()->json([
+                'teaching' => [
+                    'id' => $teaching->id,
+                    'title' => $teaching->title,
+                    'apogee_code' => $teaching->apogee_code,
+                    'defined_hours' => $definedHours
+                ],
+                'status' => [
+                    'hours_match' => $hoursMatch,
+                    'groups_balanced' => $groupsBalanced,
+                ],
+                'totals' => [
+                    'tp' => $totalTP,
+                    'td' => $totalTD,
+                    'cm' => $totalCM,
+                    'all' => $totalTP + $totalTD + $totalCM
+                ],
+                'groups' => $groupHours,
+                'slots' => $slotDetails,
+                'errors' => $errors
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Une erreur est survenue',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
 }

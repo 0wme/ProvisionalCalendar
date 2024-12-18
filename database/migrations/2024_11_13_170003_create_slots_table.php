@@ -35,8 +35,11 @@ return new class extends Migration
 
             $table->boolean('is_neutralized')->default(false);
             $table->foreignId('week_id')->constrained('weeks');
+            $table->enum('type', ['CM', 'TD', 'TP']); // Ajout du type
             $table->timestamps();
         });
+
+        
     }
 
     /**
