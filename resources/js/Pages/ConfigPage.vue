@@ -3,7 +3,24 @@
     <div class="config-page-container">
       <div class="config-page grid grid-cols-2 gap-8 p-8">
         <div class="config-section">
-          <h2 class="text-xl font-bold mb-4">Page Enseignants/Enseignements</h2>
+          <h2 class="text-xl font-bold mb-4">Groupes</h2>
+          <div class="flex flex-col gap-4">
+            <div class="flex justify-between items-center">
+              <span>Promotion</span>
+              <input type="text" v-model="texts.promo" class="border p-2 rounded" />
+            </div>
+            <div class="flex justify-between items-center">
+              <span>Groupe</span>
+              <input type="text" v-model="texts.group" class="border p-2 rounded" />
+            </div>
+            <div class="flex justify-between items-center">
+              <span>Demi-groupe</span>
+              <input type="text" v-model="texts.subgroup" class="border p-2 rounded" />
+            </div>
+          </div>
+        </div>
+        <div class="config-section">
+          <h2 class="text-xl font-bold mb-4">Enseignants/Enseignements</h2>
           <div class="flex flex-col gap-4">
             <div class="flex justify-between items-center">
               <span>Enseignants</span>
@@ -24,28 +41,7 @@
           </div>
         </div>
         <div class="config-section">
-          <h2 class="text-xl font-bold mb-4">Général</h2>
-          <div class="flex flex-col gap-4">
-            <div class="flex justify-between items-center">
-              <span>Calendrier Prévisionnel</span>
-              <input type="text" v-model="texts.provisionalCalendar" class="border p-2 rounded" />
-            </div>
-            <div class="flex justify-between items-center">
-              <span>Enseignants/Enseignements</span>
-              <input type="text" v-model="texts.teachersTeachings" class="border p-2 rounded" />
-            </div>
-            <div class="flex justify-between items-center">
-              <span>Mode Édition</span>
-              <input type="text" v-model="texts.editMode" class="border p-2 rounded" />
-            </div>
-            <div class="flex justify-between items-center">
-              <span>Panneau de configuration</span>
-              <input type="text" v-model="texts.configPanel" class="border p-2 rounded" />
-            </div>
-          </div>
-        </div>
-        <div class="config-section">
-          <h2 class="text-xl font-bold mb-4">Page Mode Édition</h2>
+          <h2 class="text-xl font-bold mb-4">Calendrier Prévisionnel</h2>
           <div class="flex flex-col gap-4">
             <div class="flex justify-between items-center">
               <span>S</span>
@@ -66,65 +62,36 @@
           </div>
         </div>
         <div class="config-section">
-          <h2 class="text-xl font-bold mb-4">Page Panneau de configuration</h2>
+          <h2 class="text-xl font-bold mb-4">Configurations</h2>
           <div class="flex flex-col gap-4">
             <div class="flex justify-between items-center">
-              <span>Paramétrage des groupes</span>
-              <input type="text" v-model="texts.groupSettings" class="border p-2 rounded" />
+              <span>Mode Édition</span>
+              <input type="text" v-model="texts.editMode" class="border p-2 rounded" />
             </div>
             <div class="flex justify-between items-center">
-              <span>Paramétrage des textes</span>
-              <input type="text" v-model="texts.textSettings" class="border p-2 rounded" />
-            </div>
-            <div class="flex justify-between items-center">
-              <span>Historique des alertes</span>
-              <input type="text" v-model="texts.alertHistory" class="border p-2 rounded" />
-            </div>
-            <div class="flex justify-between items-center">
-              <span>Enseignants/Enseignements</span>
-              <input type="text" v-model="texts.teachersTeachings" class="border p-2 rounded" />
+              <span>Panneau de configuration</span>
+              <input type="text" v-model="texts.configPanel" class="border p-2 rounded" />
             </div>
           </div>
         </div>
         <div class="config-section">
-          <h2 class="text-xl font-bold mb-4">Pop up Enseignements</h2>
+          <h2 class="text-xl font-bold mb-4">Menu Latéral</h2>
           <div class="flex flex-col gap-4">
             <div class="flex justify-between items-center">
-              <span>M3C</span>
-              <input type="text" v-model="texts.m3c" class="border p-2 rounded" />
+              <span>Calendrier Prévisionnel</span>
+              <input type="text" v-model="texts.sidebarCalendar" class="border p-2 rounded" />
             </div>
             <div class="flex justify-between items-center">
-              <span>Initiale</span>
-              <input type="text" v-model="texts.initial" class="border p-2 rounded" />
+              <span>EDT</span>
+              <input type="text" v-model="texts.sidebarEdt" class="border p-2 rounded" />
             </div>
             <div class="flex justify-between items-center">
-              <span>Continue</span>
-              <input type="text" v-model="texts.continuous" class="border p-2 rounded" />
+              <span>Service</span>
+              <input type="text" v-model="texts.sidebarService" class="border p-2 rounded" />
             </div>
             <div class="flex justify-between items-center">
-              <span>Enseignants/Enseignements</span>
-              <input type="text" v-model="texts.teachersTeachings" class="border p-2 rounded" />
-            </div>
-          </div>
-        </div>
-        <div class="config-section">
-          <h2 class="text-xl font-bold mb-4">Page Paramétrage des groupes</h2>
-          <div class="flex flex-col gap-4">
-            <div class="flex justify-between items-center">
-              <span>Promo</span>
-              <input type="text" v-model="texts.promo" class="border p-2 rounded" />
-            </div>
-            <div class="flex justify-between items-center">
-              <span>Groupe</span>
-              <input type="text" v-model="texts.group" class="border p-2 rounded" />
-            </div>
-            <div class="flex justify-between items-center">
-              <span>Demi-groupe</span>
-              <input type="text" v-model="texts.subgroup" class="border p-2 rounded" />
-            </div>
-            <div class="flex justify-between items-center">
-              <span>Enseignants/Enseignements</span>
-              <input type="text" v-model="texts.teachersTeachings" class="border p-2 rounded" />
+              <span>Déconnexion</span>
+              <input type="text" v-model="texts.sidebarLogout" class="border p-2 rounded" />
             </div>
           </div>
         </div>
@@ -162,6 +129,10 @@ const texts = ref({
   promo: 'Promo',
   group: 'Groupe',
   subgroup: 'Demi-groupe',
+  sidebarCalendar: 'Calendrier Prévisionnel',
+  sidebarEdt: 'EDT',
+  sidebarService: 'Service',
+  sidebarLogout: 'Déconnexion',
 });
 </script>
 
