@@ -2,10 +2,12 @@
 import ListManager from '@/Components/ListManager/ListManager.vue';
 import { Teacher } from '@/types/models';
 import { defineProps, defineEmits } from 'vue';
+import { ref } from 'vue';
 
 defineProps<{
-    teachers: Teacher[];
-    selectedTeacherId?: number[];
+  title?: string;
+  teachers: Teacher[];
+  selectedTeacherIds: number[];
 }>();
 
 const emit = defineEmits(['select', 'add', 'edit']);
@@ -15,22 +17,25 @@ const handleSelect = (teacher: Teacher) => {
 }
 
 const handleEdit = (teacher: Teacher) => {
-    emit('edit', teacher);
+    showPopupEdit.value = true;
 }
 
-const handleAdd = () => {
-    emit('add');
+const showPopup = ref(false);
+const showPopupEdit = ref(false);
+
+const openPopup = () => {
+    showPopup.value = true;
 }
 </script>
 
 <template>
     <ListManager
         title="Enseignants"
-        hasAdd
+         hasAdd
         :items="teachers"
-        :selectedItemsId="selectedTeacherId"
+        :selectedItemsId="selectedTeacherIds"
         @select="handleSelect"
-        @add="handleAdd"
-        @edit="handleEdit"
+        @add="emit('add')"
+        @edit="emit('edit', $event)"
     />
 </template>
