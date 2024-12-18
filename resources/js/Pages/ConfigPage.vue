@@ -164,16 +164,7 @@ const texts = ref({
 </script>
 
 <style scoped>
-.config-page-container {
-  position: relative;
-  height: 100vh;
-  overflow: hidden;
-}
 
-.config-page {
-  height: calc(100vh - 4rem);
-  padding-bottom: 4rem;
-}
 
 .validate-button {
   position: absolute;
