@@ -1,0 +1,308 @@
+[
+    {
+        "week": 1,
+        "groups": [
+            {
+                "contents": [
+                    {
+                        "hours": 2,
+                        "teacherName": "Laurent DUBREUIL",
+                        "type": "CM"
+                    }
+                ],
+                "groups": [
+                    {
+                        "contents": [
+                            {
+                                "hours": 1.5,
+                                "teacherName": "Laurent DUBREUIL",
+                                "type": "TD"
+                            }
+                        ],
+                        "groups": [
+                            {
+                                "contents": [
+                                    {
+                                        "hours": 1,
+                                        "teacherName": "Laurent DUBREUIL",
+                                        "type": "TP"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "week": 2,
+        "groups": [
+            {
+                "contents": [
+                    {
+                        "hours": 1,
+                        "teacherName": "John Doe",
+                        "type": "CM"
+                    }
+                ],
+                "groups": [
+                    {
+                        "contents": [
+                            {
+                                "hours": 1,
+                                "teacherName": "John Doe",
+                                "type": "TD"
+                            },
+                            {
+                                "hours": 2,
+                                "teacherName": "Jane Doe",
+                                "type": "TD"
+                            }
+                        ],
+                        "groups": [
+                            {
+                                "contents": [
+                                    {
+                                        "hours": 1,
+                                        "teacherName": "John Doe",
+                                        "type": "TP"
+                                    },
+                                    {
+                                        "hours": 2,
+                                        "teacherName": "Jane Doe",
+                                        "type": "TP"
+                                    }
+                                ]
+                            },
+                            {
+                                "contents": [
+                                    {
+                                        "hours": 1,
+                                        "type": "TP",
+                                        "teacherName": "John Doe"
+                                    },
+                                    {
+                                        "hours": 2,
+                                        "type": "TP",
+                                        "teacherName": "Jane Doe"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "contents": [
+                            {
+                                "hours": 1,
+                                "teacherName": "John Doe",
+                                "type": "TD"
+                            },
+                            {
+                                "hours": 2,
+                                "teacherName": "Jane Doe",
+                                "type": "TD"
+                            }
+                        ],
+                        "groups": [
+                            {
+                                "contents": [
+                                    {
+                                        "hours": 1,
+                                        "teacherName": "John Doe",
+                                        "type": "TP"
+                                    },
+                                    {
+                                        "hours": 2,
+                                        "teacherName": "Jane Doe",
+                                        "type": "TP"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "week": 3,
+        "groups": [
+            {
+                "contents": [
+                    {
+                        "hours": 1,
+                        "teacherName": "John Doe",
+                        "type": "CM"
+                    }
+                ],
+                "groups": [
+                    {
+                        "contents": [
+                            {
+                                "hours": 1,
+                                "teacherName": "John Doe",
+                                "type": "TD"
+                            },
+                            {
+                                "hours": 2,
+                                "teacherName": "Jane Doe",
+                                "type": "TD"
+                            }
+                        ],
+                        "groups": [
+                            {
+                                "contents": [
+                                    {
+                                        "hours": 1,
+                                        "teacherName": "John Doe",
+                                        "type": "TP"
+                                    },
+                                    {
+                                        "hours": 2,
+                                        "teacherName": "Jane Doe",
+                                        "type": "TP"
+                                    }
+                                ]
+                            },
+                            {
+                                "contents": [
+                                    {
+                                        "hours": 1,
+                                        "teacherName": "John Doe",
+                                        "type": "TP"
+                                    },
+                                    {
+                                        "hours": 2,
+                                        "teacherName": "Jane Doe",
+                                        "type": "TP"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "contents": [
+                            {
+                                "hours": 1,
+                                "teacherName": "John Doe",
+                                "type": "TD"
+                            },
+                            {
+                                "hours": 2,
+                                "teacherName": "Jane Doe",
+                                "type": "TD"
+                            }
+                        ],
+                        "groups": [
+                            {
+                                "contents": [
+                                    {
+                                        "hours": 1,
+                                        "teacherName": "John Doe",
+                                        "type": "TP"
+                                    },
+                                    {
+                                        "hours": 2,
+                                        "teacherName": "Jane Doe",
+                                        "type": "TP"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "week": 4,
+        "groups": [
+            {
+                "contents": [
+                    {
+                        "hours": 1,
+                        "teacherName": "John Doe",
+                        "type": "CM"
+                    }
+                ],
+                "groups": [
+                    {
+                        "contents": [
+                            {
+                                "hours": 1,
+                                "teacherName": "John Doe",
+                                "type": "TD"
+                            },
+                            {
+                                "hours": 2,
+                                "teacherName": "Jane Doe",
+                                "type": "TD"
+                            }
+                        ],
+                        "groups": [
+                            {
+                                "contents": [
+                                    {
+                                        "hours": 1,
+                                        "teacherName": "John Doe",
+                                        "type": "TP"
+                                    },
+                                    {
+                                        "hours": 2,
+                                        "teacherName": "Jane Doe",
+                                        "type": "TP"
+                                    }
+                                ]
+                            },
+                            {
+                                "contents": [
+                                    {
+                                        "hours": 1,
+                                        "teacherName": "John Doe",
+                                        "type": "TP"
+                                    },
+                                    {
+                                        "hours": 2,
+                                        "teacherName": "Jane Doe",
+                                        "type": "TP"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "contents": [
+                            {
+                                "hours": 1,
+                                "teacherName": "John Doe",
+                                "type": "TD"
+                            },
+                            {
+                                "hours": 2,
+                                "teacherName": "Jane Doe",
+                                "type": "TD"
+                            }
+                        ],
+                        "groups": [
+                            {
+                                "contents": [
+                                    {
+                                        "hours": 1,
+                                        "teacherName": "John Doe",
+                                        "type": "TP"
+                                    },
+                                    {
+                                        "hours": 2,
+                                        "teacherName": "Jane Doe",
+                                        "type": "TP"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+]
