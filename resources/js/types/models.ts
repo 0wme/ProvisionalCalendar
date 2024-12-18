@@ -64,6 +64,19 @@ export interface Item {
     period?: Period;
 }
 
+export enum EditedItemStatus {
+    ADDED,
+    DELETED,
+    MODIFIED
+}
+
+export interface EditedItem extends Item {
+    /**
+     * Indique si l'élément a été modifié.
+     */
+    editStatus: EditedItemStatus;
+}
+
 /**
  * @interface Teacher
  * 
@@ -82,6 +95,10 @@ export interface Teacher extends Item {
      * Le code de l'enseignant.
      */
     code: string;
+    /**
+     * Les enseignements de l'enseignant.
+     */
+    teachings: Teaching[];
 }
 
 /**
@@ -121,10 +138,8 @@ export interface Teaching extends Item {
     /**
      * Les enseignants de l'enseignement.
      */
-    semester: number;
-    trimester: number;
-
-    teachers: Teacher[];
+    semester?: number;
+    trimester?: number;
 }
 
 /**

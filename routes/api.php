@@ -71,5 +71,5 @@ Route::post('/years/{id}/clone', [YearController::class, 'clone']);
     Route::delete('/enseignement/{teaching}', [TeacherTeachingController::class, 'deleteTeaching']);
 
     Route::delete('/enseignant/enseignement/{teacher}/{teaching}', [TeacherTeachingController::class, 'deleteTeacherTeaching']);
-    
+
 
