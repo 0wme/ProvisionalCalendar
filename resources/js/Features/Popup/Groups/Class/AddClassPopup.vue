@@ -64,7 +64,7 @@ const handleAdd = async () => {
     <ClassPopup
         :show
         :classe
-        title="Ajouter un sous-groupe"
+        title="Ajouter une promotion"
         @updateClassName="handleUpdateClassName"
         @close="handleCancel"
     >

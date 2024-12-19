@@ -94,7 +94,7 @@ const handleSave = async () => {
     <ClassPopup
         :classe="editedClass"
         :show
-        title="Modifier un sous-groupe"
+        title="Modifier une promotion"
         @updateClassName="updateClassName"
         @close="handleCancel"
     >
