@@ -63,7 +63,7 @@ const biggestTP = computed(() => {
 </script>
 
 <template>
-    <div class="relative overflow-y-scroll">
+    <div class="relative overflow-y-scroll scrollbar-visible">
         <CalendarLeftSidebar :weeks-data="weeksData" class="absolute" />
         <CalendarContent
             :weeks-data="weeksData"
@@ -78,3 +78,27 @@ const biggestTP = computed(() => {
         />
     </div>
 </template>
+
+<style scoped>
+.scrollbar-visible {
+    scrollbar-gutter: stable;
+}
+
+.scrollbar-visible::-webkit-scrollbar {
+    width: 15px;
+    display: block;
+}
+
+.scrollbar-visible::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.scrollbar-visible::-webkit-scrollbar-thumb {
+    background: #9ca3af;
+    border-radius: 5px;
+}
+
+.scrollbar-visible::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+</style>

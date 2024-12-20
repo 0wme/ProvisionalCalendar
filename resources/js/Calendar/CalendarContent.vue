@@ -10,7 +10,10 @@ defineProps<{
 </script>
 
 <template>
-    <div class="overflow-x-auto" style="max-width: calc(100% - 3rem)">
+    <div
+        class="overflow-x-scroll scrollbar-visible"
+        style="max-width: calc(100% - 3rem)"
+    >
         <div v-for="week in weeksData" class="flex flex-col h-52">
             <div class="flex flex-col h-full">
                 <CalendarCell
@@ -25,3 +28,27 @@ defineProps<{
         </div>
     </div>
 </template>
+
+<style scoped>
+.scrollbar-visible {
+    scrollbar-gutter: stable;
+}
+
+.scrollbar-visible::-webkit-scrollbar {
+    height: 10px;
+    display: block;
+}
+
+.scrollbar-visible::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.scrollbar-visible::-webkit-scrollbar-thumb {
+    background: #9ca3af;
+    border-radius: 5px;
+}
+
+.scrollbar-visible::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+</style>

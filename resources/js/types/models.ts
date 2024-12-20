@@ -1,34 +1,34 @@
 /**
  * @interface MenuItem
- * 
+ *
  * Représente un élément du menu.
  */
 export interface MenuItem {
     /**
      * Le nom de la classe de l'icône.
      */
-    iconClass: string,
+    iconClass: string;
     /**
      * Le label de l'élément du menu.
      */
-    label: string,
+    label: string;
     /**
      * La route de l'élément du menu.
      */
-    route: string,
+    route: string;
     /**
      * Le sous-menu de l'élément du menu.
      */
-    submenu?: MenuItem[],
+    submenu?: MenuItem[];
     /**
      * Indique si l'élément du menu est désactivé.
      */
-    disable?: boolean
+    disable?: boolean;
 }
 
 /**
  * @interface Period
- * 
+ *
  * Représente une période.
  */
 export interface Period {
@@ -40,13 +40,11 @@ export interface Period {
      * Le nom de la période.
      */
     name: string;
-
-    
 }
 
 /**
  * @interface Item
- * 
+ *
  * Représente un élément.
  */
 export interface Item {
@@ -67,7 +65,7 @@ export interface Item {
 export enum EditedItemStatus {
     ADDED,
     DELETED,
-    MODIFIED
+    MODIFIED,
 }
 
 export interface EditedItem extends Item {
@@ -79,7 +77,7 @@ export interface EditedItem extends Item {
 
 /**
  * @interface Teacher
- * 
+ *
  * Représente un enseignant.
  */
 export interface Teacher extends Item {
@@ -103,7 +101,7 @@ export interface Teacher extends Item {
 
 /**
  * @interface Teaching
- * 
+ *
  * Représente un enseignement.
  */
 export interface Teaching extends Item {
@@ -144,7 +142,7 @@ export interface Teaching extends Item {
 
 /**
  * @interface Class
- * 
+ *
  * Représente une classe.
  */
 export interface Class extends Item {
@@ -153,7 +151,7 @@ export interface Class extends Item {
 
 /**
  * @interface Group
- * 
+ *
  * Représente un groupe.
  */
 export interface Group extends Item {
@@ -162,8 +160,13 @@ export interface Group extends Item {
 
 /**
  * @interface Subgroup
- * 
+ *
  * Représente un sous-groupe.
  */
-export interface Subgroup extends Item {
+export interface Subgroup extends Item {}
+
+export enum SlotType {
+    CM = "CM",
+    TD = "TD",
+    TP = "TP",
 }
