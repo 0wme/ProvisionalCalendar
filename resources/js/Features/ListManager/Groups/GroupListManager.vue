@@ -7,8 +7,8 @@ import { useLabelsStore } from '@/Stores/labelsStore';
 const labelsStore = useLabelsStore();
 
 defineProps<{
-  groups: Group[];
-  selectedGroupId?: number;
+    groups: Group[];
+    selectedGroupId?: number;
 }>();
 
 const emit = defineEmits(['select', 'edit', 'add']);
@@ -40,8 +40,5 @@ const handleAdd = () => {
         hasAdd
         :items="groups"
         :selectedItemsId="selectedGroupId ? [selectedGroupId] : undefined"
-        @select="handleSelect"
-        @edit="handleEdit"
-        @add="handleAdd"
     />
 </template>

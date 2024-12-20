@@ -7,8 +7,8 @@ import { useLabelsStore } from '@/Stores/labelsStore';
 const labelsStore = useLabelsStore();
 
 defineProps<{
-  classes: Class[];
-  selectedClassId?: number;
+    classes: Class[];
+    selectedClassId?: number;
 }>();
 
 const emit = defineEmits(['select', 'edit', 'add']);
@@ -40,8 +40,5 @@ const handleAdd = () => {
         hasAdd
         :items="classes"
         :selectedItemsId="selectedClassId ? [selectedClassId] : undefined"
-        @select="handleSelect"
-        @edit="handleEdit"
-        @add="handleAdd"
     />
 </template>
