@@ -11,16 +11,13 @@ defineProps<{
 }>();
 
 const title = computed(() => {
-    return labelsStore.getLabel('Sous-groupes');
+    return labelsStore.getLabel('Demi-groupe');
 });
 
 onMounted(async () => {
     await labelsStore.fetchLabels();
 });
 
-const handleEdit = (item: Subgroup) => {
-    console.log(item);
-}
 </script>
 
 <template>
@@ -28,6 +25,5 @@ const handleEdit = (item: Subgroup) => {
         :title="title"
         hasAdd
         :items="subgroups"
-        @edit="handleEdit"
     />
 </template>
