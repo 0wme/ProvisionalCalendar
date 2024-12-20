@@ -1,5 +1,5 @@
 <template>
-  <AdminLayout>
+  <MainLayout>
     <div class="config-page-container">
       <div class="config-page grid grid-cols-2 gap-8 p-8">
         <div class="config-section">
@@ -57,17 +57,31 @@
             </div>
           </div>
         </div>
+
+        <div class="config-section">
+          <h2 class="text-xl font-bold mb-4">Menu du haut</h2>
+          <div class="flex flex-col gap-4">
+            <div v-for="label in topMenuLabels" :key="label.id" class="flex justify-between items-center">
+              <span>{{ label.original_name }}</span>
+              <input 
+                type="text" 
+                v-model="labelValues[label.id]" 
+                class="border p-2 rounded" 
+              />
+            </div>
+          </div>
+        </div>
       </div>
       <div class="validate-button-container">
         <button class="validate-button" @click="handleSave">Valider</button>
       </div>
     </div>
-  </AdminLayout>
+  </MainLayout>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue';
-import AdminLayout from '@/Layouts/AdminLayout.vue';
+import MainLayout from '@/Layouts/MainLayout.vue';
 import { useLabelsStore } from '@/Stores/labelsStore';
 import axios from 'axios';
 
@@ -101,7 +115,13 @@ const calendarLabels = computed(() => {
 
 const sidebarLabels = computed(() => {
   return labelsStore.labels.filter(label => 
-    ['Groupes', 'Enseignants', 'Calendrier'].includes(label.original_name)
+    ['Calendrier Prévisionnel', 'EDT', 'Services', 'Déconnexion'].includes(label.original_name)
+  );
+});
+
+const topMenuLabels = computed(() => {
+  return labelsStore.labels.filter(label => 
+    ['Groupes', 'Enseignants/Enseignements', 'Calendrier Prévisionnel', 'Configuration'].includes(label.original_name)
   );
 });
 
