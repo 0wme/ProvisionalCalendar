@@ -29,7 +29,7 @@ class LabelsSeeder extends Seeder
             'Continue',
             'Promotion',
             'Groupe',
-            'Demi-goupe',
+            'Demi-groupe',
             'EDT',
             'Services',
             'Déconnexion'

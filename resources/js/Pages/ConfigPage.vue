@@ -68,6 +68,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
+import { useLabelsStore } from '@/Stores/labelsStore';
 import axios from 'axios';
 
 interface Label {
@@ -76,65 +77,63 @@ interface Label {
   name: string | null;
 }
 
-const labels = ref<Label[]>([]);
+const labelsStore = useLabelsStore();
 const labelValues = ref<{[key: number]: string}>({});
 
 // Grouper les labels par catégorie
 const groupLabels = computed(() => {
-  return labels.value.filter(label => 
-    ['Promotion', 'Groupe', 'Demi-goupe'].includes(label.original_name)
+  return labelsStore.labels.filter(label => 
+    ['Promotion', 'Groupe', 'Demi-groupe'].includes(label.original_name)
   );
 });
 
 const teachingLabels = computed(() => {
-  return labels.value.filter(label => 
+  return labelsStore.labels.filter(label => 
     ['Enseignants', 'Enseignements', 'Mode Enseignants', 'Mode Enseignements'].includes(label.original_name)
   );
 });
 
 const calendarLabels = computed(() => {
-  return labels.value.filter(label => 
+  return labelsStore.labels.filter(label => 
     ['S', 'CM', 'TD', 'TP'].includes(label.original_name)
   );
 });
 
 const sidebarLabels = computed(() => {
-  return labels.value.filter(label => 
-    ['EDT', 'Services', 'Déconnexion'].includes(label.original_name)
+  return labelsStore.labels.filter(label => 
+    ['Groupes', 'Enseignants', 'Calendrier'].includes(label.original_name)
   );
 });
 
-const fetchLabels = async () => {
-  try {
-    const response = await axios.get('/api/labels');
-    labels.value = response.data;
-    
-    // Initialiser les valeurs des labels
-    labels.value.forEach(label => {
-      labelValues.value[label.id] = label.name || label.original_name;
-    });
-  } catch (error) {
-    console.error('Erreur lors de la récupération des labels:', error);
+onMounted(async () => {
+  await labelsStore.fetchLabels();
+  // Initialiser les valeurs des labels
+  for (const label of labelsStore.labels) {
+    labelValues.value[label.id] = label.name || label.original_name;
   }
-};
+});
 
 const handleSave = async () => {
   try {
-    for (const label of labels.value) {
+    let hasChanges = false;
+    for (const label of labelsStore.labels) {
       if (labelValues.value[label.id] !== label.name) {
         await axios.put(`/api/labels/${label.id}`, {
           name: labelValues.value[label.id]
         });
+        hasChanges = true;
       }
+    }
+    if (hasChanges) {
+      alert('Les modifications ont été enregistrées avec succès');
+      // Rafraîchir les données
+      await labelsStore.fetchLabels();
     }
   } catch (error) {
     console.error('Erreur lors de la sauvegarde des labels:', error);
+    alert('Une erreur est survenue lors de la sauvegarde des modifications');
   }
 };
-
-onMounted(() => {
-  fetchLabels();
-});
 </script>
 
 <style scoped>

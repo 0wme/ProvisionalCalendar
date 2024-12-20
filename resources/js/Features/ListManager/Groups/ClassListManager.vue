@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import ListManager from '@/Components/ListManager/ListManager.vue';
-import { defineProps, defineEmits } from 'vue';
+import { defineProps, defineEmits, onMounted, computed } from 'vue';
 import { Class } from '@/types/models';
+import { useLabelsStore } from '@/Stores/labelsStore';
+
+const labelsStore = useLabelsStore();
 
 defineProps<{
   classes: Class[];
@@ -9,6 +12,14 @@ defineProps<{
 }>();
 
 const emit = defineEmits(['select', 'edit', 'add']);
+
+const title = computed(() => {
+    return labelsStore.getLabel('Promotion');
+});
+
+onMounted(async () => {
+    await labelsStore.fetchLabels();
+});
 
 const handleSelect = (item: Class) => {
     emit('select', item);
@@ -25,7 +36,7 @@ const handleAdd = () => {
 
 <template>
     <ListManager
-        title="Promotions"
+        :title="title"
         hasAdd
         :items="classes"
         :selectedItemsId="selectedClassId ? [selectedClassId] : undefined"
