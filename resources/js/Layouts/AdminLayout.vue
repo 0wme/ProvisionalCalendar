@@ -8,6 +8,7 @@ import AddYearPopup from '@/Components/Popup/AddYearPopup.vue';
 import IconButton from '@/Components/IconButton.vue';
 import Filter from '@/Components/Filter.vue';
 import axios from 'axios';
+import { useLabelsStore } from '@/Stores/labelsStore';
 
 interface Year {
   id: number;
@@ -22,6 +23,7 @@ const currentPath = ref(window.location.pathname.split('/')[1]);
 const showAddYearPopup = ref(false);
 const years = ref<Year[]>([]);
 const selectedYearIndex = ref(0);
+const labelsStore = useLabelsStore();
 
 const selectedYear = computed(() => {
   return years.value[selectedYearIndex.value]?.name || 'Aucune année';
@@ -56,6 +58,7 @@ const handleAddYear = () => {
 };
 
 onMounted(async () => {
+  await labelsStore.fetchLabels();
   headerMenu.value = mainLayout.value!.querySelector('.header-menu');
   window.addEventListener('resize', updateMainContentHeight);
   
