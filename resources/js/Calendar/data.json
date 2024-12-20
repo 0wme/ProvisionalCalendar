@@ -8,6 +8,11 @@
                         "hours": 2,
                         "teacherName": "Laurent DUBREUIL",
                         "type": "CM"
+                    },
+                    {
+                        "hours": 2,
+                        "teacherName": "Laurent DUBREUIL",
+                        "type": "CM"
                     }
                 ],
                 "groups": [
@@ -36,7 +41,7 @@
             {
                 "contents": [
                     {
-                        "hours": 2,
+                        "hours": 5,
                         "teacherName": "Laurent DUBREUIL",
                         "type": "CM"
                     }
@@ -119,6 +124,20 @@
                                         "teacherName": "Jane Doe"
                                     }
                                 ]
+                            },
+                            {
+                                "contents": [
+                                    {
+                                        "hours": 1,
+                                        "type": "TP",
+                                        "teacherName": "John Doe"
+                                    },
+                                    {
+                                        "hours": 2,
+                                        "type": "TP",
+                                        "teacherName": "Jane Doe"
+                                    }
+                                ]
                             }
                         ]
                     },
@@ -147,6 +166,34 @@
                                         "hours": 2,
                                         "teacherName": "Jane Doe",
                                         "type": "TP"
+                                    }
+                                ]
+                            },
+                            {
+                                "contents": [
+                                    {
+                                        "hours": 1,
+                                        "type": "TP",
+                                        "teacherName": "John Doe"
+                                    },
+                                    {
+                                        "hours": 2,
+                                        "type": "TP",
+                                        "teacherName": "Jane Doe"
+                                    }
+                                ]
+                            },
+                            {
+                                "contents": [
+                                    {
+                                        "hours": 1,
+                                        "type": "TP",
+                                        "teacherName": "John Doe"
+                                    },
+                                    {
+                                        "hours": 2,
+                                        "type": "TP",
+                                        "teacherName": "Jane Doe"
                                     }
                                 ]
                             }

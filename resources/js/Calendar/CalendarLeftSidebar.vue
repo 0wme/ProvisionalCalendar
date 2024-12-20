@@ -5,7 +5,7 @@ defineProps<{
 </script>
 
 <template>
-    <div class="absolute flex flex-col">
+    <div class="flex flex-col">
         <div
             v-for="week in weeksData"
             class="border-2 border-r-gray-200 border-b-gray-200 rounded-l-xl flex items-center justify-center w-12 h-52"
