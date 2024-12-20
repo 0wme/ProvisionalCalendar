@@ -17,7 +17,9 @@ class LabelsSeeder extends Seeder
             'Enseignements',
             'Mode Enseignants',
             'Mode Enseignements',
+            'Groupes',
             'Calendrier Prévisionnel',
+            'Calendrier Prévisionnels',
             'Enseignants/Enseignements',
             'Mode Édition',
             'S',
@@ -31,8 +33,10 @@ class LabelsSeeder extends Seeder
             'Groupe',
             'Demi-groupe',
             'EDT',
-            'Services',
-            'Déconnexion'
+            'Service',
+            'Configurations',
+            'Déconnexion',
+            
         ];
 
         foreach ($labels as $label) {

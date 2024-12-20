@@ -115,13 +115,13 @@ const calendarLabels = computed(() => {
 
 const sidebarLabels = computed(() => {
   return labelsStore.labels.filter(label => 
-    ['Calendrier Prévisionnel', 'EDT', 'Services', 'Déconnexion'].includes(label.original_name)
+    ['Calendrier Prévisionnel', 'EDT', 'Service','Configurations','Déconnexion'].includes(label.original_name)
   );
 });
 
 const topMenuLabels = computed(() => {
   return labelsStore.labels.filter(label => 
-    ['Groupes', 'Enseignants/Enseignements', 'Calendrier Prévisionnel', 'Configuration'].includes(label.original_name)
+    ['Groupes', 'Enseignants/Enseignements', 'Calendrier Prévisionnels'].includes(label.original_name)
   );
 });
 
