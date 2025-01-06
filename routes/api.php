@@ -2,8 +2,10 @@
 
 use App\Http\Controllers\Api\GroupController;
 use App\Http\Controllers\Api\TeacherTeachingController;
+use App\Http\Controllers\Api\LabelController;
 
 use App\Http\Controllers\Api\YearController;
+use Illuminate\Support\Facades\Route;
 
 //Years
 
@@ -49,6 +51,7 @@ Route::post('/years/{id}/clone', [YearController::class, 'clone']);
     Route::get('/enseignant/enseignements/{teacher}', [TeacherTeachingController::class, 'getTeachingsByTeacher']);
     Route::get('/enseignant/{teacher}', [TeacherTeachingController::class, 'getTeacher']);
     Route::get('/enseignement/{teaching}', [TeacherTeachingController::class, 'getTeaching']);
+    Route::get('/enseignement/{teaching}/check-hours', [TeacherTeachingController::class, 'checkTeachingHours']);
 
     Route::get('/enseignant/enseignement/{teacher}/{teaching}', [TeacherTeachingController::class, 'getTeacherTeaching']);
 
@@ -72,4 +75,8 @@ Route::post('/years/{id}/clone', [YearController::class, 'clone']);
 
     Route::delete('/enseignant/enseignement/{teacher}/{teaching}', [TeacherTeachingController::class, 'deleteTeacherTeaching']);
 
+//Labels
 
+    Route::get('/labels', [LabelController::class, 'index']);
+    Route::get('/labels/{label_id}', [LabelController::class, 'getLabel']);
+    Route::put('/labels/{label_id}', [LabelController::class, 'updateLabel']);

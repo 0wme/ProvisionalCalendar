@@ -1,12 +1,19 @@
 <script setup lang="ts">
-import { defineProps, onMounted, ref } from 'vue';
+import { defineProps, computed } from 'vue';
 import Icon from '../Icon.vue';
 import { MenuItem } from '@/types/models';
+import { useLabelsStore } from '@/Stores/labelsStore';
 
-defineProps<{
+const labelsStore = useLabelsStore();
+
+const props = defineProps<{
     item: MenuItem,
     active: boolean,
 }>();
+
+const displayLabel = computed(() => {
+    return labelsStore.getLabel(props.item.label) || props.item.label;
+});
 </script>
 
 <template>
@@ -17,7 +24,7 @@ defineProps<{
         ]">
             <Icon :name="item.iconClass" :size="24" :strokeWidth="2" />
         </div>
-        <span class="text-center">{{ item.label }}</span>
+        <span class="text-center">{{ displayLabel }}</span>
     </li>
 </template>
 

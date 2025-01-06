@@ -1,16 +1,22 @@
 <script setup lang="ts">
 import ListManager from '@/Components/ListManager/ListManager.vue';
 import { Teacher } from '@/types/models';
-import { defineProps, defineEmits } from 'vue';
+import { defineProps, defineEmits, computed } from 'vue';
 import { ref } from 'vue';
+import { useLabelsStore } from '@/Stores/labelsStore';
+
+const labelsStore = useLabelsStore();
 
 defineProps<{
-  title?: string;
   teachers: Teacher[];
   selectedTeacherIds: number[];
 }>();
 
 const emit = defineEmits(['select', 'add', 'edit']);
+
+const title = computed(() => {
+    return labelsStore.getLabel('Enseignants');
+});
 
 const handleSelect = (teacher: Teacher) => {
     emit('select', teacher);
@@ -30,7 +36,7 @@ const openPopup = () => {
 
 <template>
     <ListManager
-        title="Enseignants"
+        :title="title"
          hasAdd
         :items="teachers"
         :selectedItemsId="selectedTeacherIds"

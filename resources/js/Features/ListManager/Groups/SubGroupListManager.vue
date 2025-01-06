@@ -1,13 +1,29 @@
 <script setup lang="ts">
-import ListManager from "@/Components/ListManager/ListManager.vue";
-import { defineProps } from "vue";
-import { Subgroup } from "@/types/models";
+import ListManager from '@/Components/ListManager/ListManager.vue';
+import { defineProps, onMounted, computed } from 'vue';
+import { Subgroup } from '@/types/models';
+import { useLabelsStore } from '@/Stores/labelsStore';
+
+const labelsStore = useLabelsStore();
 
 defineProps<{
     subgroups: Subgroup[];
 }>();
+
+const title = computed(() => {
+    return labelsStore.getLabel('Demi-groupe');
+});
+
+onMounted(async () => {
+    await labelsStore.fetchLabels();
+});
+
 </script>
 
 <template>
-    <ListManager title="Sous-groupes" hasAdd :items="subgroups" />
+    <ListManager
+        :title="title"
+        hasAdd
+        :items="subgroups"
+    />
 </template>

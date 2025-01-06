@@ -1,16 +1,23 @@
 <script setup lang="ts">
 import ListManager from '@/Components/ListManager/ListManager.vue';
 import { Teaching, Period } from '@/types/models';
-import { defineProps } from 'vue';
+import { defineProps, computed } from 'vue';
 import AddTeachingPopup from '@/Features/Popup/Teachings/AddTeachingPopup.vue';
 import EditTeachingPopup from '@/Features/Popup/Teachings/EditTeachingPopup.vue';
 import { ref } from 'vue';
+import { useLabelsStore } from '@/Stores/labelsStore';
+
+const labelsStore = useLabelsStore();
 
 defineProps<{
     periods: Period[];
     teachings: Teaching[];
     selectedTeachingIds: number[];
 }>();
+
+const title = computed(() => {
+    return labelsStore.getLabel('Enseignements');
+});
 
 const emit = defineEmits(['select']);
 
@@ -32,7 +39,7 @@ const handleSelect = (teaching: Teaching) => {
 <template>
     <div class="teachings-list-manager h-full w-full">
         <ListManager
-            title="Enseignements"
+            :title="title"
             hasAdd
             hasImport
             :periods

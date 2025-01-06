@@ -21,6 +21,7 @@
         "vue-tsc": "^2.0.24"
     },
     "dependencies": {
-        "lucide-vue-next": "^0.454.0"
+        "lucide-vue-next": "^0.454.0",
+        "pinia": "^2.3.0"
     }
 }

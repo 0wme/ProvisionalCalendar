@@ -2,7 +2,14 @@
 import Sidebar from '@/Components/Navigation/Sidebar.vue';
 import { sidebarMenuItems } from '@/config/navigation';
 import { Head } from '@inertiajs/vue3';
+import { useLabelsStore } from '@/Stores/labelsStore';
+import { onMounted } from 'vue';
 
+const labelsStore = useLabelsStore();
+
+onMounted(async () => {
+    await labelsStore.fetchLabels();
+});
 </script>
 
 <template>

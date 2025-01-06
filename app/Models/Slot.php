@@ -16,7 +16,19 @@ class Slot extends Model
         'academic_subgroup_id',
         'is_neutralized',
         'week_id',
+        'type', // Ajout du type
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::updated(function ($slot) {
+            foreach ($slot->teachers as $teacher) {
+                app(\App\Services\TeacherNotificationService::class)->handleModification($teacher);
+            }
+        });
+    }
 
     public function teacher()
     {

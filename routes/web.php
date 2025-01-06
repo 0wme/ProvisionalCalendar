@@ -9,6 +9,7 @@ use App\Http\Controllers\TeachersTeachingsController;
 use App\Http\Controllers\ProvisionnalCalendarReaderController;
 use App\Http\Controllers\WorkInProgressController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TestEmailController;
 
 Route::get('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/login', [AuthController::class, 'authenticate']);
@@ -29,6 +30,8 @@ Route::get('/service', [WorkInProgressController::class, 'show'])
     ->middleware(['auth', 'role:reader', 'role:extended_reader', 'role:admin'])
     ->name('service');
 
+Route::get('/send-test-email', [TestEmailController::class, 'sendTestEmail']);
+
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/calendrier-previsionnel/groupes', [GroupsController::class, 'show'])
         ->name('provisionnal_calendar.groups');
@@ -39,6 +42,6 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/calendrier-previsionnel/editeur', [ProvisionnalCalendarEditorController::class, 'show'])
         ->name('provisionnal_calendar.editor');
 
-    Route::get('/calendrier-previsionnel/configurations', [ProvisionnalCalendarSettingsController::class, 'show'])
+    Route::get('/configurations', [ProvisionnalCalendarSettingsController::class, 'show'])
         ->name('provisionnal_calendar.settings');
 });
