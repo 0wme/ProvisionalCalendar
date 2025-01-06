@@ -21,7 +21,7 @@ defineProps<{
         <p
             class="text-gray-500 text-ellipsis overflow-hidden text-nowrap text-sm font-semibold"
         >
-            {{ content.teacherName }}
+            {{ content.teacherCode }} - {{ content.hours }}h
         </p>
     </div>
 </template>
