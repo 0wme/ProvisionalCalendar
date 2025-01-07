@@ -3,6 +3,7 @@ import Data from "./data.json";
 import CalendarLeftSidebar from "./CalendarLeftSidebar.vue";
 import CalendarContent from "./CalendarContent.vue";
 import CalendarRightSidebar from "./CalendarRightSidebar.vue";
+import CalendarHeader from "./CalendarHeader.vue";
 import { computed } from "vue";
 
 const weeksData = Data;
@@ -63,19 +64,31 @@ const biggestTP = computed(() => {
 </script>
 
 <template>
-    <div class="relative overflow-y-scroll scrollbar-visible">
-        <CalendarLeftSidebar :weeks-data="weeksData" class="absolute" />
-        <CalendarContent
-            :weeks-data="weeksData"
-            :biggestCM="biggestCM"
-            :biggestTD="biggestTD"
-            :biggestTP="biggestTP"
-            class="absolute left-12 right-36"
-        />
-        <CalendarRightSidebar
-            :weeks-data="weeksData"
-            class="absolute right-0"
-        />
+    <div class="h-screen flex flex-col">
+        <!-- Header fixe -->
+        <div class="sticky top-0 bg-white z-10 flex pl-12 pr-36">
+            <CalendarHeader
+                :biggestCM="biggestCM"
+                :biggestTD="biggestTD"
+                :biggestTP="biggestTP"
+            />
+        </div>
+        
+        <!-- Contenu défilant -->
+        <div class="flex-1 relative overflow-y-auto">
+            <CalendarLeftSidebar :weeks-data="weeksData" class="absolute left-0 top-0 bottom-0" />
+            <CalendarContent
+                :weeks-data="weeksData"
+                :biggestCM="biggestCM"
+                :biggestTD="biggestTD"
+                :biggestTP="biggestTP"
+                class="absolute left-12 right-36"
+            />
+            <CalendarRightSidebar
+                :weeks-data="weeksData"
+                class="absolute right-0 top-0 bottom-0"
+            />
+        </div>
     </div>
 </template>
 
