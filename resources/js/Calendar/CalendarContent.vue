@@ -33,7 +33,7 @@ onMounted(() => {
 <template>
     <div class="relative" style="max-width: calc(100% - 3rem)">
         <!-- Header avec son propre scroll -->
-        <div ref="headerRef" class="overflow-x-scroll">
+        <div ref="headerRef" class="overflow-x-scroll hide-scrollbar">
             <CalendarHeader
                 :biggestCM="biggestCM"
                 :biggestTD="biggestTD"
@@ -79,5 +79,14 @@ onMounted(() => {
 
 .scrollbar-visible::-webkit-scrollbar-thumb:hover {
     background: #555;
+}
+
+.hide-scrollbar {
+    -ms-overflow-style: none;  /* Pour Internet Explorer et Edge */
+    scrollbar-width: none;     /* Pour Firefox */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+    display: none;             /* Pour Chrome, Safari et Opera */
 }
 </style>
