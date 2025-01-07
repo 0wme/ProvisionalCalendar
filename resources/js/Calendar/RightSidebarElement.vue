@@ -18,7 +18,7 @@ const groupHoursSum = computed(() => {
         <div
             class="w-12 flex items-center justify-start bg-white border-r-2 border-b-2 border-gray-200"
         >
-            <p>{{ groupHoursSum }}</p>
+            <p class="w-full text-center">{{ groupHoursSum }}</p>
         </div>
         <div class="flex flex-col h-full">
             <RightSidebarElement
