@@ -59,7 +59,7 @@ const modifyCalendar = () => {
 
 <template>
   <Popup 
-    title="Ajouter calendrier prévisionnel"
+    title="Modification calendrier prévisionnel"
     :show="showPopup"
     @close="closePopup"
   >
@@ -113,7 +113,7 @@ const modifyCalendar = () => {
         @click="modifyCalendar" 
         class="w-full bg-[#72C489] hover:bg-[#5A8B6F] text-white font-semibold py-4 px-6 rounded-full text-lg"
       >
-        Ajouter
+        Modifier
       </button>
     </div>
   </Popup>
