@@ -7,33 +7,51 @@ const props = defineProps<{
     biggestTP: number;
 }>();
 
-const cmWidth = computed(() => `${props.biggestCM * 100}px`);
-const tdWidth = computed(() => `${props.biggestTD * 100}px`);
-const tpWidth = computed(() => `${props.biggestTP * 100}px`);
+const cmWidth = computed(() => `${props.biggestCM * 96}px`);
+const tdWidth = computed(() => `${props.biggestTD * 96}px`);
+const tpWidth = computed(() => `${props.biggestTP * 96}px`);
 </script>
 
 <template>
-    <div class="flex">
-        <!-- Empty space for left sidebar alignment -->
-        <div class="w-12"></div>
-        
+    <div class="flex w-max">
         <!-- Headers container -->
         <div class="flex">
             <!-- CM Header -->
-            <div class="flex items-center justify-center font-semibold text-yellow-600 bg-yellow-100 border-b border-gray-200 h-10" :style="{ width: cmWidth }">
+            <div class="flex items-center justify-center font-semibold text-gray-700 bg-yellow-100 border-r-2 border-b-2 border-gray-200 h-12 min-w-96" :style="{ width: cmWidth }">
                 CM
             </div>
             <!-- TD Header -->
-            <div class="flex items-center justify-center font-semibold text-red-600 bg-red-100 border-b border-gray-200 h-10" :style="{ width: tdWidth }">
+            <div class="flex items-center justify-center font-semibold text-gray-700 bg-red-100 border-r-2 border-b-2 border-gray-200 h-12 min-w-96" :style="{ width: tdWidth }">
                 TD
             </div>
             <!-- TP Header -->
-            <div class="flex items-center justify-center font-semibold text-blue-600 bg-blue-100 border-b border-gray-200 h-10" :style="{ width: tpWidth }">
+            <div class="flex items-center justify-center font-semibold text-gray-700 bg-blue-100 border-r-2 border-b-2 border-gray-200 h-12 min-w-96" :style="{ width: tpWidth }">
                 TP
             </div>
         </div>
-
-        <!-- Empty space for right sidebar alignment -->
-        <div class="w-36"></div>
     </div>
 </template>
+
+<style scoped>
+.scrollbar-visible {
+    scrollbar-gutter: stable;
+}
+
+.scrollbar-visible::-webkit-scrollbar {
+    height: 10px;
+    display: block;
+}
+
+.scrollbar-visible::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.scrollbar-visible::-webkit-scrollbar-thumb {
+    background: #9ca3af;
+    border-radius: 5px;
+}
+
+.scrollbar-visible::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+</style>
