@@ -7,7 +7,7 @@ import { useLabelsStore } from '@/Stores/labelsStore';
 const labelsStore = useLabelsStore();
 
 defineProps<{
-    subgroups: Subgroup[];
+    subgroups: Subgroup[]; 
 }>();
 
 const title = computed(() => {
