@@ -64,29 +64,24 @@ const biggestTP = computed(() => {
 </script>
 
 <template>
-    <div class="h-screen flex flex-col">
-        <!-- Header fixe -->
-        <div class="sticky top-0 bg-white z-10 flex pl-12 pr-36">
-            <CalendarHeader
-                :biggestCM="biggestCM"
-                :biggestTD="biggestTD"
-                :biggestTP="biggestTP"
-            />
-        </div>
+    <div class="h-full flex flex-col">
+
         
         <!-- Contenu défilant -->
         <div class="flex-1 relative overflow-y-auto">
-            <CalendarLeftSidebar :weeks-data="weeksData" class="absolute left-0 top-0 bottom-0" />
+            <CalendarLeftSidebar :weeks-data="weeksData" class="absolute left-0 top-0 bottom-0 pt-12"  />
             <CalendarContent
                 :weeks-data="weeksData"
                 :biggestCM="biggestCM"
                 :biggestTD="biggestTD"
                 :biggestTP="biggestTP"
                 class="absolute left-12 right-36"
+
             />
             <CalendarRightSidebar
                 :weeks-data="weeksData"
-                class="absolute right-0 top-0 bottom-0"
+                class="absolute right-0 top-0 bottom-0 pt-12"
+            
             />
         </div>
     </div>
