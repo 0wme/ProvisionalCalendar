@@ -75,8 +75,8 @@ class CalendarPageController extends Controller
         return $slots->map(function ($slot) {
             return [
                 'hours' => $slot->duration,
-                'teacherName' => $slot->teacher ? $slot->teacher->first_name . ' ' . $slot->teacher->last_name : null
+                'teacherCode' => $slot->teacher ? $slot->teacher->acronym : null
             ];
-        })->values()->all(); // Ajout de all() pour convertir en tableau
+        })->values()->all();
     }
 }
