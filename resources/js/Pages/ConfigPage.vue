@@ -1,5 +1,5 @@
 <template>
-    <MainLayout>
+    <ConfigLayout>
         <div class="config-page-container">
             <div class="config-page grid grid-cols-2 gap-8 p-8">
                 <div class="config-section">
@@ -102,12 +102,12 @@
                 </button>
             </div>
         </div>
-    </MainLayout>
+    </ConfigLayout>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from "vue";
-import MainLayout from "@/Layouts/MainLayout.vue";
+import ConfigLayout from "@/Layouts/ConfigLayout.vue";
 import { useLabelsStore } from "@/Stores/labelsStore";
 import axios from "axios";
 
