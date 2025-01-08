@@ -4,6 +4,7 @@ import CalendarLeftSidebar from "./CalendarLeftSidebar.vue";
 import CalendarContent from "./CalendarContent.vue";
 import CalendarRightSidebar from "./CalendarRightSidebar.vue";
 import CalendarHeader from "./CalendarHeader.vue";
+import RightSidebarHeader from "./RightSidebarHeader.vue";
 import { computed } from "vue";
 
 const weeksData = Data;
@@ -78,11 +79,14 @@ const biggestTP = computed(() => {
                 class="absolute left-12 right-36"
 
             />
-            <CalendarRightSidebar
-                :weeks-data="weeksData"
-                class="absolute right-0 top-0 bottom-0 pt-12"
-            
-            />
+            <div class="absolute right-0 top-0 bottom-0">
+                <RightSidebarHeader />
+                <CalendarRightSidebar
+                    :weeks-data="weeksData"
+                    class="absolute right-0 top-0 bottom-0 pt-12"
+                
+                />
+            </div>
         </div>
     </div>
 </template>
