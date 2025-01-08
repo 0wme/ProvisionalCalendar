@@ -13,6 +13,7 @@ defineProps<{
     periods: Period[];
     teachings: Teaching[];
     selectedTeachingIds: number[];
+    year: string;
 }>();
 
 const title = computed(() => {
@@ -54,6 +55,7 @@ const handleSelect = (teaching: Teaching) => {
             class="z-50"
             v-show="showPopup"
             :show="showPopup"
+            :year="year"
             @close="showPopup = false"
         />
 

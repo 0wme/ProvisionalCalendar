@@ -4,8 +4,12 @@ import CloseWithoutSaveConfirmationPopup from '@/Components/CloseWithoutSaveConf
 import type { Teaching } from '@/types/models';
 import { ref } from 'vue';
 import TeachingPopup from './TeachingPopup.vue';
+import axios from 'axios';
 
-const props = defineProps<{ show: boolean }>();
+const props = defineProps<{
+    show: boolean;
+    year: string;
+}>();
 const emit = defineEmits(['close', 'cancel']);
 
 const teaching = ref<Teaching>({
@@ -92,8 +96,25 @@ const handleCloseWithoutSaving = () => {
     emit('cancel');
 };
 
-const handleAdd = () => {
-    // TODO : API CALL
+const handleAdd = async () => {
+    try {
+        await axios.post(`/api/enseignement/${props.year}`, {
+            title: teaching.value.name,
+            apogee_code: teaching.value.apogee_code,
+            semester: teaching.value.semester,
+            cm_hours_initial: teaching.value.initial_cm,
+            td_hours_initial: teaching.value.initial_td,
+            tp_hours_initial: teaching.value.initial_tp,
+            cm_hours_continued: teaching.value.continuing_cm,
+            td_hours_continued: teaching.value.continuing_td,
+            tp_hours_continued: teaching.value.continuing_tp
+        });
+
+        emit('close');
+    } catch (error) {
+        console.error('Error adding teaching:', error);
+        // Here you could add error handling UI feedback
+    }
 };
 </script>
 

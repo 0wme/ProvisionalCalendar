@@ -211,9 +211,10 @@ const hideErrorPopup = () => {
                 />
                 <TeachingsListManager
                     class="h-full w-2/3"
-                    :teachings
-                    :periods
-                    :selectedTeachingIds
+                    :periods="periods"
+                    :teachings="teachings"
+                    :selectedTeachingIds="selectedTeachingIds"
+                    :year="'1'"
                     @select="handleTeachingSelect"
                 />
             </div>
