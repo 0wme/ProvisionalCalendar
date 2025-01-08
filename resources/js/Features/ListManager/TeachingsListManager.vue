@@ -20,7 +20,7 @@ const title = computed(() => {
     return labelsStore.getLabel('Enseignements');
 });
 
-const emit = defineEmits(['select']);
+const emit = defineEmits(['select', 'teaching-added']);
 
 const showPopup = ref(false);
 const showPopupEdit = ref(false);
@@ -57,6 +57,7 @@ const handleSelect = (teaching: Teaching) => {
             :show="showPopup"
             :year="year"
             @close="showPopup = false"
+            @teaching-added="(teaching) => emit('teaching-added', teaching)"
         />
 
         <!--<EditTeachingPopup

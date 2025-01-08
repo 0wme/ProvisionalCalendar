@@ -10,7 +10,7 @@ const props = defineProps<{
     show: boolean;
     year: string;
 }>();
-const emit = defineEmits(['close', 'cancel']);
+const emit = defineEmits(['close', 'cancel', 'teaching-added']);
 
 const teaching = ref<Teaching>({
   id: 0,
@@ -98,7 +98,7 @@ const handleCloseWithoutSaving = () => {
 
 const handleAdd = async () => {
     try {
-        await axios.post(`/api/enseignement/${props.year}`, {
+        const response = await axios.post(`/api/enseignement/${props.year}`, {
             title: teaching.value.name,
             apogee_code: teaching.value.apogee_code,
             semester: teaching.value.semester,
@@ -110,6 +110,7 @@ const handleAdd = async () => {
             tp_hours_continued: teaching.value.continuing_tp
         });
 
+        emit('teaching-added', response.data);
         emit('close');
     } catch (error) {
         console.error('Error adding teaching:', error);

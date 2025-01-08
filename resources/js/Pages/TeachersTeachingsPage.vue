@@ -108,6 +108,28 @@ const handleTeachingSelect = (selectedItemId: number) => {
     }
 }
 
+const handleTeachingAdded = async (newTeaching) => {
+    // Rafraîchir la liste des teachings
+    const teachingsResponse = await axios.get('/api/enseignements/1');
+    teachings.value = teachingsResponse.data.map((teaching: any) => {
+        return {
+            id: teaching.id,
+            name: teaching.title,
+            period: periods.value.find((period) => period.id === teaching.semester || teaching.trimester),
+            year: teaching.year_id,
+            semester: teaching.semester,
+            trimester: teaching.trimester,
+            apogee_code: teaching.apogee_code,
+            initial_cm: teaching.tp_hours_initial,
+            initial_td: teaching.td_hours_intial,
+            initial_tp: teaching.tp_hours_initial,
+            continuing_cm: teaching.cm_hours_continued,
+            continuing_td: teaching.td_hours_continued,
+            continuing_tp: teaching.tp_hours_continued
+        };
+    });
+}
+
 const showSaveConfirmationPopup = () => {
     fetchModifications();
     isSaveConfirmationPopupVisible.value = true;
@@ -204,18 +226,19 @@ const hideErrorPopup = () => {
         <div class="flex flex-col h-full gap-8 items-end">
             <div class="flex gap-8 flex-1 w-full min-h-0">
                 <TeachersListManager
-                    class="h-full w-1/3"
-                    :teachers
-                    :selectedTeacherIds
+                    class="w-1/3"
+                    :teachers="teachers"
+                    :selectedTeacherIds="selectedTeacherIds"
                     @select="handleTeacherSelect"
                 />
                 <TeachingsListManager
-                    class="h-full w-2/3"
-                    :periods="periods"
+                    class="w-2/3"
                     :teachings="teachings"
+                    :periods="periods"
                     :selectedTeachingIds="selectedTeachingIds"
                     :year="'1'"
                     @select="handleTeachingSelect"
+                    @teaching-added="handleTeachingAdded"
                 />
             </div>
             <div class="flex gap-4 min-h-0 h-min">
