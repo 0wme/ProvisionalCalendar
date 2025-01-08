@@ -65,6 +65,10 @@ const handleUpdateContinuingTP = (continuingTP: number) => {
     teaching.value.continuing_tp = continuingTP;
 };
 
+const handleUpdateSemester = (semester: number) => {
+    teaching.value.semester = semester;
+};
+
 const handleClose = () => {
     if (
         teaching.value.name !== '' ||
@@ -74,7 +78,8 @@ const handleClose = () => {
         teaching.value.initial_tp !== 0 ||
         teaching.value.continuing_cm !== 0 ||
         teaching.value.continuing_td !== 0 ||
-        teaching.value.continuing_tp !== 0
+        teaching.value.continuing_tp !== 0 ||
+        teaching.value.semester !== 0
     ) {
         showCloseWithoutSaveConfirmationPopup();
     } else {
@@ -95,8 +100,8 @@ const handleAdd = () => {
 <template>
     <TeachingPopup
         title="Ajouter un enseignement"
-        :teaching
-        :show
+        :teaching="teaching"
+        :show="props.show"
         @updateTeachingName="handleUpdateTeachingName"
         @updateApogeeCode="handleUpdateApogeeCode"
         @updateInitialCM="handleUpdateInitialCM"
@@ -105,6 +110,7 @@ const handleAdd = () => {
         @updateContinuingCM="handleUpdateContinuingCM"
         @updateContinuingTD="handleUpdateContinuingTD"
         @updateContinuingTP="handleUpdateContinuingTP"
+        @updateSemester="handleUpdateSemester"
         @close="handleClose"
     >
         <Button class="bg-green-500 text-white" @click="handleAdd">Ajouter</Button>

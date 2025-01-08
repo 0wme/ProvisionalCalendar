@@ -18,6 +18,7 @@ const emit = defineEmits([
     'updateContinuingTD',
     'updateInitialTP',
     'updateContinuingTP',
+    'updateSemester',
 ]);
 </script>
 
@@ -45,6 +46,21 @@ const emit = defineEmits([
                     placeholder="ex : TIN13A1S"
                     @input="emit('updateApogeeCode', ($event.target as HTMLInputElement).value)"
                 />
+            </div>
+            <div class="flex flex-col gap-2">
+                <p class="text-lg font-medium">Semestre</p>
+                <select
+                    :value="teaching?.semester"
+                    class="border border-gray-300 rounded-lg p-2"
+                    @change="emit('updateSemester', parseInt(($event.target as HTMLSelectElement).value))"
+                >
+                    <option value="1">Semestre 1</option>
+                    <option value="2">Semestre 2</option>
+                    <option value="3">Semestre 3</option>
+                    <option value="4">Semestre 4</option>
+                    <option value="5">Semestre 5</option>
+                    <option value="6">Semestre 6</option>
+                </select>
             </div>
             <table class="border-separate border-spacing-0">
                 <tbody>
