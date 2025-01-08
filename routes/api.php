@@ -3,7 +3,7 @@
 use App\Http\Controllers\Api\GroupController;
 use App\Http\Controllers\Api\TeacherTeachingController;
 use App\Http\Controllers\Api\LabelController;
-
+use App\Http\Controllers\Api\CalendarController;
 use App\Http\Controllers\Api\YearController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\CalendarPageController;
@@ -82,10 +82,4 @@ Route::middleware(['api.logger'])->group(function () {
         Route::get('/labels', [LabelController::class, 'index']);
         Route::get('/labels/{label_id}', [LabelController::class, 'getLabel']);
         Route::put('/labels/{label_id}', [LabelController::class, 'updateLabel']);
-
-
-    //Calendar
-    
-    Route::get('/calendar/{year}', [CalendarPageController::class, 'getCalendarData']);
-
 });
