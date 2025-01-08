@@ -4,9 +4,11 @@ import axios from "axios";
 import AdminLayout from "@/Layouts/AdminLayout.vue";
 import TeachersListManager from "@/Features/ListManager/TeachersListManager.vue";
 import CalendarTable from "@/Calendar/CalendarTable.vue";
+import AddCalendarPopup from "@/Features/Popup/Calendar/AddCalendarPopup.vue";
 
 const teachers = ref([]);
 const selectedTeacherIds = ref<number[]>([]);
+const isAddCalendarPopupVisible = ref<boolean>(false);
 
 onMounted(async () => {
     try {
@@ -37,4 +39,5 @@ onMounted(async () => {
             <CalendarTable class="w-3/4" />
         </div>
     </AdminLayout>
+    <AddCalendarPopup />
 </template>
