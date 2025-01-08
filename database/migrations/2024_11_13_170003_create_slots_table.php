@@ -16,7 +16,7 @@ return new class extends Migration
             $table->decimal('duration', 3, 1);
             $table->foreignId('teacher_id')->constrained('teachers');
             $table->foreignId('teaching_id')->constrained('teachings');
-            $table->foreignId('substitute_teacher_id')->constrained('teachers')->nullable();
+            $table->foreignId('substitute_teacher_id')->nullable()->constrained('teachers');
             $table->foreignId('academic_promotion_id')
                 ->nullable()
                 ->default(null)

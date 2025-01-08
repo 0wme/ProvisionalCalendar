@@ -3,38 +3,14 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Slot;
 use App\Models\Week;
-use App\Models\Teacher;
-use App\Models\Teaching;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use App\Models\Slot;
 
 class CalendarController extends Controller
 {
-    /**
-     * Récupère les slots pour une semaine donnée
-     */
-    public function getSlots($week_id): JsonResponse
-    {
-        try {
-            $week = Week::with(['slots' => function ($query) {
-                $query->with(['teacher', 'substituteTeacher', 'teaching', 'academicPromotion']);
-            }])->findOrFail($week_id);
-
-            return response()->json([
-                'message' => 'Slots récupérés avec succès',
-                'slots' => $week->slots
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'error' => 'Une erreur est survenue',
-                'message' => $e->getMessage()
-            ], 500);
-        }
-    }
 
     /**
      * Crée un nouveau slot dans l'emploi du temps
@@ -93,5 +69,78 @@ class CalendarController extends Controller
                 'message' => $e->getMessage()
             ], 500);
         }
+    }
+
+
+    public function getCalendarData($year_id): JsonResponse
+    {
+        try {
+            // Récupérer les semaines avec leurs créneaux
+            $weeks = Week::where('year_id', $year_id)
+                        ->with([
+                            'slots.teacher',
+                            'slots.academicPromotion.academicGroups.academicSubgroups'
+                        ])
+                        ->orderBy('week_number')
+                        ->get();
+
+
+            $calendarData = $weeks->map(function ($week) {
+                return [
+                    'week' => $week->week_number,
+                    'groups' => $this->formatPromotionGroups($week->slots)
+                ];
+            });
+
+            return response()->json($calendarData);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Une erreur est survenue',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    private function formatPromotionGroups($slots)
+    {
+        return $slots->groupBy('academic_promotion_id')
+            ->map(function ($promotionSlots) {
+                return [
+                    'contents' => $this->formatSlotContents($promotionSlots->where('type', 'CM')),
+                    'groups' => $this->formatGroups($promotionSlots)
+                ];
+            })->values();
+    }
+
+    private function formatGroups($promotionSlots)
+    {
+        return $promotionSlots->groupBy('academic_group_id')
+            ->map(function ($groupSlots) {
+                return [
+                    'contents' => $this->formatSlotContents($groupSlots->where('type', 'TD')),
+                    'groups' => $this->formatSubgroups($groupSlots)
+                ];
+            })->values();
+    }
+
+    private function formatSubgroups($groupSlots)
+    {
+        return $groupSlots->groupBy('academic_subgroup_id')
+            ->map(function ($subgroupSlots) {
+                return [
+                    'contents' => $this->formatSlotContents($subgroupSlots->where('type', 'TP'))
+                ];
+            })->values();
+    }
+
+    private function formatSlotContents($slots)
+    {
+        return $slots->map(function ($slot) {
+            return [
+                'hours' => $slot->duration,
+                'teacherCode' => $slot->teacher ? $slot->teacher->acronym : null
+            ];
+        })->values()->all();
     }
 }

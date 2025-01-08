@@ -82,8 +82,8 @@ Route::middleware(['api.logger'])->group(function () {
         Route::get('/labels/{label_id}', [LabelController::class, 'getLabel']);
         Route::put('/labels/{label_id}', [LabelController::class, 'updateLabel']);
 
-    //Calendar
+    //Calendrier
 
-        Route::get('/calendar/weeks/{week_id}/slots', [CalendarController::class, 'getSlots']);
-        Route::post('/calendar/slots', [CalendarController::class, 'storeSlot']);
+        Route::get('/calendrier', [CalendarController::class, 'storeSlot']);
+        Route::get('/calendrier/{id}', [CalendarController::class, 'getCalendarData']);
 });
