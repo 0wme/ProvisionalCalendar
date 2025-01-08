@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Slot;
 
-class CalendarPageController extends Controller 
+class CalendarController extends Controller
 {
 
     /**
@@ -78,13 +78,13 @@ class CalendarPageController extends Controller
             // Récupérer les semaines avec leurs créneaux
             $weeks = Week::where('year_id', $year_id)
                         ->with([
-                            'slots.teacher', 
+                            'slots.teacher',
                             'slots.academicPromotion.academicGroups.academicSubgroups'
                         ])
                         ->orderBy('week_number')
                         ->get();
 
- 
+
             $calendarData = $weeks->map(function ($week) {
                 return [
                     'week' => $week->week_number,
@@ -102,7 +102,7 @@ class CalendarPageController extends Controller
         }
     }
 
-    private function formatPromotionGroups($slots) 
+    private function formatPromotionGroups($slots)
     {
         return $slots->groupBy('academic_promotion_id')
             ->map(function ($promotionSlots) {
@@ -113,7 +113,7 @@ class CalendarPageController extends Controller
             })->values();
     }
 
-    private function formatGroups($promotionSlots) 
+    private function formatGroups($promotionSlots)
     {
         return $promotionSlots->groupBy('academic_group_id')
             ->map(function ($groupSlots) {
@@ -124,7 +124,7 @@ class CalendarPageController extends Controller
             })->values();
     }
 
-    private function formatSubgroups($groupSlots) 
+    private function formatSubgroups($groupSlots)
     {
         return $groupSlots->groupBy('academic_subgroup_id')
             ->map(function ($subgroupSlots) {
@@ -134,7 +134,7 @@ class CalendarPageController extends Controller
             })->values();
     }
 
-    private function formatSlotContents($slots) 
+    private function formatSlotContents($slots)
     {
         return $slots->map(function ($slot) {
             return [

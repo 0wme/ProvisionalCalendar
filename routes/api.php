@@ -6,7 +6,6 @@ use App\Http\Controllers\Api\LabelController;
 use App\Http\Controllers\Api\CalendarController;
 use App\Http\Controllers\Api\YearController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\CalendarPageController;
 
 Route::middleware(['api.logger'])->group(function () {
     //Years
