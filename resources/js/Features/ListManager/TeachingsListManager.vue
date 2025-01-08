@@ -5,7 +5,7 @@ import { defineProps, computed } from 'vue';
 import AddTeachingPopup from '@/Features/Popup/Teachings/AddTeachingPopup.vue';
 import EditTeachingPopup from '@/Features/Popup/Teachings/EditTeachingPopup.vue';
 import { ref } from 'vue';
-import { useLabelsStore } from '@/Stores/labelsStore';
+import { useLabelsStore } from '@/stores/labelsStore';
 
 const labelsStore = useLabelsStore();
 

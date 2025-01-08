@@ -3,7 +3,7 @@ import ListManager from '@/Components/ListManager/ListManager.vue';
 import { Teacher } from '@/types/models';
 import { defineProps, defineEmits, computed } from 'vue';
 import { ref } from 'vue';
-import { useLabelsStore } from '@/Stores/labelsStore';
+import { useLabelsStore } from '@/stores/labelsStore';
 
 const labelsStore = useLabelsStore();
 

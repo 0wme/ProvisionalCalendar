@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Popup from '../Popup/Popup.vue';
+import Popup from '@/Components/Popup/Popup.vue';
 import Button from '@/Components/Button.vue';
 import DeleteConfirmationPopup from '@/Components/DeleteConfirmationPopup.vue';
 import CloseWithoutSaveConfirmationPopup from '@/Components/CloseWithoutSaveConfirmationPopup.vue';
