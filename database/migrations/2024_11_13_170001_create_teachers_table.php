@@ -13,12 +13,11 @@ return new class extends Migration
     {
         Schema::create('teachers', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('cascade');
             $table->foreignId('year_id')->constrained('years')->onDelete('cascade');
             $table->string('acronym', 3);
             $table->string('first_name');
             $table->string('last_name');
-            $table->string('email')->unique(); // Ajout de la colonne email
             $table->timestamps();
         });
     }

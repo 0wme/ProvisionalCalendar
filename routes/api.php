@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\TeacherTeachingController;
 use App\Http\Controllers\Api\LabelController;
 use App\Http\Controllers\Api\CalendarController;
 use App\Http\Controllers\Api\YearController;
+use App\Http\Controllers\Api\UserControllerApi; // Ajout du UserController
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['api.logger'])->group(function () {
@@ -86,4 +87,11 @@ Route::middleware(['api.logger'])->group(function () {
 
         Route::get('/calendar/weeks/{week_id}/slots', [CalendarController::class, 'getSlots']);
         Route::post('/calendar/slots', [CalendarController::class, 'storeSlot']);
+
+    // Routes pour la gestion des utilisateurs
+
+    Route::post('/users', [UserControllerApi::class, 'store']);
+    Route::put('/users/{user}', [UserControllerApi::class, 'update']);
+    Route::delete('/users/{user}', [UserControllerApi::class, 'destroy']);
+    Route::post('/users/{user}/create-or-reset-password', [UserControllerApi::class, 'createOrResetPassword']);
 });

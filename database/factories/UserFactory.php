@@ -16,6 +16,7 @@ class UserFactory extends Factory
             'username' => fake()->unique()->userName(),
             'firstname' => fake()->firstName(),
             'lastname' => fake()->lastName(),
+            'email' => fake()->unique()->safeEmail(),
             'password' => bcrypt('password'),
             'role_id' => 2,
             'remember_token' => Str::random(10),
@@ -42,4 +43,4 @@ class UserFactory extends Factory
             'role_id' => 3,
         ]);
     }
-} 
+}

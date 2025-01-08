@@ -42,6 +42,13 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/calendrier-previsionnel/editeur', [ProvisionnalCalendarEditorController::class, 'show'])
         ->name('provisionnal_calendar.editor');
 
-    Route::get('/configurations', [ProvisionnalCalendarSettingsController::class, 'show'])
-        ->name('provisionnal_calendar.settings');
+    Route::get('/configurations', function () {
+        return redirect()->route('provisionnal_calendar.settings.labels');
+    })->name('provisionnal_calendar.settings');
+
+    Route::get('/configurations/labels', [ProvisionnalCalendarSettingsController::class, 'showLabels'])
+        ->name('provisionnal_calendar.settings.labels');
+
+    Route::get('/configurations/utilisateurs', [ProvisionnalCalendarSettingsController::class, 'showUsers'])
+        ->name('provisionnal_calendar.settings.users');
 });
