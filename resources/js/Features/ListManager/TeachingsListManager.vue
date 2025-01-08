@@ -50,14 +50,14 @@ const handleSelect = (teaching: Teaching) => {
             @select="handleSelect"
         />
 
-        <!--<AddTeachingPopup
+        <AddTeachingPopup
             class="z-50"
-            v-if="showPopup"
-            :is-editing="false"
+            v-show="showPopup"
+            :show="showPopup"
             @close="showPopup = false"
         />
 
-        <EditTeachingPopup
+        <!--<EditTeachingPopup
             class="z-50"
             v-if="showPopupEdit"
             :is-editing="true"
