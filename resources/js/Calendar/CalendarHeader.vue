@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed } from "vue";
 
 const props = defineProps<{
     biggestCM: number;
@@ -17,15 +17,24 @@ const tpWidth = computed(() => `${props.biggestTP * 96}px`);
         <!-- Headers container -->
         <div class="flex">
             <!-- CM Header -->
-            <div class="flex items-center justify-center font-semibold text-gray-700 bg-yellow-100 border-r-2 border-b-2 border-gray-200 h-12 min-w-96" :style="{ width: cmWidth }">
+            <div
+                class="flex items-center justify-center font-semibold text-gray-700 bg-yellow-100 border-r-2 border-b-2 border-gray-200 h-12 min-w-96"
+                :style="{ width: cmWidth }"
+            >
                 CM
             </div>
             <!-- TD Header -->
-            <div class="flex items-center justify-center font-semibold text-gray-700 bg-red-100 border-r-2 border-b-2 border-gray-200 h-12 min-w-96" :style="{ width: tdWidth }">
+            <div
+                class="flex items-center justify-center font-semibold text-gray-700 bg-red-100 border-r-2 border-b-2 border-gray-200 h-12 min-w-96"
+                :style="{ width: tdWidth }"
+            >
                 TD
             </div>
             <!-- TP Header -->
-            <div class="flex items-center justify-center font-semibold text-gray-700 bg-blue-100 border-r-2 border-b-2 border-gray-200 h-12 min-w-96" :style="{ width: tpWidth }">
+            <div
+                class="flex items-center justify-center font-semibold text-gray-700 bg-blue-100 border-r-2 border-b-2 border-gray-200 h-12 min-w-96"
+                :style="{ width: tpWidth }"
+            >
                 TP
             </div>
         </div>
