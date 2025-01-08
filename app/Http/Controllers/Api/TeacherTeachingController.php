@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Teacher;
 use App\Models\Year;
 use App\Models\Teaching;
+use App\Models\Semester;
+use App\Models\Trimester;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -217,7 +219,7 @@ class TeacherTeachingController extends Controller
                 'apogee_code' => $teaching->apogee_code,
                 'tp_hours_initial' => $teaching->tp_hours_initial,
                 'tp_hours_continued' => $teaching->tp_hours_continued,
-                'td_hours_initial' => $teaching->td_hours_intial,
+                'td_hours_initial' => $teaching->td_hours_initial,
                 'td_hours_continued' => $teaching->td_hours_continued,
                 'cm_hours_initial' => $teaching->cm_hours_initial,
                 'cm_hours_continued' => $teaching->cm_hours_continued,
@@ -320,6 +322,19 @@ class TeacherTeachingController extends Controller
                 'trimester' => 'nullable|integer|min:1|max:4'
             ]);
 
+            // Vérifie qu'un seul des deux est spécifié
+            if ($request->semester && $request->trimester) {
+                return response()->json([
+                    'error' => 'Un enseignement ne peut pas être lié à la fois à un semestre et à un trimestre'
+                ], 422);
+            }
+
+            if (!$request->semester && !$request->trimester) {
+                return response()->json([
+                    'error' => 'Un enseignement doit être lié soit à un semestre, soit à un trimestre'
+                ], 422);
+            }
+
             // Vérifie si l'année existe
             $yearExists = Year::find($year);
             if (!$yearExists) {
@@ -339,6 +354,36 @@ class TeacherTeachingController extends Controller
                 ], 422);
             }
 
+            // Trouve le semestre ou le trimestre correspondant
+            $semester_id = null;
+            $trimester_id = null;
+
+            if ($request->semester) {
+                $semester = Semester::where('semester_number', $request->semester)
+                    ->where('year_id', $year)
+                    ->first();
+                
+                if (!$semester) {
+                    return response()->json([
+                        'error' => 'Le semestre spécifié n\'existe pas pour cette année'
+                    ], 422);
+                }
+                
+                $semester_id = $semester->id;
+            } else {
+                $trimester = Trimester::where('trimester_number', $request->trimester)
+                    ->where('year_id', $year)
+                    ->first();
+                
+                if (!$trimester) {
+                    return response()->json([
+                        'error' => 'Le trimestre spécifié n\'existe pas pour cette année'
+                    ], 422);
+                }
+                
+                $trimester_id = $trimester->id;
+            }
+
             $teaching = Teaching::create([
                 'title' => $request->title,
                 'apogee_code' => $request->apogee_code,
@@ -348,8 +393,8 @@ class TeacherTeachingController extends Controller
                 'td_hours_continued' => $request->td_hours_continued,
                 'cm_hours_initial' => $request->cm_hours_initial,
                 'cm_hours_continued' => $request->cm_hours_continued,
-                'semester' => $request->semester?->semester_number,
-                'trimester' => $request->trimester?->trimester_number,
+                'semester_id' => $semester_id,
+                'trimester_id' => $trimester_id,
                 'year_id' => $year
             ]);
 
@@ -365,8 +410,8 @@ class TeacherTeachingController extends Controller
                     'td_hours_continued' => $teaching->td_hours_continued,
                     'cm_hours_initial' => $teaching->cm_hours_initial,
                     'cm_hours_continued' => $teaching->cm_hours_continued,
-                    'semester' => $teaching->semester?->semester_number,
-                    'trimester' => $teaching->trimester?->trimester_number,
+                    'semester_id' => $teaching->semester_id,
+                    'trimester_id' => $teaching->trimester_id,
                     'year_id' => $teaching->year_id
                 ]
             ], 201);
@@ -460,7 +505,7 @@ class TeacherTeachingController extends Controller
                 'td_hours_continued' => 'nullable|numeric|min:0',
                 'cm_hours_initial' => 'nullable|numeric|min:0',
                 'cm_hours_continued' => 'nullable|numeric|min:0',
-                'semester' => 'nullable|integer|min:max:6',
+                'semester' => 'nullable|integer|min:1|max:6',
                 'trimester' => 'nullable|integer|min:1|max:4'
             ]);
 
@@ -484,6 +529,36 @@ class TeacherTeachingController extends Controller
                 ], 422);
             }
 
+            // Trouve le semestre ou le trimestre correspondant
+            $semester_id = null;
+            $trimester_id = null;
+
+            if ($request->semester) {
+                $semester = Semester::where('semester_number', $request->semester)
+                    ->where('year_id', $teaching->year_id)
+                    ->first();
+                
+                if (!$semester) {
+                    return response()->json([
+                        'error' => 'Le semestre spécifié n\'existe pas pour cette année'
+                    ], 422);
+                }
+                
+                $semester_id = $semester->id;
+            } else {
+                $trimester = Trimester::where('trimester_number', $request->trimester)
+                    ->where('year_id', $teaching->year_id)
+                    ->first();
+                
+                if (!$trimester) {
+                    return response()->json([
+                        'error' => 'Le trimestre spécifié n\'existe pas pour cette année'
+                    ], 422);
+                }
+                
+                $trimester_id = $trimester->id;
+            }
+
             $teaching->update([
                 'title' => $request->title,
                 'apogee_code' => $request->apogee_code,
@@ -493,8 +568,8 @@ class TeacherTeachingController extends Controller
                 'td_hours_continued' => $request->td_hours_continued,
                 'cm_hours_initial' => $request->cm_hours_initial,
                 'cm_hours_continued' => $request->cm_hours_continued,
-                'semester' => $request->semester?->semester_number,
-                'trimester' => $request->trimester?->trimester_number,
+                'semester_id' => $semester_id,
+                'trimester_id' => $trimester_id,
             ]);
 
             // Recharge les relations pour la réponse
@@ -512,8 +587,8 @@ class TeacherTeachingController extends Controller
                     'td_hours_continued' => $teaching->td_hours_continued,
                     'cm_hours_initial' => $teaching->cm_hours_initial,
                     'cm_hours_continued' => $teaching->cm_hours_continued,
-                    'semester' => $teaching->semester?->semester_number,
-                    'trimester' => $teaching->trimester?->trimester_number,
+                    'semester_id' => $teaching->semester_id,
+                    'trimester_id' => $teaching->trimester_id,
                     'year' => [
                         'id' => $teaching->year->id,
                         'name' => $teaching->year->name
