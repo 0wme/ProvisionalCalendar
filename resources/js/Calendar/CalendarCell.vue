@@ -37,11 +37,11 @@ console.log(isDragOver);
     <div class="flex w-max h-full">
         <div
             :class="[
-                'relative min-w-96 flex items-center justify-start border-r-2 bg-white border-b-2 border-gray-200 after:absolute after:z-50 after:top-0 after:bottom-0 after:right-0 after:left-0',
+                'relative min-w-96 flex items-center justify-start border-r-2 bg-white border-b-2 border-gray-200 after:absolute after:top-0 after:bottom-0 after:right-0 after:left-0',
                 { 'after:bg-blue-500 after:opacity-20': isDragOver },
             ]"
             :style="{ width: `${cellWidth}px` }"
-            dropzone="link"
+            dropzone="move"
             @dragover.prevent="isDragOver = true"
             @dragleave="isDragOver = false"
             @drop="

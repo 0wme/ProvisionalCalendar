@@ -79,16 +79,31 @@ class CalendarController extends Controller
             $weeks = Week::where('year_id', $year_id)
                         ->with([
                             'slots.teacher',
+                            'slots.teaching',
                             'slots.academicPromotion.academicGroups.academicSubgroups'
                         ])
                         ->orderBy('week_number')
                         ->get();
 
+            if ($weeks->isEmpty()) {
+                return response()->json([]);
+            }
 
-            $calendarData = $weeks->map(function ($week) {
+            // Récupérer la promotion du premier slot trouvé
+            $firstSlot = $weeks->pluck('slots')->flatten()->first();
+            if (!$firstSlot) {
+                return response()->json([]);
+            }
+
+            $promotion = $firstSlot->academicPromotion;
+            if (!$promotion) {
+                return response()->json([]);
+            }
+
+            $calendarData = $weeks->map(function ($week) use ($promotion) {
                 return [
                     'week' => $week->week_number,
-                    'groups' => $this->formatPromotionGroups($week->slots)
+                    'groups' => $this->formatPromotionGroups($week->slots, $promotion)
                 ];
             });
 
@@ -102,36 +117,37 @@ class CalendarController extends Controller
         }
     }
 
-    private function formatPromotionGroups($slots)
+    private function formatPromotionGroups($slots, $promotion)
     {
-        return $slots->groupBy('academic_promotion_id')
-            ->map(function ($promotionSlots) {
-                return [
-                    'contents' => $this->formatSlotContents($promotionSlots->where('type', 'CM')),
-                    'groups' => $this->formatGroups($promotionSlots)
-                ];
-            })->values();
+        return collect([
+            [
+                'contents' => $this->formatSlotContents($slots->where('academic_promotion_id', $promotion->id)->where('type', 'CM')),
+                'groups' => $this->formatGroups($slots->where('academic_promotion_id', $promotion->id), $promotion->academicGroups)
+            ]
+        ]);
     }
 
-    private function formatGroups($promotionSlots)
+    private function formatGroups($promotionSlots, $groups)
     {
-        return $promotionSlots->groupBy('academic_group_id')
-            ->map(function ($groupSlots) {
-                return [
-                    'contents' => $this->formatSlotContents($groupSlots->where('type', 'TD')),
-                    'groups' => $this->formatSubgroups($groupSlots)
-                ];
-            })->values();
+        return $groups->map(function ($group) use ($promotionSlots) {
+            $groupSlots = $promotionSlots->where('academic_group_id', $group->id);
+            
+            return [
+                'contents' => $this->formatSlotContents($groupSlots->where('type', 'TD')),
+                'groups' => $this->formatSubgroups($groupSlots, $group->academicSubgroups)
+            ];
+        })->values();
     }
 
-    private function formatSubgroups($groupSlots)
+    private function formatSubgroups($groupSlots, $subgroups)
     {
-        return $groupSlots->groupBy('academic_subgroup_id')
-            ->map(function ($subgroupSlots) {
-                return [
-                    'contents' => $this->formatSlotContents($subgroupSlots->where('type', 'TP'))
-                ];
-            })->values();
+        return $subgroups->map(function ($subgroup) use ($groupSlots) {
+            $subgroupSlots = $groupSlots->where('academic_subgroup_id', $subgroup->id);
+            
+            return [
+                'contents' => $this->formatSlotContents($subgroupSlots->where('type', 'TP'))
+            ];
+        })->values();
     }
 
     private function formatSlotContents($slots)
@@ -139,7 +155,9 @@ class CalendarController extends Controller
         return $slots->map(function ($slot) {
             return [
                 'hours' => $slot->duration,
-                'teacherCode' => $slot->teacher ? $slot->teacher->acronym : null
+                'type' => $slot->type,
+                'teacherCode' => $slot->teacher ? $slot->teacher->acronym : null,
+                'isNeutralized' => $slot->is_neutralized
             ];
         })->values()->all();
     }

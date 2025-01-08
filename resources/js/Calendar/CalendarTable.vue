@@ -1,17 +1,25 @@
 <script setup lang="ts">
-import Data from "./data.json";
 import CalendarLeftSidebar from "./CalendarLeftSidebar.vue";
 import CalendarContent from "./CalendarContent.vue";
 import CalendarRightSidebar from "./CalendarRightSidebar.vue";
-import CalendarHeader from "./CalendarHeader.vue";
 import RightSidebarHeader from "./RightSidebarHeader.vue";
-import { computed } from "vue";
+import { computed, onMounted, ref } from "vue";
+import { Calendar } from "@/types/models";
+import axios from "axios";
 
-const weeksData = Data;
+const weeksData = ref<Calendar>();
+
+onMounted(async () => {
+    weeksData.value = await axios.get("/api/calendrier/1").then((response) => {
+        return response.data;
+    });
+});
 
 const biggestCM = computed(() => {
     let biggest = 0;
-    weeksData.forEach((week) => {
+    if (!weeksData.value) return biggest;
+
+    weeksData.value.forEach((week) => {
         week.groups.forEach((promotion) => {
             let contentSize = 0;
             promotion.contents.forEach((content) => {
@@ -27,8 +35,11 @@ const biggestCM = computed(() => {
 
 const biggestTD = computed(() => {
     let biggest = 0;
-    weeksData.forEach((week) => {
+    if (!weeksData.value) return biggest;
+
+    weeksData.value.forEach((week) => {
         week.groups.forEach((promotion) => {
+            if (!promotion.groups) return;
             promotion.groups.forEach((tdGroup) => {
                 let contentSize = 0;
                 tdGroup.contents.forEach((content) => {
@@ -45,9 +56,13 @@ const biggestTD = computed(() => {
 
 const biggestTP = computed(() => {
     let biggest = 0;
-    weeksData.forEach((week) => {
+    if (!weeksData.value) return biggest;
+
+    weeksData.value.forEach((week) => {
         week.groups.forEach((promotion) => {
+            if (!promotion.groups) return;
             promotion.groups.forEach((tdGroup) => {
+                if (!tdGroup.groups) return;
                 tdGroup.groups.forEach((tpGroup) => {
                     let contentSize = 0;
                     tpGroup.contents.forEach((content) => {
@@ -66,25 +81,24 @@ const biggestTP = computed(() => {
 
 <template>
     <div class="h-full flex flex-col">
-
-        
         <!-- Contenu défilant -->
         <div class="flex-1 relative overflow-y-auto">
-            <CalendarLeftSidebar :weeks-data="weeksData" class="absolute left-0 top-0 bottom-0 pt-12"  />
+            <CalendarLeftSidebar
+                :weeks-data="weeksData"
+                class="absolute left-0 top-0 bottom-0 pt-12"
+            />
             <CalendarContent
                 :weeks-data="weeksData"
                 :biggestCM="biggestCM"
                 :biggestTD="biggestTD"
                 :biggestTP="biggestTP"
                 class="absolute left-12 right-36"
-
             />
             <div class="absolute right-0 top-0 bottom-0">
                 <RightSidebarHeader />
                 <CalendarRightSidebar
                     :weeks-data="weeksData"
                     class="absolute right-0 top-0 bottom-0 pt-12"
-                
                 />
             </div>
         </div>

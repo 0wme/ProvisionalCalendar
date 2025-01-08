@@ -39,5 +39,5 @@ onMounted(async () => {
             <CalendarTable class="w-3/4" />
         </div>
     </AdminLayout>
-    <AddCalendarPopup />
+    <AddCalendarPopup :show="isAddCalendarPopupVisible" />
 </template>

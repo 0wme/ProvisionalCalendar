@@ -7,9 +7,10 @@ const props = defineProps<{
 
 const groupHoursSum = computed(() => {
     if (!props.groupData?.contents) return 0;
-    return props.groupData.contents
+    const sum = props.groupData.contents
         .map((content: any) => content.hours)
         .reduce((sum: number, hours: number) => sum + hours, 0);
+    return Number(sum).toFixed(1);
 });
 </script>
 
