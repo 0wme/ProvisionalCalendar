@@ -33,6 +33,15 @@
                                         "type": "TP"
                                     }
                                 ]
+                            },
+                            {
+                                "contents": [
+                                    {
+                                        "hours": 1,
+                                        "teacherCode": "LD",
+                                        "type": "TP"
+                                    }
+                                ]
                             }
                         ]
                     }
