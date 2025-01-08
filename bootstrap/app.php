@@ -19,6 +19,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->alias([
             'role' => \App\Http\Middleware\RoleManager::class,
+            'api.logger' => \App\Http\Middleware\ApiLogger::class,
         ]);
 
         //
