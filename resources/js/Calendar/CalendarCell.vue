@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import CalendarSlot from "@/Calendar/CalendarSlot.vue";
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { SlotType } from "@/types/models";
 
 const props = defineProps<{
@@ -9,6 +9,8 @@ const props = defineProps<{
     biggestTD: number;
     biggestTP: number;
 }>();
+
+const isDragOver = ref<boolean>(false);
 
 const getGroupType = (): SlotType => {
     return props.groupData.contents[0]?.type as SlotType;
@@ -27,13 +29,27 @@ const cellWidth = computed(() => {
             return 96;
     }
 });
+
+console.log(isDragOver);
 </script>
 
 <template>
     <div class="flex w-max h-full">
         <div
-            class="min-w-96 flex items-center justify-start bg-white border-r-2 border-b-2 border-gray-200"
+            :class="[
+                'relative min-w-96 flex items-center justify-start border-r-2 bg-white border-b-2 border-gray-200 after:absolute after:z-50 after:top-0 after:bottom-0 after:right-0 after:left-0',
+                { 'after:bg-blue-500 after:opacity-20': isDragOver },
+            ]"
             :style="{ width: `${cellWidth}px` }"
+            dropzone="link"
+            @dragover.prevent="isDragOver = true"
+            @dragleave="isDragOver = false"
+            @drop="
+                (e) => {
+                    console.log(e);
+                    isDragOver = false;
+                }
+            "
         >
             <CalendarSlot
                 v-for="content in groupData.contents"

@@ -21,6 +21,7 @@ const handleSelect = () => {
 const handleDrag = (event: DragEvent) => {
     if (event.dataTransfer) {
         event.dataTransfer.setData("text/plain", JSON.stringify(props.item));
+        event.dataTransfer.dropEffect = "link";
     }
 };
 </script>
