@@ -14,6 +14,7 @@ defineProps<{
                 'bg-yellow-200': contentType === SlotType.CM,
                 'bg-red-200': contentType === SlotType.TD,
                 'bg-blue-200': contentType === SlotType.TP,
+                neutralized: content.isNeutralized,
             },
         ]"
         :style="{ width: `${content.hours * 96}px` }"
@@ -25,3 +26,16 @@ defineProps<{
         </p>
     </div>
 </template>
+
+<style scoped>
+.neutralized {
+    filter: brightness(0.8);
+    background-image: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 10px,
+        rgba(255, 150, 150, 1) 10px,
+        rgba(255, 150, 150, 1) 12px
+    );
+}
+</style>
