@@ -5,8 +5,10 @@ use App\Http\Controllers\Api\TeacherTeachingController;
 use App\Http\Controllers\Api\LabelController;
 use App\Http\Controllers\Api\CalendarController;
 use App\Http\Controllers\Api\YearController;
-use App\Http\Controllers\Api\UserControllerApi; // Ajout du UserController
+use App\Http\Controllers\Api\UserControllerApi;
+use App\Http\Controllers\Api\RoleControllerApi;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TestEmailController;
 
 Route::middleware(['api.logger'])->group(function () {
     //Years
@@ -87,9 +89,12 @@ Route::middleware(['api.logger'])->group(function () {
 
         Route::get('/calendar/weeks/{week_id}/slots', [CalendarController::class, 'getSlots']);
         Route::post('/calendar/slots', [CalendarController::class, 'storeSlot']);
+        Route::get('/test-email', [TestEmailController::class, 'sendTestEmail']);
 
     // Routes pour la gestion des utilisateurs
 
+    Route::get('/roles', [RoleControllerApi::class, 'index']);
+    Route::get('/users', [UserControllerApi::class, 'index']);
     Route::post('/users', [UserControllerApi::class, 'store']);
     Route::put('/users/{user}', [UserControllerApi::class, 'update']);
     Route::delete('/users/{user}', [UserControllerApi::class, 'destroy']);

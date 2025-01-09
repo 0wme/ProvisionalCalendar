@@ -10,7 +10,7 @@ class TestEmailController extends Controller
     public function sendTestEmail()
     {
         $teacher = \App\Models\Teacher::first(); // Assurez-vous qu'il y a un enseignant dans la base de données
-        Mail::to('@etu.unilim.fr')->send(new TeacherNotificationMail($teacher));
+        Mail::to('sofian.smimid@etu.unilim.fr')->send(new TeacherNotificationMail($teacher));
         return 'Email de test envoyé';
     }
 }
