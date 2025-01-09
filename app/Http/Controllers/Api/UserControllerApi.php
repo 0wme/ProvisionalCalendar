@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
@@ -102,6 +103,30 @@ class UserControllerApi extends Controller
     }
 
     /**
+     * Récupérer tous les utilisateurs
+     */
+    public function index()
+    {
+        try {
+            $users = User::with('role')
+                ->select('id', 'username', 'firstname', 'lastname', 'email', 'role_id', 'password')
+                ->get()
+                ->map(function ($user) {
+                    $user->has_password = !is_null($user->password);
+                    unset($user->password);
+                    return $user;
+                });
+            return response()->json($users);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Erreur lors de la récupération des utilisateurs',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
      * Supprimer un utilisateur
      */
     public function destroy($id)
@@ -127,7 +152,7 @@ class UserControllerApi extends Controller
     public function createOrResetPassword(User $user)
     {
         // Générer un mot de passe aléatoire
-        $newPassword = Str::random(12);
+        $newPassword = Str::random(4);
         
         // Mettre à jour le mot de passe de l'utilisateur
         $user->password = Hash::make($newPassword);
