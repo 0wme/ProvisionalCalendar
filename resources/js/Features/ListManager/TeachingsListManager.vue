@@ -24,16 +24,24 @@ const emit = defineEmits(['select', 'teaching-added']);
 
 const showPopup = ref(false);
 const showPopupEdit = ref(false);
+const selectedTeaching = ref<Teaching | null>(null);
+
 const openPopup = () => {
     showPopup.value = true;
 }
 
 const handleEdit = (teaching: Teaching) => {
+    selectedTeaching.value = teaching;
     showPopupEdit.value = true;
 }
 
 const handleSelect = (teaching: Teaching) => {
     emit('select', teaching);
+}
+
+const closeEditPopup = () => {
+    showPopupEdit.value = false;
+    selectedTeaching.value = null;
 }
 </script>
 
@@ -60,11 +68,12 @@ const handleSelect = (teaching: Teaching) => {
             @teaching-added="(teaching) => emit('teaching-added', teaching)"
         />
 
-        <!--<EditTeachingPopup
+        <EditTeachingPopup
             class="z-50"
-            v-if="showPopupEdit"
-            :is-editing="true"
-            @close="showPopupEdit = false"
-            />-->
+            v-show="showPopupEdit"
+            :show="showPopupEdit"
+            :teaching="selectedTeaching"
+            @cancel="closeEditPopup"
+        />
     </div>
 </template>
