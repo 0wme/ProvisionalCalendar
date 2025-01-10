@@ -2,7 +2,7 @@
 import { SlotType } from "@/types/models";
 defineProps<{
     content: any;
-    contentType: SlotType;
+    contentType: SlotType | null;
 }>();
 </script>
 

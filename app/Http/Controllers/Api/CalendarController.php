@@ -80,7 +80,10 @@ class CalendarController extends Controller
                         ->with([
                             'slots.teacher',
                             'slots.teaching',
-                            'slots.academicPromotion.academicGroups.academicSubgroups'
+                            'slots.substituteTeacher',
+                            'slots.academicPromotion.academicGroups.academicSubgroups',
+                            'slots.academicGroup',
+                            'slots.academicSubgroup'
                         ])
                         ->orderBy('week_number')
                         ->get();
@@ -131,7 +134,7 @@ class CalendarController extends Controller
     {
         return $groups->map(function ($group) use ($promotionSlots) {
             $groupSlots = $promotionSlots->where('academic_group_id', $group->id);
-            
+
             return [
                 'contents' => $this->formatSlotContents($groupSlots->where('type', 'TD')),
                 'groups' => $this->formatSubgroups($groupSlots, $group->academicSubgroups)
@@ -143,7 +146,7 @@ class CalendarController extends Controller
     {
         return $subgroups->map(function ($subgroup) use ($groupSlots) {
             $subgroupSlots = $groupSlots->where('academic_subgroup_id', $subgroup->id);
-            
+
             return [
                 'contents' => $this->formatSlotContents($subgroupSlots->where('type', 'TP'))
             ];
@@ -153,12 +156,29 @@ class CalendarController extends Controller
     private function formatSlotContents($slots)
     {
         return $slots->map(function ($slot) {
-            return [
+            $data = [
                 'hours' => $slot->duration,
                 'type' => $slot->type,
+                'teacherId' => $slot->teacher ? $slot->teacher->id : null,
                 'teacherCode' => $slot->teacher ? $slot->teacher->acronym : null,
+                'substituteId' => $slot->substituteTeacher ? $slot->substituteTeacher->id : null,
                 'isNeutralized' => $slot->is_neutralized
             ];
+
+            // Ajouter les IDs en fonction du type de slot
+            switch($slot->type) {
+                case 'CM':
+                    $data['promotionId'] = $slot->academic_promotion_id;
+                    break;
+                case 'TD':
+                    $data['groupId'] = $slot->academic_group_id;
+                    break;
+                case 'TP':
+                    $data['subgroupId'] = $slot->academic_subgroup_id;
+                    break;
+            }
+
+            return $data;
         })->values()->all();
     }
 }

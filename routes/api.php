@@ -84,6 +84,6 @@ Route::middleware(['api.logger'])->group(function () {
 
     //Calendrier
 
-        Route::get('/calendrier', [CalendarController::class, 'storeSlot']);
+        Route::post('/calendrier', [CalendarController::class, 'storeSlot']);
         Route::get('/calendrier/{id}', [CalendarController::class, 'getCalendarData']);
 });

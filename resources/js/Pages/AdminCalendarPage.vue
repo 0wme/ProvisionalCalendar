@@ -1,14 +1,24 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import axios from "axios";
 import AdminLayout from "@/Layouts/AdminLayout.vue";
 import TeachersListManager from "@/Features/ListManager/TeachersListManager.vue";
 import CalendarTable from "@/Calendar/CalendarTable.vue";
+import { useCalendarStore } from "@/stores/calendar";
 import AddCalendarPopup from "@/Features/Popup/Calendar/AddCalendarPopup.vue";
 
 const teachers = ref([]);
 const selectedTeacherIds = ref<number[]>([]);
-const isAddCalendarPopupVisible = ref<boolean>(false);
+const calendarStore = useCalendarStore();
+
+// Watch store changes
+watch(
+    () => calendarStore.showingAddCalendarPopup,
+    (showing) => {
+        console.log('Popup visibility changed:', showing);
+        console.log('Current popup data:', calendarStore.addCalendarPopupData);
+    }
+);
 
 onMounted(async () => {
     try {
@@ -33,11 +43,18 @@ onMounted(async () => {
         <div class="h-full w-full flex gap-4">
             <TeachersListManager
                 :teachers="teachers"
-                :selectedTeacherIds="selectedTeacherIds"
+                v-model:selectedTeacherIds="selectedTeacherIds"
                 class="w-1/4"
             />
-            <CalendarTable class="w-3/4" />
+            <div class="w-3/4">
+                <CalendarTable />
+                <AddCalendarPopup
+                    v-if="calendarStore.showingAddCalendarPopup"
+                    v-model:show="calendarStore.showingAddCalendarPopup"
+                    v-bind="calendarStore.addCalendarPopupData"
+                    @close="calendarStore.hideAddCalendarPopup"
+                />
+            </div>
         </div>
     </AdminLayout>
-    <AddCalendarPopup :show="isAddCalendarPopupVisible" />
 </template>

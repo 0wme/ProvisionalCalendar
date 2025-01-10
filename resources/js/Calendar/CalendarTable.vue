@@ -8,11 +8,14 @@ import { Calendar } from "@/types/models";
 import axios from "axios";
 
 const weeksData = ref<Calendar>();
+const teachingId = ref(1);
 
 onMounted(async () => {
-    weeksData.value = await axios.get("/api/calendrier/1").then((response) => {
-        return response.data;
-    });
+    weeksData.value = await axios
+        .get(`/api/calendrier/${teachingId.value}`)
+        .then((response) => {
+            return response.data;
+        });
 });
 
 const biggestCM = computed(() => {
@@ -87,19 +90,52 @@ const biggestTP = computed(() => {
                 :weeks-data="weeksData"
                 class="absolute left-0 top-0 bottom-0 pt-12"
             />
-            <CalendarContent
-                :weeks-data="weeksData"
-                :biggestCM="biggestCM"
-                :biggestTD="biggestTD"
-                :biggestTP="biggestTP"
-                class="absolute left-12 right-36"
-            />
-            <div class="absolute right-0 top-0 bottom-0">
-                <RightSidebarHeader />
-                <CalendarRightSidebar
+            <div class="relative flex-1">
+                <CalendarContent
                     :weeks-data="weeksData"
-                    class="absolute right-0 top-0 bottom-0 pt-12"
-                />
+                    :biggestCM="biggestCM"
+                    :biggestTD="biggestTD"
+                    :biggestTP="biggestTP"
+                    class="absolute left-12 right-36"
+                >
+                    <template v-for="week in weeksData" :key="week.week">
+                        <div class="flex flex-col">
+                            <CalendarCell
+                                v-for="group in week.groups"
+                                :key="group.id"
+                                :groupData="group"
+                                :biggestCM="biggestCM"
+                                :biggestTD="biggestTD"
+                                :biggestTP="biggestTP"
+                            >
+                                <template v-for="subgroup in group.groups" :key="subgroup.id">
+                                    <CalendarCell
+                                        :groupData="subgroup"
+                                        :biggestCM="biggestCM"
+                                        :biggestTD="biggestTD"
+                                        :biggestTP="biggestTP"
+                                    >
+                                        <template v-for="finalGroup in subgroup.groups" :key="finalGroup.id">
+                                            <CalendarCell
+                                                :groupData="finalGroup"
+                                                :biggestCM="biggestCM"
+                                                :biggestTD="biggestTD"
+                                                :biggestTP="biggestTP"
+                                            />
+                                        </template>
+                                    </CalendarCell>
+                                </template>
+                            </CalendarCell>
+                        </div>
+                    </template>
+                </CalendarContent>
+                <div class="absolute right-0 top-0 bottom-0">
+                    <RightSidebarHeader />
+                    <CalendarRightSidebar
+                        :weeks-data="weeksData"
+                        class="absolute right-0 top-0 bottom-0 pt-12"
+                    />
+                </div>
             </div>
         </div>
     </div>
