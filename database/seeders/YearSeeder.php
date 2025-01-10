@@ -14,6 +14,7 @@ class YearSeeder extends Seeder
     public function run(): void
     {
         Year::create([
+            'id' => 1,
             'name' => '2024-2025',
             'periodicity' => 'Semestrial',
         ]);

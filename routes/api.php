@@ -5,7 +5,10 @@ use App\Http\Controllers\Api\TeacherTeachingController;
 use App\Http\Controllers\Api\LabelController;
 use App\Http\Controllers\Api\CalendarController;
 use App\Http\Controllers\Api\YearController;
+use App\Http\Controllers\Api\UserControllerApi;
+use App\Http\Controllers\Api\RoleControllerApi;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TestEmailController;
 
 Route::middleware(['api.logger'])->group(function () {
     //Years

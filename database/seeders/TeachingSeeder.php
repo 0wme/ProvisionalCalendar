@@ -3,6 +3,9 @@
 namespace Database\Seeders;
 
 use App\Models\Teaching;
+use App\Models\Year;
+use App\Models\Semester;
+use App\Models\Trimester;
 use Illuminate\Database\Seeder;
 
 class TeachingSeeder extends Seeder

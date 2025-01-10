@@ -2,23 +2,40 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
+use App\Models\User;
 use App\Models\Teacher;
+use App\Models\Year;
+use Illuminate\Database\Seeder;
+
 class TeacherSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
+        // Vérifier si l'utilisateur existe
+        $user = User::first();
+
+        if (!$user) {
+            // Si pas d'utilisateur, on lance d'abord le UserSeeder
+            $this->call(UserSeeder::class);
+            $user = User::first();
+        }
+
+        // Vérifier si l'année existe
+        $year = Year::first();
+
+        if (!$year) {
+            // Si pas d'année, on lance d'abord le YearSeeder
+            $this->call(YearSeeder::class);
+            $year = Year::first();
+        }
+
+        // Créer l'enseignant
         Teacher::create([
-            'user_id' => 1,
-            'year_id' => 1,
+            'user_id' => $user->id,
+            'year_id' => $year->id,
             'acronym' => 'LD',
             'first_name' => 'Laurent',
             'last_name' => 'DUBREUIL',
-            'email' => 'sofian.smimid+ld@etu.unilim.fr'
         ]);
         Teacher::create([
             'user_id' => 2,
@@ -26,15 +43,13 @@ class TeacherSeeder extends Seeder
             'acronym' => 'AP',
             'first_name' => 'Anais',
             'last_name' => 'POURSAT',
-            'email' => 'sofian.smimid+ap@etu.unilim.fr'
         ]);
         Teacher::create([
             'user_id' => 3,
             'year_id' => 1,
             'acronym' => 'CO',
             'first_name' => 'Cristina',
-            'last_name' => 'ONETE',           
-             'email' => 'sofian.smimid+co@etu.unilim.fr'
+            'last_name' => 'ONETE',
         ]);
         Teacher::create([
             'user_id' => 2,
@@ -42,7 +57,6 @@ class TeacherSeeder extends Seeder
             'acronym' => 'EJ',
             'first_name' => 'Elise',
             'last_name' => 'JOFFRE',
-            'email' => 'sofian.smimid+ej@etu.unilim.fr'
         ]);
         Teacher::create([
             'user_id' => 2,
@@ -50,7 +64,6 @@ class TeacherSeeder extends Seeder
             'acronym' => 'SF',
             'first_name' => 'Said',
             'last_name' => 'FETTAHI',
-            'email' => 'sofian.smimid+sf@etu.unilim.fr'
         ]);
         Teacher::create([
             'user_id' => 2,
@@ -58,7 +71,6 @@ class TeacherSeeder extends Seeder
             'acronym' => 'DM',
             'first_name' => 'David',
             'last_name' => 'MINGO',
-            'email' => 'sofian.smimid+dm@etu.unilim.fr'
         ]);
         Teacher::create([
             'user_id' => 2,
@@ -66,7 +78,6 @@ class TeacherSeeder extends Seeder
             'acronym' => 'SM',
             'first_name' => 'Stephane',
             'last_name' => 'MERILLOU',
-            'email' => 'sofian.smimid+sm@etu.unilim.fr'
         ]);
         Teacher::create([
             'user_id' => 2,
@@ -74,7 +85,6 @@ class TeacherSeeder extends Seeder
             'acronym' => 'NM',
             'first_name' => 'Nicolas',
             'last_name' => 'MERILLOU',
-            'email' => 'sofian.smimid+nm@etu.unilim.fr'
         ]);
         Teacher::create([
             'user_id' => 2,
@@ -82,7 +92,6 @@ class TeacherSeeder extends Seeder
             'acronym' => 'VB',
             'first_name' => 'Véronique',
             'last_name' => 'BAULANT',
-            'email' => 'sofian.smimid+vb@etu.unilim.fr'
         ]);
         Teacher::create([
             'user_id' => 2,
@@ -90,7 +99,6 @@ class TeacherSeeder extends Seeder
             'acronym' => 'PN',
             'first_name' => 'Pierre-Antoine',
             'last_name' => 'NAVARETTE',
-            'email' => 'sofian.smimid+pn@etu.unilim.fr'
 
         ]);
     }
