@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import ListManager from '@/Components/ListManager/ListManager.vue';
-import { defineProps, defineEmits, onMounted, computed } from 'vue';
-import { Class } from '@/types/models';
-import { useLabelsStore } from '@/Stores/labelsStore';
+import ListManager from "@/Components/ListManager/ListManager.vue";
+import { defineProps, defineEmits, onMounted, computed } from "vue";
+import { Class } from "@/types/models";
+import { useLabelsStore } from "@/Stores/labelsStore";
 
 const labelsStore = useLabelsStore();
 
@@ -11,10 +11,10 @@ defineProps<{
     selectedClassId?: number;
 }>();
 
-const emit = defineEmits(['select', 'edit', 'add']);
+const emit = defineEmits(["select", "edit", "add"]);
 
 const title = computed(() => {
-    return labelsStore.getLabel('Promotion');
+    return labelsStore.getLabel("Promotion");
 });
 
 onMounted(async () => {
@@ -22,16 +22,16 @@ onMounted(async () => {
 });
 
 const handleSelect = (item: Class) => {
-    emit('select', item);
-}
+    emit("select", item);
+};
 
 const handleEdit = (item: Class) => {
-    emit('edit', item);
-}
+    emit("edit", item);
+};
 
 const handleAdd = () => {
-    emit('add');
-}
+    emit("add");
+};
 </script>
 
 <template>
@@ -40,5 +40,8 @@ const handleAdd = () => {
         hasAdd
         :items="classes"
         :selectedItemsId="selectedClassId ? [selectedClassId] : undefined"
+        @select="handleSelect"
+        @edit="handleEdit"
+        @add="handleAdd"
     />
 </template>

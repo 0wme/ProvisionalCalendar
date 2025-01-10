@@ -10,6 +10,7 @@ use App\Models\AcademicSubgroup;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 class GroupController extends Controller
 {
@@ -497,7 +498,7 @@ class GroupController extends Controller
     public function deleteGroup($group): JsonResponse
     {
         try {
-            $groupToDelete = AcademicGroup::with(['academicSubgroups', 'academicPromotion'])
+            $groupToDelete = AcademicGroup::with(['academicSubgroups', 'academicPromotion', 'slots'])
                 ->find($group);
             
             if (!$groupToDelete) {
@@ -525,14 +526,23 @@ class GroupController extends Controller
                 ]
             ];
 
-            // La suppression en cascade est gérée par la base de données
-            $groupToDelete->delete();
+            DB::beginTransaction();
+            try {
+                // Delete associated slots first
+                $groupToDelete->slots()->delete();
+                // Then delete the group (which will cascade to subgroups)
+                $groupToDelete->delete();
+                DB::commit();
+            } catch (\Exception $e) {
+                DB::rollback();
+                throw $e;
+            }
 
             return response()->json($deletedGroup);
 
         } catch (\Exception $e) {
             return response()->json([
-                'error' => 'Une erreur est survenue',
+                'error' => 'Une erreur est survenue lors de la suppression',
                 'message' => $e->getMessage()
             ], 500);
         }

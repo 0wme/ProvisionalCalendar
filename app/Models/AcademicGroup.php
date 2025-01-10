@@ -20,4 +20,19 @@ class AcademicGroup extends Model
     {
         return $this->hasMany(AcademicSubgroup::class);
     }
+
+    public function slots()
+    {
+        return $this->hasMany(Slot::class);
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($group) {
+            // Delete associated slots first
+            $group->slots()->delete();
+        });
+    }
 }
