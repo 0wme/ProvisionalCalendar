@@ -85,6 +85,13 @@ Route::middleware(['api.logger'])->group(function () {
         Route::get('/labels/{label_id}', [LabelController::class, 'getLabel']);
         Route::put('/labels/{label_id}', [LabelController::class, 'updateLabel']);
 
+        Route::get('/roles', [RoleControllerApi::class, 'index']);
+        Route::get('/users', [UserControllerApi::class, 'index']);
+        Route::post('/users', [UserControllerApi::class, 'store']);
+        Route::put('/users/{user}', [UserControllerApi::class, 'update']);
+        Route::delete('/users/{user}', [UserControllerApi::class, 'destroy']);
+        Route::post('/users/{user}/create-or-reset-password', [UserControllerApi::class, 'createOrResetPassword']);
+
     //Calendrier
 
         Route::post('/calendrier', [CalendarController::class, 'storeSlot']);
