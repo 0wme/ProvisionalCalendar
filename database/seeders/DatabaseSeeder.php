@@ -20,6 +20,13 @@ class DatabaseSeeder extends Seeder
         // 2. Création des utilisateurs
         $this->call(UserSeeder::class);
 
+        // 3. Création de la hiérarchie académique
+        $this->call([
+            AcademicPromotionSeeder::class,
+            AcademicGroupSeeder::class,
+            AcademicSubgroupSeeder::class,
+        ]);
+
         // 4. Création des autres données
         $this->call([
             WeekSeeder::class,
