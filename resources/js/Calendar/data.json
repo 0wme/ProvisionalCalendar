@@ -37,6 +37,15 @@
                                         "isNeutralized": false
                                     }
                                 ]
+                            },
+                            {
+                                "contents": [
+                                    {
+                                        "hours": 1,
+                                        "teacherCode": "LD",
+                                        "type": "TP"
+                                    }
+                                ]
                             }
                         ]
                     }

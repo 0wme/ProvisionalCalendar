@@ -1,4 +1,4 @@
-<script setup lang="ts">
+ <script setup lang="ts">
 import { computed } from "vue";
 
 const props = defineProps<{
@@ -18,7 +18,7 @@ const tpWidth = computed(() => `${props.biggestTP * 96}px`);
         <div class="flex">
             <!-- CM Header -->
             <div
-                class="flex items-center justify-center font-semibold text-gray-700 bg-yellow-100 border-r-2 border-b-2 border-gray-200 h-12 min-w-96"
+                class="flex items-center justify-center font-semibold text-gray-700 bg-yellow-100 border-r-2 border-b-2 border-gray-200 h-12 min-w-96 rounded-tl-xl"
                 :style="{ width: cmWidth }"
             >
                 CM
@@ -32,7 +32,7 @@ const tpWidth = computed(() => `${props.biggestTP * 96}px`);
             </div>
             <!-- TP Header -->
             <div
-                class="flex items-center justify-center font-semibold text-gray-700 bg-blue-100 border-r-2 border-b-2 border-gray-200 h-12 min-w-96"
+                class="flex items-center justify-center font-semibold text-gray-700 bg-blue-100 border-r-2 border-b-2 border-gray-200 h-12 min-w-96 rounded-tr-xl"
                 :style="{ width: tpWidth }"
             >
                 TP

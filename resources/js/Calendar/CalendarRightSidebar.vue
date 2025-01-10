@@ -7,7 +7,7 @@ defineProps<{
 </script>
 
 <template>
-    <div class="flex flex-col border-gray-200">
+    <div class="flex flex-col border-gray-200 ">
         <div v-for="week in weeksData" class="min-h-52 flex flex-col">
             <RightSidebarElement
                 v-for="group in week.groups"
