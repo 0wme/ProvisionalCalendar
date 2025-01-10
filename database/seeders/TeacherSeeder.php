@@ -2,19 +2,37 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
+use App\Models\User;
 use App\Models\Teacher;
+use App\Models\Year;
+use Illuminate\Database\Seeder;
+
 class TeacherSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
+        // Vérifier si l'utilisateur existe
+        $user = User::first();
+
+        if (!$user) {
+            // Si pas d'utilisateur, on lance d'abord le UserSeeder
+            $this->call(UserSeeder::class);
+            $user = User::first();
+        }
+
+        // Vérifier si l'année existe
+        $year = Year::first();
+
+        if (!$year) {
+            // Si pas d'année, on lance d'abord le YearSeeder
+            $this->call(YearSeeder::class);
+            $year = Year::first();
+        }
+
+        // Créer l'enseignant
         Teacher::create([
-            'user_id' => 1,
-            'year_id' => 1,
+            'user_id' => $user->id,
+            'year_id' => $year->id,
             'acronym' => 'LD',
             'first_name' => 'Laurent',
             'last_name' => 'DUBREUIL',
@@ -31,7 +49,7 @@ class TeacherSeeder extends Seeder
             'year_id' => 1,
             'acronym' => 'CO',
             'first_name' => 'Cristina',
-            'last_name' => 'ONETE',           
+            'last_name' => 'ONETE',
         ]);
         Teacher::create([
             'user_id' => 2,

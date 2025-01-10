@@ -2,45 +2,31 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
+use App\Models\Year;
 use App\Models\Semester;
+use Illuminate\Database\Seeder;
 
 class SemesterSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        Semester::create([
-            'semester_number' => 1,
-            'year_id' => 1
-        ]);
+        // Vérifier si l'année semestrielle existe
+        $year = Year::where('periodicity', 'Semestrial')->first();
+        
+        if (!$year) {
+            // Créer l'année si elle n'existe pas
+            $year = Year::create([
+                'name' => '2024-2025',
+                'periodicity' => 'Semestrial',
+            ]);
+        }
 
-        Semester::create([
-            'semester_number' => 2,
-            'year_id' => 1
-        ]);
-
-        Semester::create([
-            'semester_number' => 3,
-            'year_id' => 1
-        ]);
-
-        Semester::create([
-            'semester_number' => 4,
-            'year_id' => 1
-        ]);
-
-        Semester::create([
-            'semester_number' => 5,
-            'year_id' => 1
-        ]);
-
-        Semester::create([
-            'semester_number' => 6,
-            'year_id' => 1
-        ]);
+        // Créer les semestres
+        for ($i = 1; $i <= 6; $i++) {
+            Semester::create([
+                'semester_number' => $i,
+                'year_id' => $year->id
+            ]);
+        }
     }
 }

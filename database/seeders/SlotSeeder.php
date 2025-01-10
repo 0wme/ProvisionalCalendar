@@ -2,15 +2,15 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
 use App\Models\Slot;
+use App\Models\Teacher;
+use App\Models\Teaching;
+use App\Models\AcademicPromotion;
+use App\Models\Week;
+use Illuminate\Database\Seeder;
 
 class SlotSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
         // Slots CM pour atteindre 20h

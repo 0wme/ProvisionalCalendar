@@ -16,7 +16,7 @@ class Teaching extends Model
         'cm_hours_initial',
         'cm_hours_continued',
         'semester_id',
-        'trimestre_id',
+        'trimester_id',
         'year_id'
     ];
 
@@ -25,8 +25,8 @@ class Teaching extends Model
         parent::boot();
 
         static::saving(function ($teaching) {
-            if (($teaching->semester_id !== null && $teaching->trimestre_id !== null) || 
-                ($teaching->semester_id === null && $teaching->trimestre_id === null)) {
+            if (($teaching->semester_id !== null && $teaching->trimester_id !== null) || 
+                ($teaching->semester_id === null && $teaching->trimester_id === null)) {
                 throw new \InvalidArgumentException(
                     'Un enseignement doit avoir soit un semestre, soit un trimestre, mais pas les deux.'
                 );

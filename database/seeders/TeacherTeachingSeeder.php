@@ -12,7 +12,7 @@ class TeacherTeachingSeeder extends Seeder
     {
         $teacher = Teacher::where('acronym', 'LD')->first();
         $teaching = Teaching::where('apogee_code', 'WEB_R1.05')->first();
-    
+
         if ($teacher && $teaching) {
             $teacher->teachings()->attach($teaching->id);
         } else {
