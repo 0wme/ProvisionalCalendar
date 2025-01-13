@@ -62,7 +62,7 @@
         
         <div class="content">
             <p>Bonjour,</p>
-            <p>Voici votre mot de passe pour accéder à l'application de gestion des emplois du temps :</p>
+            <p>Voici votre mot de passe pour accéder à l'application de gestion des calendriers prévisionnels :</p>
             
             <div class="password-box">
                 {{ $password }}
