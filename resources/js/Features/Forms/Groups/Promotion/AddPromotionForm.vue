@@ -22,11 +22,12 @@ const nameError = ref<string | undefined>();
 
 const errorMessage = ref<string | undefined>();
 
-const emit = defineEmits(["success"]);
+const emit = defineEmits(["success", "edited"]);
 
 const updateName = (value: string) => {
     nameError.value = undefined;
     promotion.value.name = value;
+    emit("edited");
 };
 
 const resetErrorMessage = () => {
