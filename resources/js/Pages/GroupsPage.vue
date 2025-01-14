@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import AdminLayout from "@/Layouts/AdminLayout.vue";
-import ClassListManager from "@/Features/ListManager/Groups/ClassListManager.vue";
+import ClassListManager from "@/Features/ListManager/Groups/PromotionListManager.vue";
 import GroupListManager from "@/Features/ListManager/Groups/GroupListManager.vue";
 import SubgroupListManager from "@/Features/ListManager/Groups/SubgroupListManager.vue";
 import { ref, computed, onMounted } from "vue";

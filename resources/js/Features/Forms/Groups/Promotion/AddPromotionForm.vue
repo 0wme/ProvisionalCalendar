@@ -17,12 +17,12 @@ import ErrorPopup from "@/Features/Popup/ErrorPopup.vue";
 
 const props = defineProps<{ yearId: number }>();
 
+const emit = defineEmits(["successfullyAdded", "edited"]);
+
 const promotion = ref<Promotion>({ id: 0, name: "" });
 const nameError = ref<string | undefined>();
 
 const errorMessage = ref<string | undefined>();
-
-const emit = defineEmits(["successfullyAdded", "edited"]);
 
 const updateName = (value: string) => {
     nameError.value = undefined;

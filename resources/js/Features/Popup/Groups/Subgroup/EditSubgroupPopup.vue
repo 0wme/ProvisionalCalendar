@@ -21,7 +21,7 @@ import CloseWithoutSaveConfirmationPopup from "@/Features/Popup/CloseWithoutSave
 import Popup from "@/Components/Popup/Popup.vue";
 import { Subgroup } from "@/types/models";
 
-defineProps<{ yearId: number; subgroup: Subgroup }>();
+defineProps<{ subgroup: Subgroup }>();
 
 const emit = defineEmits([
     "cancel",
@@ -52,7 +52,6 @@ const handleCloseWithoutSaving = () => {
 <template>
     <Popup title="Modifier une subgroup" @close="handleCancel">
         <EditSubgroupForm
-            :yearId
             :subgroup
             @successfullyEdited="$emit('successfullyEdited')"
             @successfullyDeleted="$emit('successfullyDeleted')"

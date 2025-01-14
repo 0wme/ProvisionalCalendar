@@ -20,7 +20,7 @@ import AddGroupForm from "@/Features/Forms/Groups/Group/AddGroupForm.vue";
 import CloseWithoutSaveConfirmationPopup from "@/Features/Popup/CloseWithoutSaveConfirmationPopup.vue";
 import Popup from "@/Components/Popup/Popup.vue";
 
-defineProps<{ yearId: number }>();
+defineProps<{ promotionId: number }>();
 
 const emit = defineEmits(["cancel", "successfullyAdded"]);
 
@@ -47,7 +47,7 @@ const handleCloseWithoutSaving = () => {
 <template>
     <Popup title="Ajouter une group" @close="handleCancel">
         <AddGroupForm
-            :yearId
+            :promotionId
             @successfullyAdded="$emit('successfullyAdded')"
             @edited="hasBeenEdited = true"
         />

@@ -21,7 +21,13 @@ import { ref } from "vue";
 import ErrorPopup from "@/Features/Popup/ErrorPopup.vue";
 import DeleteConfirmationPopup from "@/Features/Popup/DeleteConfirmationPopup.vue";
 
-const props = defineProps<{ yearId: number; promotion: Promotion }>();
+const props = defineProps<{ promotion: Promotion }>();
+
+const emit = defineEmits([
+    "successfullyEdited",
+    "successfullyDeleted",
+    "edited",
+]);
 
 const editedPromotion = ref<Promotion>(props.promotion);
 const nameError = ref<string | undefined>();
@@ -30,33 +36,10 @@ const errorMessage = ref<string | undefined>();
 
 const isDeleteConfirmationPopupVisible = ref<boolean>(false);
 
-const emit = defineEmits([
-    "successfullyEdited",
-    "successfullyDeleted",
-    "edited",
-]);
-
 const showDeleteConfirmationPopup = () =>
     (isDeleteConfirmationPopupVisible.value = true);
-
 const hideDeleteConfirmationPopup = () =>
     (isDeleteConfirmationPopupVisible.value = false);
-
-const handleDelete = async () => {
-    try {
-        const response = await axios.delete(
-            `${API_ENDPOINTS.PROMOTION}/${props.promotion.id}`
-        );
-        hideDeleteConfirmationPopup();
-        emit("successfullyDeleted", response.data.promotion);
-    } catch (error: unknown) {
-        if (error instanceof AxiosError && error.response?.data?.error) {
-            errorMessage.value = error.response.data.error;
-        } else {
-            errorMessage.value = MESSAGES.DEFAULT_ERROR_MESSAGE;
-        }
-    }
-};
 
 const updateName = (value: string) => {
     nameError.value = undefined;
@@ -75,10 +58,26 @@ const handleEdit = async () => {
     }
     try {
         const response = await axios.put(
-            `${API_ENDPOINTS.PROMOTION}/${props.yearId}`,
+            `${API_ENDPOINTS.PROMOTION}/${props.promotion.id}`,
             editedPromotion.value
         );
         emit("successfullyEdited", response.data.promotion);
+    } catch (error: unknown) {
+        if (error instanceof AxiosError && error.response?.data?.error) {
+            errorMessage.value = error.response.data.error;
+        } else {
+            errorMessage.value = MESSAGES.DEFAULT_ERROR_MESSAGE;
+        }
+    }
+};
+
+const handleDelete = async () => {
+    try {
+        const response = await axios.delete(
+            `${API_ENDPOINTS.PROMOTION}/${props.promotion.id}`
+        );
+        hideDeleteConfirmationPopup();
+        emit("successfullyDeleted", response.data.promotion);
     } catch (error: unknown) {
         if (error instanceof AxiosError && error.response?.data?.error) {
             errorMessage.value = error.response.data.error;

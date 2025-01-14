@@ -15,14 +15,14 @@ import { API_ENDPOINTS, MESSAGES } from "@/constants";
 import { ref } from "vue";
 import ErrorPopup from "@/Features/Popup/ErrorPopup.vue";
 
-const props = defineProps<{ yearId: number }>();
+const props = defineProps<{ groupId: number }>();
+
+const emit = defineEmits(["successfullyAdded", "edited"]);
 
 const subgroup = ref<Subgroup>({ id: 0, name: "" });
 const nameError = ref<string | undefined>();
 
 const errorMessage = ref<string | undefined>();
-
-const emit = defineEmits(["successfullyAdded", "edited"]);
 
 const updateName = (value: string) => {
     nameError.value = undefined;
@@ -41,7 +41,7 @@ const handleAdd = async () => {
     }
     try {
         const response = await axios.post(
-            `${API_ENDPOINTS.SUBGROUP}/${props.yearId}`,
+            `${API_ENDPOINTS.SUBGROUP}/${props.groupId}`,
             subgroup.value
         );
         emit("successfullyAdded", response.data.subgroup);

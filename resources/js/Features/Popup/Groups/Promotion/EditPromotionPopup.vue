@@ -21,7 +21,7 @@ import CloseWithoutSaveConfirmationPopup from "@/Features/Popup/CloseWithoutSave
 import Popup from "@/Components/Popup/Popup.vue";
 import { Promotion } from "@/types/models";
 
-defineProps<{ yearId: number; promotion: Promotion }>();
+defineProps<{ promotion: Promotion }>();
 
 const emit = defineEmits([
     "cancel",
@@ -52,7 +52,6 @@ const handleCloseWithoutSaving = () => {
 <template>
     <Popup title="Modifier une promotion" @close="handleCancel">
         <EditPromotionForm
-            :yearId
             :promotion
             @successfullyEdited="$emit('successfullyEdited')"
             @successfullyDeleted="$emit('successfullyDeleted')"

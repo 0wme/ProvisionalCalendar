@@ -21,14 +21,7 @@ import { ref } from "vue";
 import ErrorPopup from "@/Features/Popup/ErrorPopup.vue";
 import DeleteConfirmationPopup from "@/Features/Popup/DeleteConfirmationPopup.vue";
 
-const props = defineProps<{ yearId: number; group: Group }>();
-
-const editedPromotion = ref<Group>(props.group);
-const nameError = ref<string | undefined>();
-
-const errorMessage = ref<string | undefined>();
-
-const isDeleteConfirmationPopupVisible = ref<boolean>(false);
+const props = defineProps<{ group: Group }>();
 
 const emit = defineEmits([
     "successfullyEdited",
@@ -36,11 +29,47 @@ const emit = defineEmits([
     "edited",
 ]);
 
+const editedGroup = ref<Group>(props.group);
+const nameError = ref<string | undefined>();
+
+const errorMessage = ref<string | undefined>();
+
+const isDeleteConfirmationPopupVisible = ref<boolean>(false);
+
 const showDeleteConfirmationPopup = () =>
     (isDeleteConfirmationPopupVisible.value = true);
-
 const hideDeleteConfirmationPopup = () =>
     (isDeleteConfirmationPopupVisible.value = false);
+
+const updateName = (value: string) => {
+    nameError.value = undefined;
+    editedGroup.value.name = value;
+    emit("edited");
+};
+
+const resetErrorMessage = () => {
+    errorMessage.value = undefined;
+};
+
+const handleEdit = async () => {
+    if (editedGroup.value.name.trim() === "") {
+        nameError.value = MESSAGES.EMPTY_GROUP_NAME_ERROR_MESSAGE;
+        return;
+    }
+    try {
+        const response = await axios.put(
+            `${API_ENDPOINTS.GROUP}/${props.group.id}`,
+            editedGroup.value
+        );
+        emit("successfullyEdited", response.data.group);
+    } catch (error: unknown) {
+        if (error instanceof AxiosError && error.response?.data?.error) {
+            errorMessage.value = error.response.data.error;
+        } else {
+            errorMessage.value = MESSAGES.DEFAULT_ERROR_MESSAGE;
+        }
+    }
+};
 
 const handleDelete = async () => {
     try {
@@ -57,43 +86,13 @@ const handleDelete = async () => {
         }
     }
 };
-
-const updateName = (value: string) => {
-    nameError.value = undefined;
-    editedPromotion.value.name = value;
-    emit("edited");
-};
-
-const resetErrorMessage = () => {
-    errorMessage.value = undefined;
-};
-
-const handleEdit = async () => {
-    if (editedPromotion.value.name.trim() === "") {
-        nameError.value = MESSAGES.EMPTY_GROUP_NAME_ERROR_MESSAGE;
-        return;
-    }
-    try {
-        const response = await axios.put(
-            `${API_ENDPOINTS.GROUP}/${props.yearId}`,
-            editedPromotion.value
-        );
-        emit("successfullyEdited", response.data.group);
-    } catch (error: unknown) {
-        if (error instanceof AxiosError && error.response?.data?.error) {
-            errorMessage.value = error.response.data.error;
-        } else {
-            errorMessage.value = MESSAGES.DEFAULT_ERROR_MESSAGE;
-        }
-    }
-};
 </script>
 
 <template>
     <div class="flex flex-col gap-6">
         <FormInput
             label="Nom de la group"
-            :value="editedPromotion.name"
+            :value="editedGroup.name"
             :error="nameError"
             @input="updateName($event.target.value)"
         />
