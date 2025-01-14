@@ -2,7 +2,7 @@
 /**
  * A script setup for a component that allows the user to add a promotion to a year.
  *
- * It emits a "success" event with the newly created promotion as argument when the
+ * It emits a "successfullyAdded" event with the newly created promotion as argument when the
  * addition is successful.
  *
  * It uses the yearId prop to determine the year to which the promotion should be added.
@@ -22,7 +22,7 @@ const nameError = ref<string | undefined>();
 
 const errorMessage = ref<string | undefined>();
 
-const emit = defineEmits(["success", "edited"]);
+const emit = defineEmits(["successfullyAdded", "edited"]);
 
 const updateName = (value: string) => {
     nameError.value = undefined;
@@ -44,7 +44,7 @@ const handleAdd = async () => {
             `${API_ENDPOINTS.PROMOTION}/${props.yearId}`,
             promotion.value
         );
-        emit("success", response.data.promotion);
+        emit("successfullyAdded", response.data.promotion);
     } catch (error: unknown) {
         if (error instanceof AxiosError && error.response?.data?.error) {
             errorMessage.value = error.response.data.error;

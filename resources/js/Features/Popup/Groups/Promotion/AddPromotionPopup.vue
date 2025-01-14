@@ -22,7 +22,7 @@ import Popup from "@/Components/Popup/Popup.vue";
 
 defineProps<{ yearId: number }>();
 
-const emit = defineEmits(["cancel", "success"]);
+const emit = defineEmits(["cancel", "successfullyAdded"]);
 
 const isCloseWithoutSaveConfirmationPopupVisible = ref<boolean>(false);
 const hasBeenEdited = ref<boolean>(false);
@@ -48,7 +48,7 @@ const handleCloseWithoutSaving = () => {
     <Popup title="Ajouter une promotion" @close="handleCancel">
         <AddPromotionForm
             :yearId
-            @success="$emit('success')"
+            @successfullyAdded="$emit('successfullyAdded')"
             @edited="hasBeenEdited = true"
         />
         <CloseWithoutSaveConfirmationPopup
