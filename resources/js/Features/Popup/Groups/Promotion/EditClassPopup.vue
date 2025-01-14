@@ -1,36 +1,36 @@
 <script setup lang="ts">
-import { ref, watch } from "vue";
-import axios from "axios";
-
-import { Class } from "@/types/models";
-import { API_ENDPOINTS, MESSAGES } from "@/constants";
-
-import Button from "@/Components/FormButton.vue";
-import ClassPopup from "./ClassPopup.vue";
-import DeleteConfirmationPopup from "@/Features/Popup/DeleteConfirmationPopup.vue";
+/**
+ * Script setup for the add promotion popup.
+ *
+ * This popup is used to add a new promotion. It contains a form to enter the
+ * promotion's name and year, and a button to save the promotion. When the user
+ * clicks on the button, the popup emits a "success" event with the promotion's
+ * details.
+ *
+ * The popup also contains a "cancel" button that emits a "cancel" event when
+ * clicked.
+ *
+ * If the user has made changes to the form but has not saved them, a confirmation
+ * popup is shown when the user clicks on the "cancel" button. If the user
+ * confirms, the popup emits a "cancel" event. If the user cancels, the
+ * confirmation popup is hidden.
+ */
+import { ref } from "vue";
+import EditPromotionForm from "@/Features/Forms/Groups/Promotion/EditPromotionForm.vue";
 import CloseWithoutSaveConfirmationPopup from "@/Features/Popup/CloseWithoutSaveConfirmationPopup.vue";
+import Popup from "@/Components/Popup/Popup.vue";
+import { Promotion } from "@/types/models";
 
-const props = defineProps<{ classToEditId?: number; show?: boolean }>();
-const emit = defineEmits(["cancel", "delete", "save", "error"]);
+defineProps<{ yearId: number; promotion: Promotion }>();
 
-const actualClass = ref<Class | undefined>();
-const editedClass = ref<Class | undefined>();
+const emit = defineEmits([
+    "cancel",
+    "successfullyEdited",
+    "successfullyDeleted",
+]);
 
 const isCloseWithoutSaveConfirmationPopupVisible = ref<boolean>(false);
-const isDeleteConfirmationPopupVisible = ref<boolean>(false);
-
-const cloneActualClass = async () => {
-    const response = await axios.get(
-        `${API_ENDPOINTS.PROMOTION}/${props.classToEditId}`
-    );
-    actualClass.value = response.data;
-    actualClass.value && (editedClass.value = { ...actualClass.value });
-};
-
-watch(
-    () => props.show,
-    () => props.show && cloneActualClass()
-);
+const hasBeenEdited = ref<boolean>(false);
 
 const showCloseWithoutSaveConfirmationPopup = () =>
     (isCloseWithoutSaveConfirmationPopupVisible.value = true);
@@ -38,85 +38,30 @@ const showCloseWithoutSaveConfirmationPopup = () =>
 const hideCloseWithoutSaveConfirmationPopup = () =>
     (isCloseWithoutSaveConfirmationPopupVisible.value = false);
 
-const showDeleteConfirmationPopup = () =>
-    (isDeleteConfirmationPopupVisible.value = true);
-
-const hideDeleteConfirmationPopup = () =>
-    (isDeleteConfirmationPopupVisible.value = false);
-
-const updateClassName = (groupName: string) =>
-    (editedClass.value!.name = groupName);
+const handleCancel = () =>
+    hasBeenEdited.value
+        ? showCloseWithoutSaveConfirmationPopup()
+        : emit("cancel");
 
 const handleCloseWithoutSaving = () => {
     hideCloseWithoutSaveConfirmationPopup();
     emit("cancel");
 };
-
-const handleCancel = () =>
-    editedClass.value?.name !== actualClass.value?.name
-        ? showCloseWithoutSaveConfirmationPopup()
-        : emit("cancel");
-
-const handleDelete = async () => {
-    try {
-        const response = await axios.delete(
-            `${API_ENDPOINTS.PROMOTION}/${actualClass.value!.id}`
-        );
-        hideDeleteConfirmationPopup();
-        emit("delete", response.data.promotion);
-    } catch (error: any) {
-        error.response?.data?.error
-            ? emit("error", error.response.data.error)
-            : emit("error", MESSAGES.DEFAULT_ERROR_MESSAGE);
-    }
-};
-
-const handleSave = async () => {
-    if (editedClass.value?.name === "") {
-        emit("error", MESSAGES.EMPTY_GROUP_NAME_ERROR_MESSAGE);
-        return;
-    }
-    try {
-        const response = await axios.put(
-            `${API_ENDPOINTS.PROMOTION}/${editedClass.value!.id}`,
-            editedClass.value
-        );
-        emit("save", response.data.promotion);
-    } catch (error: any) {
-        error.response?.data?.error
-            ? emit("error", error.response.data.error)
-            : emit("error", MESSAGES.DEFAULT_ERROR_MESSAGE);
-    }
-};
 </script>
 
 <template>
-    <ClassPopup
-        :classe="editedClass"
-        :show
-        title="Modifier une promotion"
-        @updateClassName="updateClassName"
-        @close="handleCancel"
-    >
-        <div class="flex gap-4">
-            <Button class="bg-green-500 text-white w-full" @click="handleSave"
-                >Sauvegarder</Button
-            >
-            <Button
-                class="bg-red-500 text-white w-full"
-                @click="showDeleteConfirmationPopup"
-                >Supprimer</Button
-            >
-        </div>
-    </ClassPopup>
+    <Popup title="Modifier une promotion" @close="handleCancel">
+        <EditPromotionForm
+            :yearId
+            :promotion
+            @successfullyEdited="$emit('successfullyEdited')"
+            @successfullyDeleted="$emit('successfullyDeleted')"
+            @edited="hasBeenEdited = true"
+        />
+    </Popup>
     <CloseWithoutSaveConfirmationPopup
-        :show="isCloseWithoutSaveConfirmationPopupVisible"
+        v-if="isCloseWithoutSaveConfirmationPopupVisible"
         @close="handleCloseWithoutSaving"
         @cancel="hideCloseWithoutSaveConfirmationPopup"
-    />
-    <DeleteConfirmationPopup
-        :show="isDeleteConfirmationPopupVisible"
-        @delete="handleDelete"
-        @cancel="hideDeleteConfirmationPopup"
     />
 </template>
