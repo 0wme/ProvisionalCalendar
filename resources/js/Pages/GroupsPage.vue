@@ -5,14 +5,14 @@ import GroupListManager from "@/Features/ListManager/Groups/GroupListManager.vue
 import SubgroupListManager from "@/Features/ListManager/Groups/SubgroupListManager.vue";
 import { ref, computed, onMounted } from "vue";
 import { Class, Group, Subgroup } from "@/types/models";
-import AddClassPopup from "@/Features/Popup/Groups/Class/AddClassPopup.vue";
-import EditClassPopup from "@/Features/Popup/Groups/Class/EditClassPopup.vue";
 import AddGroupPopup from "@/Features/Popup/Groups/Group/AddGroupPopup.vue";
 import EditGroupPopup from "@/Features/Popup/Groups/Group/EditGroupPopup.vue";
 import AddSubgroupPopup from "@/Features/Popup/Groups/Subgroup/AddSubgroupPopup.vue";
 import EditSubgroupPopup from "@/Features/Popup/Groups/Subgroup/EditSubgroupPopup.vue";
 import axios from "axios";
 import ErrorPopup from "@/Features/Popup/ErrorPopup.vue";
+import AddPromotionPopup from "@/Features/Popup/Groups/Promotion/AddPromotionPopup.vue";
+import EditPromotionPopup from "@/Features/Popup/Groups/Promotion/EditPromotionPopup.vue";
 
 onMounted(async () => {
     const response = await axios.get("/api/groupes/1");
@@ -263,20 +263,19 @@ const handleError = (error: string) => {
             />
         </div>
     </AdminLayout>
-    <AddClassPopup
+    <AddPromotionPopup
         :show="isAddClassPopupVisible"
         :yearId="1"
         @cancel="hideAddClassPopup"
         @add="handleAddClass"
         @error="handleError"
     />
-    <EditClassPopup
+    <EditPromotionPopup
         :classToEditId
         :show="isEditClassPopupVisible"
         @cancel="hideEditClassPopup"
         @delete="handleDeleteClass"
         @save="handleSaveEditedClass"
-        @error="handleError"
     />
     <AddGroupPopup
         :show="isAddGroupPopupVisible"
