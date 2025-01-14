@@ -2,17 +2,10 @@
 import AdminLayout from "@/Layouts/AdminLayout.vue";
 import ClassListManager from "@/Features/ListManager/Groups/PromotionListManager.vue";
 import GroupListManager from "@/Features/ListManager/Groups/GroupListManager.vue";
-import SubgroupListManager from "@/Features/ListManager/Groups/SubgroupListManager.vue";
+import SubgroupListManager from "@/Features/ListManager/Groups/SubGroupListManager.vue";
 import { ref, computed, onMounted } from "vue";
 import { Class, Group, Subgroup } from "@/types/models";
-import AddGroupPopup from "@/Features/Popup/Groups/Group/AddGroupPopup.vue";
-import EditGroupPopup from "@/Features/Popup/Groups/Group/EditGroupPopup.vue";
-import AddSubgroupPopup from "@/Features/Popup/Groups/Subgroup/AddSubgroupPopup.vue";
-import EditSubgroupPopup from "@/Features/Popup/Groups/Subgroup/EditSubgroupPopup.vue";
 import axios from "axios";
-import ErrorPopup from "@/Features/Popup/ErrorPopup.vue";
-import AddPromotionPopup from "@/Features/Popup/Groups/Promotion/AddPromotionPopup.vue";
-import EditPromotionPopup from "@/Features/Popup/Groups/Promotion/EditPromotionPopup.vue";
 
 onMounted(async () => {
     const response = await axios.get("/api/groupes/1");
@@ -244,72 +237,14 @@ const handleError = (error: string) => {
                 :classes
                 :selectedClassId
                 @select="handleClassSelect"
-                @add="showAddClassPopup"
-                @edit="handleEditClass"
             />
             <GroupListManager
                 class="w-full h-full"
                 :groups
                 :selectedGroupId
                 @select="handleGroupSelect"
-                @add="showAddGroupPopup"
-                @edit="handleEditGroup"
             />
-            <SubgroupListManager
-                class="w-full h-full"
-                :subgroups
-                @add="showAddSubgroupPopup"
-                @edit="handleEditSubgroup"
-            />
+            <SubgroupListManager class="w-full h-full" />
         </div>
     </AdminLayout>
-    <AddPromotionPopup
-        :show="isAddClassPopupVisible"
-        :yearId="1"
-        @cancel="hideAddClassPopup"
-        @add="handleAddClass"
-        @error="handleError"
-    />
-    <EditPromotionPopup
-        :classToEditId
-        :show="isEditClassPopupVisible"
-        @cancel="hideEditClassPopup"
-        @delete="handleDeleteClass"
-        @save="handleSaveEditedClass"
-    />
-    <AddGroupPopup
-        :show="isAddGroupPopupVisible"
-        :classId="selectedClassId"
-        @cancel="hideAddGroupPopup"
-        @add="handleAddGroup"
-        @error="handleError"
-    />
-    <EditGroupPopup
-        :groupToEditId
-        :show="isEditGroupPopupVisible"
-        @cancel="hideEditGroupPopup"
-        @delete="handleDeleteGroup"
-        @save="handleSaveEditedGroup"
-        @error="handleError"
-    />
-    <AddSubgroupPopup
-        :show="isAddSubgroupPopupVisible"
-        :groupId="selectedGroupId"
-        @cancel="hideAddSubgroupPopup"
-        @add="handleAddSubgroup"
-        @error="handleError"
-    />
-    <EditSubgroupPopup
-        :subgroupToEditId
-        :show="isEditSubgroupPopupVisible"
-        @cancel="hideEditSubgroupPopup"
-        @delete="handleDeleteSubgroup"
-        @save="handleSaveEditedSubgroup"
-        @error="handleError"
-    />
-    <ErrorPopup
-        :message="errorMessage"
-        :show="isErrorPopupVisible"
-        @close="hideErrorPopup"
-    />
 </template>

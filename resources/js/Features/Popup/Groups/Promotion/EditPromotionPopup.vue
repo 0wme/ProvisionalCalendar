@@ -15,13 +15,15 @@
  * confirms, the popup emits a "cancel" event. If the user cancels, the
  * confirmation popup is hidden.
  */
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import EditPromotionForm from "@/Features/Forms/Groups/Promotion/EditPromotionForm.vue";
 import CloseWithoutSaveConfirmationPopup from "@/Features/Popup/CloseWithoutSaveConfirmationPopup.vue";
 import Popup from "@/Components/Popup/Popup.vue";
 import { Promotion } from "@/types/models";
+import { API_ENDPOINTS } from "@/constants";
+import axios from "axios";
 
-defineProps<{ promotion: Promotion }>();
+const props = defineProps<{ promotionId: number | undefined }>();
 
 const emit = defineEmits([
     "cancel",
@@ -29,8 +31,16 @@ const emit = defineEmits([
     "successfullyDeleted",
 ]);
 
+const promotion = ref<Promotion | undefined>();
 const isCloseWithoutSaveConfirmationPopupVisible = ref<boolean>(false);
 const hasBeenEdited = ref<boolean>(false);
+
+onMounted(async () => {
+    const response = await axios.get(
+        `${API_ENDPOINTS.PROMOTION}/${props.promotionId}`
+    );
+    promotion.value = response.data;
+});
 
 const showCloseWithoutSaveConfirmationPopup = () =>
     (isCloseWithoutSaveConfirmationPopupVisible.value = true);
@@ -52,11 +62,15 @@ const handleCloseWithoutSaving = () => {
 <template>
     <Popup title="Modifier une promotion" @close="handleCancel">
         <EditPromotionForm
+            v-if="promotion"
             :promotion
             @successfullyEdited="$emit('successfullyEdited')"
             @successfullyDeleted="$emit('successfullyDeleted')"
             @edited="hasBeenEdited = true"
         />
+        <div v-else class="w-full flex justify-center">
+            <div>Chargement...</div>
+        </div>
     </Popup>
     <CloseWithoutSaveConfirmationPopup
         v-if="isCloseWithoutSaveConfirmationPopupVisible"

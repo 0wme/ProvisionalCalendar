@@ -108,15 +108,15 @@ const handleDelete = async () => {
                 >Supprimer</FormButton
             >
         </div>
+        <DeleteConfirmationPopup
+            v-if="isDeleteConfirmationPopupVisible"
+            @delete="handleDelete"
+            @cancel="hideDeleteConfirmationPopup"
+        />
+        <ErrorPopup
+            v-if="errorMessage"
+            :message="errorMessage!"
+            @close="resetErrorMessage"
+        />
     </div>
-    <DeleteConfirmationPopup
-        v-if="isDeleteConfirmationPopupVisible"
-        @delete="handleDelete"
-        @cancel="hideDeleteConfirmationPopup"
-    />
-    <ErrorPopup
-        v-if="errorMessage"
-        :message="errorMessage!"
-        @close="resetErrorMessage"
-    />
 </template>

@@ -1,62 +1,82 @@
 <script setup lang="ts">
-import { ref, computed, defineEmits, onMounted, onUnmounted, watch } from 'vue';
-import Filter from '@/Components/Filter.vue';
-import SearchBar from '@/Components/SearchBar.vue';
-import SelectionnableEditableButtonList from './SelectionnableEditableButtonList.vue';
-import { Period, Item } from '@/types/models';
+import { ref, computed, defineEmits, onMounted, onUnmounted, watch } from "vue";
+import Filter from "@/Components/Filter.vue";
+import SearchBar from "@/Components/SearchBar.vue";
+import SelectionnableEditableButtonList from "./SelectionnableEditableButtonList.vue";
+import { Period, Item } from "@/types/models";
 
 const props = defineProps<{
-  title: string;
-  periods?: Period[];
-  items: Item[];
-  selectedItemsId?: number[];
-  hasFilter?: boolean;
-  hasAdd?: boolean;
-  hasImport?: boolean;
+    title: string;
+    periods?: Period[];
+    items: Item[] | undefined;
+    selectedItemsId?: number[];
+    hasFilter?: boolean;
+    hasAdd?: boolean;
+    hasImport?: boolean;
 }>();
 
-const emit = defineEmits(['select', 'edit', 'add']);
+const emit = defineEmits(["select", "edit", "add"]);
 
 const selectedPeriodId = ref(0);
 
-const searchValue = ref('');
+const searchValue = ref("");
 
-const listManagerItemsHeight = ref('0px');
+const listManagerItemsHeight = ref("0px");
 const visibleItems = computed(() => {
     if (!props.items) return [];
-    
-    if (props.periods) 
+
+    if (props.periods)
         return props.items
-            .filter(item => item.period?.id! - 1 === selectedPeriodId.value)
-            .filter(item => item.name.toLowerCase().includes(searchValue.value.toLowerCase()));
+            .filter((item) => item.period?.id! - 1 === selectedPeriodId.value)
+            .filter((item) =>
+                item.name
+                    .toLowerCase()
+                    .includes(searchValue.value.toLowerCase())
+            );
     else
-        return props.items
-            .filter(item => item.name.toLowerCase().includes(searchValue.value.toLowerCase()));
+        return props.items.filter((item) =>
+            item.name.toLowerCase().includes(searchValue.value.toLowerCase())
+        );
 });
 
 const handleNextPeriod = () => {
-    selectedPeriodId.value = selectedPeriodId.value < (props.periods?.length! - 1) ? (selectedPeriodId.value + 1) : 0;
-}
+    selectedPeriodId.value =
+        selectedPeriodId.value < props.periods?.length! - 1
+            ? selectedPeriodId.value + 1
+            : 0;
+};
 
 const handlePreviousPeriod = () => {
-    selectedPeriodId.value = selectedPeriodId.value === 0 ? (props.periods?.length! - 1) : (selectedPeriodId.value - 1);
-}
+    selectedPeriodId.value =
+        selectedPeriodId.value === 0
+            ? props.periods?.length! - 1
+            : selectedPeriodId.value - 1;
+};
 
 const handleSearch = (event: Event) => {
     searchValue.value = (event.target as HTMLInputElement).value;
-}
+};
 
-const listManager = ref<HTMLElement | null>(null)
+const listManager = ref<HTMLElement | null>(null);
 
 const updateHeight = () => {
-  if (!listManager.value) return;
-  
-  requestAnimationFrame(() => {
-    const elements = listManager.value?.querySelectorAll(':scope > :not(.list-manager-items)');
-    const elementsHeight = Array.from(elements || []).reduce((acc, el) => acc + el.clientHeight, 0);
-    listManagerItemsHeight.value = `${listManager.value?.clientHeight! - elementsHeight - (props.periods ? 96 : 80)}px`;
-  });
-}
+    if (!listManager.value) return;
+
+    requestAnimationFrame(() => {
+        const elements = listManager.value?.querySelectorAll(
+            ":scope > :not(.list-manager-items)"
+        );
+        const elementsHeight = Array.from(elements || []).reduce(
+            (acc, el) => acc + el.clientHeight,
+            0
+        );
+        listManagerItemsHeight.value = `${
+            listManager.value?.clientHeight! -
+            elementsHeight -
+            (props.periods ? 96 : 80)
+        }px`;
+    });
+};
 
 const resizeObserver = new ResizeObserver(() => {
     updateHeight();
@@ -70,15 +90,18 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-  resizeObserver.disconnect();
+    resizeObserver.disconnect();
 });
 </script>
 
 <template>
-    <div ref="listManager" class="list-manager h-full flex flex-col p-6 bg-white rounded-3xl shadow-lg">
+    <div
+        ref="listManager"
+        class="list-manager h-full flex flex-col p-6 bg-white rounded-3xl shadow-lg"
+    >
         <h1 class="text-2xl font-bold mb-4">{{ title }}</h1>
         <SearchBar
-            placeholder="Rechercher..." 
+            placeholder="Rechercher..."
             :hasAdd
             :hasImport
             class="mb-4"

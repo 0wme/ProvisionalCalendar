@@ -15,13 +15,15 @@
  * confirms, the popup emits a "cancel" event. If the user cancels, the
  * confirmation popup is hidden.
  */
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import EditGroupForm from "@/Features/Forms/Groups/Group/EditGroupForm.vue";
 import CloseWithoutSaveConfirmationPopup from "@/Features/Popup/CloseWithoutSaveConfirmationPopup.vue";
 import Popup from "@/Components/Popup/Popup.vue";
 import { Group } from "@/types/models";
+import { API_ENDPOINTS } from "@/constants";
+import axios from "axios";
 
-defineProps<{ group: Group }>();
+const props = defineProps<{ groupId: number | undefined }>();
 
 const emit = defineEmits([
     "cancel",
@@ -29,8 +31,14 @@ const emit = defineEmits([
     "successfullyDeleted",
 ]);
 
+const group = ref<Group | undefined>();
 const isCloseWithoutSaveConfirmationPopupVisible = ref<boolean>(false);
 const hasBeenEdited = ref<boolean>(false);
+
+onMounted(async () => {
+    const response = await axios.get(`${API_ENDPOINTS.GROUP}/${props.groupId}`);
+    group.value = response.data;
+});
 
 const showCloseWithoutSaveConfirmationPopup = () =>
     (isCloseWithoutSaveConfirmationPopupVisible.value = true);
@@ -52,11 +60,15 @@ const handleCloseWithoutSaving = () => {
 <template>
     <Popup title="Modifier une group" @close="handleCancel">
         <EditGroupForm
+            v-if="group"
             :group
             @successfullyEdited="$emit('successfullyEdited')"
             @successfullyDeleted="$emit('successfullyDeleted')"
             @edited="hasBeenEdited = true"
         />
+        <div v-else class="w-full flex justify-center">
+            <div>Chargement...</div>
+        </div>
     </Popup>
     <CloseWithoutSaveConfirmationPopup
         v-if="isCloseWithoutSaveConfirmationPopupVisible"

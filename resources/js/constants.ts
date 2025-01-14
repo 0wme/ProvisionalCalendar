@@ -1,7 +1,7 @@
 export const API_ENDPOINTS = {
-    PROMOTION: "/api/groupes/promotion",
-    GROUP: "/api/groupes/groupe",
-    SUBGROUP: "/api/groupes/sous-groupe",
+    PROMOTION: "/api/promotion",
+    GROUP: "/api/group",
+    SUBGROUP: "/api/subgroup",
 };
 
 export const MESSAGES = {

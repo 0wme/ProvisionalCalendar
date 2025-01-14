@@ -14,36 +14,22 @@ use Illuminate\Support\Facades\DB;
 
 class GroupController extends Controller
 {
-    public function index($year): JsonResponse
+    public function getPromotionsByYear($year_id): JsonResponse
     {
         try {
-            // Vérifie si l'année existe
-            $yearExists = Year::find($year);
+            $yearExists = Year::find($year_id);
             if (!$yearExists) {
                 return response()->json([
                     'error' => 'Année non trouvée'
                 ], 404);
             }
 
-            $promotions = AcademicPromotion::with(['academicGroups.academicSubgroups'])
-                ->where('year_id', $year)
+            $promotions = AcademicPromotion::where('year_id', $year_id)
                 ->get()
                 ->map(function ($promotion) {
                     return [
                         'id' => $promotion->id,
                         'name' => $promotion->name,
-                        'groups' => $promotion->academicGroups->map(function ($group) {
-                            return [
-                                'id' => $group->id,
-                                'name' => $group->name,
-                                'subgroups' => $group->academicSubgroups->map(function ($subgroup) {
-                                    return [
-                                        'id' => $subgroup->id,
-                                        'name' => $subgroup->name,
-                                    ];
-                                })
-                            ];
-                        })
                     ];
                 });
 
@@ -51,17 +37,70 @@ class GroupController extends Controller
 
         } catch (\Exception $e) {
             return response()->json([
-                'error' => 'Une erreur est survenue',
-                'message' => $e->getMessage()
+                'error' => 'Une erreur est survenue lors du chargement des promotions',
             ], 500);
         }
     }
 
-    public function getByPromotion($academic_promotion): JsonResponse
+    public function getGroupsByPromotion($promotion_id): JsonResponse
+    {
+        try {
+            $groups = AcademicGroup::where('academic_promotion_id', $promotion_id)
+                ->get()
+                ->map(function ($group) {
+                    return [
+                        'id' => $group->id,
+                        'name' => $group->name,
+                    ];
+                });
+
+            if (!$groups) {
+                return response()->json([
+                    'error' => 'Groupe non trouvé'
+                ], 404);
+            }
+
+            return response()->json($groups);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Une erreur est survenue lors du chargement des groupes',
+            ], 500);
+        }
+    }
+
+    public function getSubgroupsByGroup($group_id): JsonResponse
+    {
+        try {
+            $subgroups = AcademicSubgroup::where('academic_group_id', $group_id)
+                ->get()
+                ->map(function ($subgroup) {
+                    return [
+                        'id' => $subgroup->id,
+                        'name' => $subgroup->name,
+                    ];
+                });
+
+            if (!$subgroups) {
+                return response()->json([
+                    'error' => 'Sous-groupe non trouvé'
+                ], 404);
+            }
+
+            return response()->json($subgroups);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Une erreur est survenue lors du chargement des sous-groupes',
+            ], 500);
+        }
+    }
+
+    public function getByPromotion($promotion_id): JsonResponse
     {
         try {
             $promotion = AcademicPromotion::with(['academicGroups.academicSubgroups'])
-                ->find($academic_promotion);
+                ->find($promotion_id);
 
             if (!$promotion) {
                 return response()->json([
@@ -88,8 +127,7 @@ class GroupController extends Controller
 
         } catch (\Exception $e) {
             return response()->json([
-                'error' => 'Une erreur est survenue',
-                'message' => $e->getMessage()
+                'error' => 'Une erreur est survenue lors du chargement des groupes',
             ], 500);
         }
     }
@@ -453,7 +491,7 @@ class GroupController extends Controller
         try {
             $promotionToDelete = AcademicPromotion::with(['academicGroups.academicSubgroups'])
                 ->find($promotion);
-            
+
             if (!$promotionToDelete) {
                 return response()->json([
                     'error' => 'Promotion non trouvée'
@@ -500,7 +538,7 @@ class GroupController extends Controller
         try {
             $groupToDelete = AcademicGroup::with(['academicSubgroups', 'academicPromotion', 'slots'])
                 ->find($group);
-            
+
             if (!$groupToDelete) {
                 return response()->json([
                     'error' => 'Groupe non trouvé'
@@ -553,7 +591,7 @@ class GroupController extends Controller
         try {
             $subgroupToDelete = AcademicSubgroup::with(['academicGroup.academicPromotion'])
                 ->find($subgroup);
-            
+
             if (!$subgroupToDelete) {
                 return response()->json([
                     'error' => 'Sous-groupe non trouvé'

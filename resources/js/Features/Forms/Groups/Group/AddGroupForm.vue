@@ -66,10 +66,10 @@ const handleAdd = async () => {
         <FormButton class="bg-green-500 text-white" @click="handleAdd"
             >Ajouter</FormButton
         >
+        <ErrorPopup
+            v-if="errorMessage"
+            :message="errorMessage!"
+            @close="resetErrorMessage"
+        />
     </div>
-    <ErrorPopup
-        v-if="errorMessage"
-        :message="errorMessage!"
-        @close="resetErrorMessage"
-    />
 </template>

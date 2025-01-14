@@ -15,13 +15,15 @@
  * confirms, the popup emits a "cancel" event. If the user cancels, the
  * confirmation popup is hidden.
  */
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import EditSubgroupForm from "@/Features/Forms/Groups/Subgroup/EditSubgroupForm.vue";
 import CloseWithoutSaveConfirmationPopup from "@/Features/Popup/CloseWithoutSaveConfirmationPopup.vue";
 import Popup from "@/Components/Popup/Popup.vue";
 import { Subgroup } from "@/types/models";
+import { API_ENDPOINTS } from "@/constants";
+import axios from "axios";
 
-defineProps<{ subgroup: Subgroup }>();
+const props = defineProps<{ subgroupId: number | undefined }>();
 
 const emit = defineEmits([
     "cancel",
@@ -29,8 +31,16 @@ const emit = defineEmits([
     "successfullyDeleted",
 ]);
 
+const subgroup = ref<Subgroup | undefined>();
 const isCloseWithoutSaveConfirmationPopupVisible = ref<boolean>(false);
 const hasBeenEdited = ref<boolean>(false);
+
+onMounted(async () => {
+    const response = await axios.get(
+        `${API_ENDPOINTS.SUBGROUP}/${props.subgroupId}`
+    );
+    subgroup.value = response.data;
+});
 
 const showCloseWithoutSaveConfirmationPopup = () =>
     (isCloseWithoutSaveConfirmationPopupVisible.value = true);
@@ -52,11 +62,15 @@ const handleCloseWithoutSaving = () => {
 <template>
     <Popup title="Modifier une subgroup" @close="handleCancel">
         <EditSubgroupForm
+            v-if="subgroup"
             :subgroup
             @successfullyEdited="$emit('successfullyEdited')"
             @successfullyDeleted="$emit('successfullyDeleted')"
             @edited="hasBeenEdited = true"
         />
+        <div v-else class="w-full flex justify-center">
+            <div>Chargement...</div>
+        </div>
     </Popup>
     <CloseWithoutSaveConfirmationPopup
         v-if="isCloseWithoutSaveConfirmationPopupVisible"

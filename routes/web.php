@@ -10,9 +10,14 @@ use App\Http\Controllers\ProvisionnalCalendarReaderController;
 use App\Http\Controllers\WorkInProgressController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TestEmailController;
+use Inertia\Inertia;
 
 Route::get('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/login', [AuthController::class, 'authenticate']);
+
+Route::get('/test', function () {
+    return Inertia::render('TestPage');
+});
 
 Route::get('/logout', [AuthController::class, 'logout'])->middleware(['auth'])->name('logout');
 
