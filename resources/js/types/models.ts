@@ -233,3 +233,22 @@ export interface CalendarWeek {
  * Représente le calendrier complet.
  */
 export type Calendar = CalendarWeek[];
+
+export interface SelectOption {
+    value: string | number;
+    label: string;
+}
+
+export enum FormInputType {
+    TEXT = "text",
+    NUMBER = "number",
+    SELECT = "select",
+    CHECKBOX = "checkbox",
+    PASSWORD = "password",
+}
+
+export interface Promotion {
+    id: number;
+    name: string;
+    groups?: Group[];
+}
