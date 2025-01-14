@@ -11,7 +11,7 @@ import ErrorPopup from "@/Features/Popup/ErrorPopup.vue";
 
 const labelsStore = useLabelsStore();
 
-const props = defineProps<{ yearId: number; selectedPromotionId: number }>();
+const props = defineProps<{ yearId: number; selectedPromotionId?: number }>();
 
 const emit = defineEmits(["select"]);
 

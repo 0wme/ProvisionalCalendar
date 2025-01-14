@@ -10,7 +10,7 @@ const emit = defineEmits(["close"]);
 
 <template>
     <div
-        class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
+        class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-99"
     >
         <div class="rounded-2xl p-6 bg-white flex flex-col gap-4">
             <div class="flex justify-between gap-10 items-center">

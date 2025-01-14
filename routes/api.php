@@ -22,8 +22,10 @@ Route::middleware(['api.logger'])->group(function () {
 
         //Récupération des données
 
-        Route::get('/groupes/{year}', [GroupController::class, 'index']);
-        Route::get('/groupes/promotion/{academic_promotion}', [GroupController::class, 'getByPromotion']);
+        Route::get('/promotions/{year_id}', [GroupController::class, 'getPromotionsByYear']);
+        Route::get('/groups/{promotion_id}', [GroupController::class, 'getGroupsByPromotion']);
+        Route::get('/subgroups/{group_id}', [GroupController::class, 'getSubgroupsByGroup']);
+        Route::get('/promotion/{promotion_id}', [GroupController::class, 'getByPromotion']);
         Route::get('/groupes/groupe/{group}', [GroupController::class, 'getByGroup']);
         Route::get('/groupes/sous-groupe/{subgroup}', [GroupController::class, 'getBySubgroup']);
 

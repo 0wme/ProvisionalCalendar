@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import ListManager from "@/Components/ListManager/ListManager.vue";
-import { defineProps, defineEmits, onMounted, computed, ref } from "vue";
+import { defineProps, defineEmits, onMounted, computed, ref, watch } from "vue";
 import { useLabelsStore } from "@/stores/labelsStore";
 import { Item } from "@/types/models";
 import { API_ENDPOINTS, MESSAGES } from "@/constants";
@@ -11,7 +11,7 @@ import ErrorPopup from "@/Features/Popup/ErrorPopup.vue";
 
 const labelsStore = useLabelsStore();
 
-const props = defineProps<{ promotionId: number; selectedGroupId: number }>();
+const props = defineProps<{ promotionId?: number; selectedGroupId?: number }>();
 
 const emit = defineEmits(["select"]);
 
@@ -24,20 +24,23 @@ const isEditGroupPopupVisible = ref<boolean>(false);
 
 const errorMessage = ref<string>();
 
-onMounted(async () => {
-    try {
-        const response = await axios.get(
-            `${API_ENDPOINTS.GROUP}s/${props.promotionId}`
-        );
-        groups.value = response.data;
-    } catch (error: unknown) {
-        if (error instanceof AxiosError && error.response?.data?.error) {
-            errorMessage.value = error.response.data.error;
-        } else {
-            errorMessage.value = MESSAGES.DEFAULT_ERROR_MESSAGE;
+watch(
+    () => props.promotionId,
+    async () => {
+        try {
+            const response = await axios.get(
+                `${API_ENDPOINTS.GROUP}s/${props.promotionId}`
+            );
+            groups.value = response.data;
+        } catch (error: unknown) {
+            if (error instanceof AxiosError && error.response?.data?.error) {
+                errorMessage.value = error.response.data.error;
+            } else {
+                errorMessage.value = MESSAGES.DEFAULT_ERROR_MESSAGE;
+            }
         }
     }
-});
+);
 
 const title = computed(() => {
     return labelsStore.getLabel("Groupe");
@@ -47,7 +50,9 @@ onMounted(async () => {
     await labelsStore.fetchLabels();
 });
 
-const showAddGroupPopup = () => (isAddGroupPopupVisible.value = true);
+const showAddGroupPopup = () => {
+    if (props.promotionId) isAddGroupPopupVisible.value = true;
+};
 const hideAddGroupPopup = () => (isAddGroupPopupVisible.value = false);
 
 const showEditGroupPopup = () => (isEditGroupPopupVisible.value = true);
@@ -80,7 +85,7 @@ const handleAdd = () => {
         />
         <AddGroupPopup
             v-if="isAddGroupPopupVisible"
-            :promotionId
+            :promotionId="promotionId!"
             @cancel="hideAddGroupPopup"
         />
         <EditGroupPopup
