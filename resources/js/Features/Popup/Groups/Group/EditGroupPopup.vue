@@ -5,7 +5,7 @@ import axios from "axios";
 import { Group } from "@/types/models";
 import { API_ENDPOINTS, MESSAGES } from "@/constants";
 
-import Button from "@/Components/Button.vue";
+import Button from "@/Components/FormButton.vue";
 import GroupPopup from "./GroupPopup.vue";
 import DeleteConfirmationPopup from "@/Features/Popup/DeleteConfirmationPopup.vue";
 import CloseWithoutSaveConfirmationPopup from "@/Features/Popup/CloseWithoutSaveConfirmationPopup.vue";

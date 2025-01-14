@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import TeachingPopup from './TeachingPopup.vue';
-import Button from '@/Components/Button.vue';
-import DeleteConfirmationPopup from '@/Components/DeleteConfirmationPopup.vue';
-import CloseWithoutSaveConfirmationPopup from '@/Components/CloseWithoutSaveConfirmationPopup.vue';
-import type { Teaching } from '@/types/models';
-import { ref, watch } from 'vue';
+import TeachingPopup from "./TeachingPopup.vue";
+import Button from "@/Components/FormButton.vue";
+import DeleteConfirmationPopup from "@/Components/DeleteConfirmationPopup.vue";
+import CloseWithoutSaveConfirmationPopup from "@/Components/CloseWithoutSaveConfirmationPopup.vue";
+import type { Teaching } from "@/types/models";
+import { ref, watch } from "vue";
 
 const props = defineProps<{
-  teaching?: Teaching;
-  show: boolean;
+    teaching?: Teaching;
+    show: boolean;
 }>();
 
-const emit = defineEmits(['cancel', 'update', 'delete']);
+const emit = defineEmits(["cancel", "update", "delete"]);
 
 const editedTeaching = ref<Teaching>({ ...props.teaching });
 const isCloseWithoutSaveConfirmationPopupVisible = ref<boolean>(false);
@@ -33,11 +33,14 @@ const hideDeleteConfirmationPopup = () => {
     isDeleteConfirmationPopupVisible.value = false;
 };
 
-watch(() => props.show, () => {
-    if (props.show) {
-        editedTeaching.value = { ...props.teaching };
+watch(
+    () => props.show,
+    () => {
+        if (props.show) {
+            editedTeaching.value = { ...props.teaching };
+        }
     }
-});
+);
 
 const handleUpdateTeachingName = (name: string) => {
     editedTeaching.value.name = name;
@@ -84,13 +87,13 @@ const handleClose = () => {
     ) {
         showCloseWithoutSaveConfirmationPopup();
     } else {
-        emit('cancel');
+        emit("cancel");
     }
 };
 
 const handleCloseWithoutSaving = () => {
     hideCloseWithoutSaveConfirmationPopup();
-    emit('cancel');
+    emit("cancel");
 };
 
 const handleSave = () => {
@@ -118,8 +121,14 @@ const handleDelete = () => {
         @close="handleClose"
     >
         <div class="flex gap-4">
-            <Button class="bg-green-500 text-white w-full" @click="handleSave">Sauvegarder</Button>
-            <Button class="bg-red-500 text-white w-full" @click="showDeleteConfirmationPopup">Supprimer</Button>
+            <Button class="bg-green-500 text-white w-full" @click="handleSave"
+                >Sauvegarder</Button
+            >
+            <Button
+                class="bg-red-500 text-white w-full"
+                @click="showDeleteConfirmationPopup"
+                >Supprimer</Button
+            >
         </div>
     </TeachingPopup>
     <DeleteConfirmationPopup

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import Popup from '@/Components/Popup/Popup.vue';
-import Button from '@/Components/Button.vue';
+import Button from '@/Components/FormButton.vue';
 import { EditedItem, EditedItemStatus } from '@/types/models';
 
 defineProps<{

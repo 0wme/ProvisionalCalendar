@@ -51,10 +51,10 @@ const handleCloseWithoutSaving = () => {
             @successfullyAdded="$emit('successfullyAdded')"
             @edited="hasBeenEdited = true"
         />
-        <CloseWithoutSaveConfirmationPopup
-            v-if="isCloseWithoutSaveConfirmationPopupVisible"
-            @close="handleCloseWithoutSaving"
-            @cancel="hideCloseWithoutSaveConfirmationPopup"
-        />
     </Popup>
+    <CloseWithoutSaveConfirmationPopup
+        v-if="isCloseWithoutSaveConfirmationPopupVisible"
+        @close="handleCloseWithoutSaving"
+        @cancel="hideCloseWithoutSaveConfirmationPopup"
+    />
 </template>

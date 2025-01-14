@@ -5,7 +5,7 @@ import axios from "axios";
 import { Subgroup } from "@/types/models";
 import { API_ENDPOINTS, MESSAGES } from "@/constants";
 
-import Button from "@/Components/Button.vue";
+import Button from "@/Components/FormButton.vue";
 import SubgroupPopup from "./SubgroupPopup.vue";
 import CloseWithoutSaveConfirmationPopup from "@/Features/Popup/CloseWithoutSaveConfirmationPopup.vue";
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import Popup from "@/Components/Popup/Popup.vue";
-import Button from "@/Components/Button.vue";
+import Button from "@/Components/FormButton.vue";
 
 const emit = defineEmits(["delete", "cancel"]);
 
