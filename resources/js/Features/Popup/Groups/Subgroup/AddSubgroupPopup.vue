@@ -1,27 +1,31 @@
 <script setup lang="ts">
-import { ref, watch } from "vue";
-import axios from "axios";
-
-import { Subgroup } from "@/types/models";
-import { API_ENDPOINTS, MESSAGES } from "@/constants";
-
-import Button from "@/Components/FormButton.vue";
-import SubgroupPopup from "./SubgroupPopup.vue";
+/**
+ * Script setup for the add subgroup popup.
+ *
+ * This popup is used to add a new subgroup. It contains a form to enter the
+ * subgroup's name and year, and a button to save the subgroup. When the user
+ * clicks on the button, the popup emits a "success" event with the subgroup's
+ * details.
+ *
+ * The popup also contains a "cancel" button that emits a "cancel" event when
+ * clicked.
+ *
+ * If the user has made changes to the form but has not saved them, a confirmation
+ * popup is shown when the user clicks on the "cancel" button. If the user
+ * confirms, the popup emits a "cancel" event. If the user cancels, the
+ * confirmation popup is hidden.
+ */
+import { ref } from "vue";
+import AddSubgroupForm from "@/Features/Forms/Groups/Subgroup/AddSubgroupForm.vue";
 import CloseWithoutSaveConfirmationPopup from "@/Features/Popup/CloseWithoutSaveConfirmationPopup.vue";
+import Popup from "@/Components/Popup/Popup.vue";
 
-const emit = defineEmits(["cancel", "add", "error"]);
+defineProps<{ yearId: number }>();
 
-const props = defineProps<{ show?: boolean; groupId?: number }>();
+const emit = defineEmits(["cancel", "successfullyAdded"]);
 
-const subgroup = ref<Subgroup>({ id: 0, name: "" });
 const isCloseWithoutSaveConfirmationPopupVisible = ref<boolean>(false);
-
-const resetSubgroup = () => (subgroup.value = { id: 0, name: "" });
-
-watch(
-    () => props.show,
-    () => props.show && resetSubgroup()
-);
+const hasBeenEdited = ref<boolean>(false);
 
 const showCloseWithoutSaveConfirmationPopup = () =>
     (isCloseWithoutSaveConfirmationPopupVisible.value = true);
@@ -29,11 +33,8 @@ const showCloseWithoutSaveConfirmationPopup = () =>
 const hideCloseWithoutSaveConfirmationPopup = () =>
     (isCloseWithoutSaveConfirmationPopupVisible.value = false);
 
-const updateSubgroupName = (newSubgroupName: string) =>
-    (subgroup.value.name = newSubgroupName);
-
 const handleCancel = () =>
-    subgroup.value.name !== ""
+    hasBeenEdited.value
         ? showCloseWithoutSaveConfirmationPopup()
         : emit("cancel");
 
@@ -41,43 +42,19 @@ const handleCloseWithoutSaving = () => {
     hideCloseWithoutSaveConfirmationPopup();
     emit("cancel");
 };
-
-const handleAdd = async () => {
-    if (subgroup.value.name === "") {
-        emit("error", MESSAGES.EMPTY_GROUP_NAME_ERROR_MESSAGE);
-        return;
-    }
-    try {
-        const response = await axios.post(
-            `${API_ENDPOINTS.SUBGROUP}/${props.groupId}`,
-            subgroup.value
-        );
-        emit("add", response.data.subgroup);
-    } catch (error: any) {
-        error.response?.data?.error
-            ? emit("error", error.response.data.error)
-            : emit("error", MESSAGES.DEFAULT_ERROR_MESSAGE);
-    }
-};
 </script>
 
 <template>
-    <SubgroupPopup
-        :show
-        :subgroup
-        title="Ajouter un sous-groupe"
-        @updateSubgroupName="updateSubgroupName"
-        @close="handleCancel"
-    >
-        <div class="flex gap-4">
-            <Button class="bg-green-500 text-white w-full" @click="handleAdd"
-                >Ajouter</Button
-            >
-        </div>
-        <CloseWithoutSaveConfirmationPopup
-            :show="isCloseWithoutSaveConfirmationPopupVisible"
-            @close="handleCloseWithoutSaving"
-            @cancel="hideCloseWithoutSaveConfirmationPopup"
+    <Popup title="Ajouter une subgroup" @close="handleCancel">
+        <AddSubgroupForm
+            :yearId
+            @successfullyAdded="$emit('successfullyAdded')"
+            @edited="hasBeenEdited = true"
         />
-    </SubgroupPopup>
+    </Popup>
+    <CloseWithoutSaveConfirmationPopup
+        v-if="isCloseWithoutSaveConfirmationPopupVisible"
+        @close="handleCloseWithoutSaving"
+        @cancel="hideCloseWithoutSaveConfirmationPopup"
+    />
 </template>

@@ -1,26 +1,31 @@
 <script setup lang="ts">
-import { ref, watch } from "vue";
-import axios from "axios";
-
-import { Group } from "@/types/models";
-import { API_ENDPOINTS, MESSAGES } from "@/constants";
-
-import Button from "@/Components/FormButton.vue";
-import GroupPopup from "./GroupPopup.vue";
+/**
+ * Script setup for the add group popup.
+ *
+ * This popup is used to add a new group. It contains a form to enter the
+ * group's name and year, and a button to save the group. When the user
+ * clicks on the button, the popup emits a "success" event with the group's
+ * details.
+ *
+ * The popup also contains a "cancel" button that emits a "cancel" event when
+ * clicked.
+ *
+ * If the user has made changes to the form but has not saved them, a confirmation
+ * popup is shown when the user clicks on the "cancel" button. If the user
+ * confirms, the popup emits a "cancel" event. If the user cancels, the
+ * confirmation popup is hidden.
+ */
+import { ref } from "vue";
+import AddGroupForm from "@/Features/Forms/Groups/Group/AddGroupForm.vue";
 import CloseWithoutSaveConfirmationPopup from "@/Features/Popup/CloseWithoutSaveConfirmationPopup.vue";
+import Popup from "@/Components/Popup/Popup.vue";
 
-const props = defineProps<{ show?: boolean; classId?: number }>();
-const emit = defineEmits(["cancel", "add", "error"]);
+defineProps<{ yearId: number }>();
 
-const group = ref<Group>({ id: 0, name: "", subgroups: [] });
+const emit = defineEmits(["cancel", "successfullyAdded"]);
+
 const isCloseWithoutSaveConfirmationPopupVisible = ref<boolean>(false);
-
-const resetGroup = () => (group.value = { id: 0, name: "", subgroups: [] });
-
-watch(
-    () => props.show,
-    () => props.show && resetGroup()
-);
+const hasBeenEdited = ref<boolean>(false);
 
 const showCloseWithoutSaveConfirmationPopup = () =>
     (isCloseWithoutSaveConfirmationPopupVisible.value = true);
@@ -28,11 +33,8 @@ const showCloseWithoutSaveConfirmationPopup = () =>
 const hideCloseWithoutSaveConfirmationPopup = () =>
     (isCloseWithoutSaveConfirmationPopupVisible.value = false);
 
-const handleUpdateGroupName = (newGroupName: string) =>
-    (group.value.name = newGroupName);
-
 const handleCancel = () =>
-    group.value.name !== ""
+    hasBeenEdited.value
         ? showCloseWithoutSaveConfirmationPopup()
         : emit("cancel");
 
@@ -40,43 +42,19 @@ const handleCloseWithoutSaving = () => {
     hideCloseWithoutSaveConfirmationPopup();
     emit("cancel");
 };
-
-const handleAdd = async () => {
-    if (group.value.name === "") {
-        emit("error", MESSAGES.EMPTY_GROUP_NAME_ERROR_MESSAGE);
-        return;
-    }
-    try {
-        const response = await axios.post(
-            `${API_ENDPOINTS.GROUP}/${props.classId}`,
-            group.value
-        );
-        emit("add", response.data.group);
-    } catch (error: any) {
-        error.response?.data?.error
-            ? emit("error", error.response.data.error)
-            : emit("error", MESSAGES.DEFAULT_ERROR_MESSAGE);
-    }
-};
 </script>
 
 <template>
-    <GroupPopup
-        :show
-        :group
-        title="Ajouter un groupe"
-        @updateGroupName="handleUpdateGroupName"
-        @close="handleCancel"
-    >
-        <div class="flex gap-4">
-            <Button class="bg-green-500 text-white w-full" @click="handleAdd"
-                >Ajouter</Button
-            >
-        </div>
-        <CloseWithoutSaveConfirmationPopup
-            :show="isCloseWithoutSaveConfirmationPopupVisible"
-            @close="handleCloseWithoutSaving"
-            @cancel="hideCloseWithoutSaveConfirmationPopup"
+    <Popup title="Ajouter une group" @close="handleCancel">
+        <AddGroupForm
+            :yearId
+            @successfullyAdded="$emit('successfullyAdded')"
+            @edited="hasBeenEdited = true"
         />
-    </GroupPopup>
+    </Popup>
+    <CloseWithoutSaveConfirmationPopup
+        v-if="isCloseWithoutSaveConfirmationPopupVisible"
+        @close="handleCloseWithoutSaving"
+        @cancel="hideCloseWithoutSaveConfirmationPopup"
+    />
 </template>

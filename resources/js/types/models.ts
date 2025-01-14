@@ -154,9 +154,9 @@ export interface Class extends Item {
  *
  * Représente un groupe.
  */
-export interface Group extends Item {
-    subgroups: Subgroup[];
-}
+// export interface Group extends Item {
+//     subgroups: Subgroup[];
+// }
 
 /**
  * @interface Subgroup
@@ -245,6 +245,17 @@ export enum FormInputType {
     SELECT = "select",
     CHECKBOX = "checkbox",
     PASSWORD = "password",
+}
+
+export interface Subgroup {
+    id: number;
+    name: string;
+}
+
+export interface Group {
+    id: number;
+    name: string;
+    subgroups?: Subgroup[];
 }
 
 export interface Promotion {
