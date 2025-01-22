@@ -25,27 +25,28 @@ Route::middleware(['api.logger'])->group(function () {
         Route::get('/promotions/{year_id}', [GroupController::class, 'getPromotionsByYear']);
         Route::get('/groups/{promotion_id}', [GroupController::class, 'getGroupsByPromotion']);
         Route::get('/subgroups/{group_id}', [GroupController::class, 'getSubgroupsByGroup']);
-        Route::get('/promotion/{promotion_id}', [GroupController::class, 'getByPromotion']);
-        Route::get('/groupes/groupe/{group}', [GroupController::class, 'getByGroup']);
-        Route::get('/groupes/sous-groupe/{subgroup}', [GroupController::class, 'getBySubgroup']);
+
+        Route::get('/promotion/{promotion_id}', [GroupController::class, 'getPromotionById']);
+        Route::get('/groupe/{group_id}', [GroupController::class, 'getGroupById']);
+        Route::get('/sous-groupe/{subgroup_id}', [GroupController::class, 'getSubgroupById']);
 
         //Création des données
 
-        Route::post('/groupes/promotion/{year}', [GroupController::class, 'storePromotion']);
-        Route::post('/groupes/groupe/{promotion}', [GroupController::class, 'storeGroup']);
-        Route::post('/groupes/sous-groupe/{group}', [GroupController::class, 'storeSubgroup']);
+        Route::post('/promotion/{year}', [GroupController::class, 'storePromotion']);
+        Route::post('/groupe/{promotion}', [GroupController::class, 'storeGroup']);
+        Route::post('/sous-groupe/{group}', [GroupController::class, 'storeSubgroup']);
 
         //Modification des données
 
-        Route::put('/groupes/promotion/{promotion}', [GroupController::class, 'updatePromotion']);
-        Route::put('/groupes/groupe/{group}', [GroupController::class, 'updateGroup']);
-        Route::put('/groupes/sous-groupe/{subgroup}', [GroupController::class, 'updateSubgroup']);
+        Route::put('/promotion/{promotion}', [GroupController::class, 'updatePromotion']);
+        Route::put('/groupe/{group}', [GroupController::class, 'updateGroup']);
+        Route::put('/sous-groupe/{subgroup}', [GroupController::class, 'updateSubgroup']);
 
         //Suppression des données
 
-        Route::delete('/groupes/promotion/{promotion}', [GroupController::class, 'deletePromotion']);
-        Route::delete('/groupes/groupe/{group}', [GroupController::class, 'deleteGroup']);
-        Route::delete('/groupes/sous-groupe/{subgroup}', [GroupController::class, 'deleteSubgroup']);
+        Route::delete('/promotion/{promotion}', [GroupController::class, 'deletePromotion']);
+        Route::delete('/groupe/{group}', [GroupController::class, 'deleteGroup']);
+        Route::delete('/sous-groupe/{subgroup}', [GroupController::class, 'deleteSubgroup']);
 
     //Enseignants
 

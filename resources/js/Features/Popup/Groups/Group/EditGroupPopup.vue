@@ -58,7 +58,7 @@ const handleCloseWithoutSaving = () => {
 </script>
 
 <template>
-    <Popup title="Modifier une group" @close="handleCancel">
+    <Popup title="Modifier un groupe" @close="handleCancel">
         <EditGroupForm
             v-if="group"
             :group

@@ -91,7 +91,7 @@ const handleDelete = async () => {
 <template>
     <div class="flex flex-col gap-6">
         <FormInput
-            label="Nom de la group"
+            label="Nom du groupe"
             :value="editedGroup.name"
             :error="nameError"
             @input="updateName($event.target.value)"

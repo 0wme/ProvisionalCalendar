@@ -12,6 +12,7 @@ const props = defineProps<{
     selectedItemsId?: number[];
     hasFilter?: boolean;
     hasAdd?: boolean;
+    canAdd?: boolean;
     hasImport?: boolean;
 }>();
 
@@ -103,6 +104,7 @@ onUnmounted(() => {
         <SearchBar
             placeholder="Rechercher..."
             :hasAdd
+            :canAdd
             :hasImport
             class="mb-4"
             @input="handleSearch"

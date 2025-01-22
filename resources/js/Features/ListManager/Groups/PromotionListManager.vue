@@ -13,7 +13,12 @@ const labelsStore = useLabelsStore();
 
 const props = defineProps<{ yearId: number; selectedPromotionId?: number }>();
 
-const emit = defineEmits(["select"]);
+const emit = defineEmits([
+    "select",
+    "successfullyAdded",
+    "successfullyEdited",
+    "successfullyDeleted",
+]);
 
 const promotions = ref<Item[] | undefined>();
 
@@ -24,7 +29,23 @@ const isEditPromotionPopupVisible = ref<boolean>(false);
 
 const errorMessage = ref<string>();
 
-onMounted(async () => {
+onMounted(() => {
+    fetchPromotions();
+    labelsStore.fetchLabels();
+});
+
+const title = computed(() => {
+    return labelsStore.getLabel("Promotion");
+});
+
+const showAddPromotionPopup = () => (isAddPromotionPopupVisible.value = true);
+const hideAddPromotionPopup = () => (isAddPromotionPopupVisible.value = false);
+
+const showEditPromotionPopup = () => (isEditPromotionPopupVisible.value = true);
+const hideEditPromotionPopup = () =>
+    (isEditPromotionPopupVisible.value = false);
+
+const fetchPromotions = async () => {
     try {
         const response = await axios.get(
             `${API_ENDPOINTS.PROMOTION}s/${props.yearId}`
@@ -37,22 +58,7 @@ onMounted(async () => {
             errorMessage.value = MESSAGES.DEFAULT_ERROR_MESSAGE;
         }
     }
-});
-
-const title = computed(() => {
-    return labelsStore.getLabel("Promotion");
-});
-
-onMounted(async () => {
-    await labelsStore.fetchLabels();
-});
-
-const showAddPromotionPopup = () => (isAddPromotionPopupVisible.value = true);
-const hideAddPromotionPopup = () => (isAddPromotionPopupVisible.value = false);
-
-const showEditPromotionPopup = () => (isEditPromotionPopupVisible.value = true);
-const hideEditPromotionPopup = () =>
-    (isEditPromotionPopupVisible.value = false);
+};
 
 const handleSelect = (item: number) => {
     emit("select", item);
@@ -66,6 +72,24 @@ const handleEdit = (item: number) => {
 const handleAdd = () => {
     showAddPromotionPopup();
 };
+
+const handleSuccessfullyAdded = () => {
+    hideAddPromotionPopup();
+    fetchPromotions();
+    emit("successfullyAdded");
+};
+
+const handleSuccessfullyEdited = () => {
+    hideEditPromotionPopup();
+    fetchPromotions();
+    emit("successfullyEdited");
+};
+
+const handleSuccessfullyDeleted = () => {
+    hideEditPromotionPopup();
+    fetchPromotions();
+    emit("successfullyDeleted");
+};
 </script>
 
 <template>
@@ -73,6 +97,7 @@ const handleAdd = () => {
         <ListManager
             :title="title"
             hasAdd
+            canAdd
             :items="promotions"
             :selectedItemsId="
                 selectedPromotionId ? [selectedPromotionId] : undefined
@@ -84,11 +109,14 @@ const handleAdd = () => {
         <AddPromotionPopup
             v-if="isAddPromotionPopupVisible"
             :yearId
+            @successfullyAdded="handleSuccessfullyAdded"
             @cancel="hideAddPromotionPopup"
         />
         <EditPromotionPopup
             v-if="isEditPromotionPopupVisible"
             :promotionId="promotionToEditId"
+            @successfullyEdited="handleSuccessfullyEdited"
+            @successfullyDeleted="handleSuccessfullyDeleted"
             @cancel="hideEditPromotionPopup"
         />
         <ErrorPopup v-if="errorMessage" :message="errorMessage" />

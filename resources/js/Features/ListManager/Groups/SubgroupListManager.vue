@@ -13,7 +13,12 @@ const labelsStore = useLabelsStore();
 
 const props = defineProps<{ groupId?: number }>();
 
-const emit = defineEmits(["select"]);
+const emit = defineEmits([
+    "select",
+    "successfullyAdded",
+    "successfullyEdited",
+    "successfullyDeleted",
+]);
 
 const subgroups = ref<Item[] | undefined>();
 
@@ -26,37 +31,35 @@ const errorMessage = ref<string>();
 
 watch(
     () => props.groupId,
-    async () => {
-        try {
-            const response = await axios.get(
-                `${API_ENDPOINTS.SUBGROUP}s/${props.groupId}`
-            );
-            subgroups.value = response.data;
-        } catch (error: unknown) {
-            if (error instanceof AxiosError && error.response?.data?.error) {
-                errorMessage.value = error.response.data.error;
-            } else {
-                errorMessage.value = MESSAGES.DEFAULT_ERROR_MESSAGE;
-            }
-        }
-    }
+    () => fetchSubgroups()
 );
 
 const title = computed(() => {
     return labelsStore.getLabel("Demi-groupe");
 });
 
-onMounted(async () => {
-    await labelsStore.fetchLabels();
-});
+onMounted(() => labelsStore.fetchLabels());
 
-const showAddSubgroupPopup = () => {
-    if (props.groupId) isAddSubgroupPopupVisible.value = true;
-};
+const showAddSubgroupPopup = () => (isAddSubgroupPopupVisible.value = true);
 const hideAddSubgroupPopup = () => (isAddSubgroupPopupVisible.value = false);
 
 const showEditSubgroupPopup = () => (isEditSubgroupPopupVisible.value = true);
 const hideEditSubgroupPopup = () => (isEditSubgroupPopupVisible.value = false);
+
+const fetchSubgroups = async () => {
+    try {
+        const response = await axios.get(
+            `${API_ENDPOINTS.SUBGROUP}s/${props.groupId}`
+        );
+        subgroups.value = response.data;
+    } catch (error: unknown) {
+        if (error instanceof AxiosError && error.response?.data?.error) {
+            errorMessage.value = error.response.data.error;
+        } else {
+            errorMessage.value = MESSAGES.DEFAULT_ERROR_MESSAGE;
+        }
+    }
+};
 
 const handleSelect = (item: number) => {
     emit("select", item);
@@ -70,6 +73,24 @@ const handleEdit = (item: number) => {
 const handleAdd = () => {
     showAddSubgroupPopup();
 };
+
+const handleSuccessfullyAdded = () => {
+    hideAddSubgroupPopup();
+    fetchSubgroups();
+    emit("successfullyAdded");
+};
+
+const handleSuccessfullyEdited = () => {
+    hideEditSubgroupPopup();
+    fetchSubgroups();
+    emit("successfullyEdited");
+};
+
+const handleSuccessfullyDeleted = () => {
+    hideEditSubgroupPopup();
+    fetchSubgroups();
+    emit("successfullyDeleted");
+};
 </script>
 
 <template>
@@ -77,6 +98,7 @@ const handleAdd = () => {
         <ListManager
             :title="title"
             hasAdd
+            :canAdd="!!groupId"
             :items="subgroups"
             @select="handleSelect"
             @edit="handleEdit"
@@ -85,11 +107,14 @@ const handleAdd = () => {
         <AddSubgroupPopup
             v-if="isAddSubgroupPopupVisible"
             :groupId="groupId!"
+            @successfullyAdded="handleSuccessfullyAdded"
             @cancel="hideAddSubgroupPopup"
         />
         <EditSubgroupPopup
             v-if="isEditSubgroupPopupVisible"
             :subgroupId="subgroupToEditId"
+            @successfullyEdited="handleSuccessfullyEdited"
+            @successfullyDeleted="handleSuccessfullyDeleted"
             @cancel="hideEditSubgroupPopup"
         />
         <ErrorPopup v-if="errorMessage" :message="errorMessage" />

@@ -96,7 +96,7 @@ class GroupController extends Controller
         }
     }
 
-    public function getByPromotion($promotion_id): JsonResponse
+    public function getPromotionById($promotion_id): JsonResponse
     {
         try {
             $promotion = AcademicPromotion::with(['academicGroups.academicSubgroups'])
@@ -132,11 +132,11 @@ class GroupController extends Controller
         }
     }
 
-    public function getByGroup($group): JsonResponse
+    public function getGroupById($group_id): JsonResponse
     {
         try {
             $group = AcademicGroup::with(['academicSubgroups', 'academicPromotion'])
-                ->find($group);
+                ->find($group_id);
 
             if (!$group) {
                 return response()->json([
@@ -167,11 +167,11 @@ class GroupController extends Controller
         }
     }
 
-    public function getBySubgroup($subgroup): JsonResponse
+    public function getSubgroupById($subgroup_id): JsonResponse
     {
         try {
             $subgroup = AcademicSubgroup::with(['academicGroup.academicPromotion'])
-                ->find($subgroup);
+                ->find($subgroup_id);
 
             if (!$subgroup) {
                 return response()->json([

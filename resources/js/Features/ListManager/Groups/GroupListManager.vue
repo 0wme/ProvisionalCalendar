@@ -13,7 +13,12 @@ const labelsStore = useLabelsStore();
 
 const props = defineProps<{ promotionId?: number; selectedGroupId?: number }>();
 
-const emit = defineEmits(["select"]);
+const emit = defineEmits([
+    "select",
+    "successfullyAdded",
+    "successfullyEdited",
+    "successfullyDeleted",
+]);
 
 const groups = ref<Item[] | undefined>();
 
@@ -26,37 +31,35 @@ const errorMessage = ref<string>();
 
 watch(
     () => props.promotionId,
-    async () => {
-        try {
-            const response = await axios.get(
-                `${API_ENDPOINTS.GROUP}s/${props.promotionId}`
-            );
-            groups.value = response.data;
-        } catch (error: unknown) {
-            if (error instanceof AxiosError && error.response?.data?.error) {
-                errorMessage.value = error.response.data.error;
-            } else {
-                errorMessage.value = MESSAGES.DEFAULT_ERROR_MESSAGE;
-            }
-        }
-    }
+    () => fetchGroups()
 );
 
 const title = computed(() => {
     return labelsStore.getLabel("Groupe");
 });
 
-onMounted(async () => {
-    await labelsStore.fetchLabels();
-});
+onMounted(() => labelsStore.fetchLabels());
 
-const showAddGroupPopup = () => {
-    if (props.promotionId) isAddGroupPopupVisible.value = true;
-};
+const showAddGroupPopup = () => (isAddGroupPopupVisible.value = true);
 const hideAddGroupPopup = () => (isAddGroupPopupVisible.value = false);
 
 const showEditGroupPopup = () => (isEditGroupPopupVisible.value = true);
 const hideEditGroupPopup = () => (isEditGroupPopupVisible.value = false);
+
+const fetchGroups = async () => {
+    try {
+        const response = await axios.get(
+            `${API_ENDPOINTS.GROUP}s/${props.promotionId}`
+        );
+        groups.value = response.data;
+    } catch (error: unknown) {
+        if (error instanceof AxiosError && error.response?.data?.error) {
+            errorMessage.value = error.response.data.error;
+        } else {
+            errorMessage.value = MESSAGES.DEFAULT_ERROR_MESSAGE;
+        }
+    }
+};
 
 const handleSelect = (item: number) => {
     emit("select", item);
@@ -70,6 +73,24 @@ const handleEdit = (item: number) => {
 const handleAdd = () => {
     showAddGroupPopup();
 };
+
+const handleSuccessfullyAdded = () => {
+    hideAddGroupPopup();
+    fetchGroups();
+    emit("successfullyAdded");
+};
+
+const handleSuccessfullyEdited = () => {
+    hideEditGroupPopup();
+    fetchGroups();
+    emit("successfullyEdited");
+};
+
+const handleSuccessfullyDeleted = () => {
+    hideEditGroupPopup();
+    fetchGroups();
+    emit("successfullyDeleted");
+};
 </script>
 
 <template>
@@ -77,6 +98,7 @@ const handleAdd = () => {
         <ListManager
             :title="title"
             hasAdd
+            :canAdd="!!promotionId"
             :items="groups"
             :selectedItemsId="selectedGroupId ? [selectedGroupId] : undefined"
             @select="handleSelect"
@@ -86,11 +108,14 @@ const handleAdd = () => {
         <AddGroupPopup
             v-if="isAddGroupPopupVisible"
             :promotionId="promotionId!"
+            @successfullyAdded="handleSuccessfullyAdded"
             @cancel="hideAddGroupPopup"
         />
         <EditGroupPopup
             v-if="isEditGroupPopupVisible"
             :groupId="groupToEditId"
+            @successfullyEdited="handleSuccessfullyEdited"
+            @successfullyDeleted="handleSuccessfullyDeleted"
             @cancel="hideEditGroupPopup"
         />
         <ErrorPopup v-if="errorMessage" :message="errorMessage" />

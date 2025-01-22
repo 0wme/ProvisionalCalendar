@@ -9,9 +9,23 @@ const yearId = ref<number>(1);
 const selectedPromotionId = ref<number | undefined>();
 const selectedGroupId = ref<number | undefined>();
 
-const handlePromotionSelect = (id: number) => (selectedPromotionId.value = id);
+const handlePromotionSelect = (id: number) => {
+    if (selectedPromotionId.value === id) {
+        selectedPromotionId.value = undefined;
+        selectedGroupId.value = undefined;
+        return;
+    }
+    selectedPromotionId.value = id;
+    selectedGroupId.value = undefined;
+};
 
-const handleGroupSelect = (id: number) => (selectedGroupId.value = id);
+const handleGroupSelect = (id: number) => {
+    if (selectedGroupId.value === id) {
+        selectedGroupId.value = undefined;
+        return;
+    }
+    selectedGroupId.value = id;
+};
 </script>
 
 <template>

@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import Icon from '@/Components/Icon.vue';
-import IconButton from '@/Components/IconButton.vue';
+import Icon from "@/Components/Icon.vue";
+import IconButton from "@/Components/IconButton.vue";
 
 /**
  * @component SearchBar
  * @description Barre de recherche réutilisable avec une icône de recherche et des options pour ajouter des boutons d'import et d'ajout
- * 
+ *
  * @example
  * ```vue
- * <SearchBar 
+ * <SearchBar
  *   placeholder="Rechercher un élément..."
  *   hasImport
  *   hasAdd
@@ -16,10 +16,10 @@ import IconButton from '@/Components/IconButton.vue';
  *   @addClick="handleAdd"
  * />
  * ```
- * 
+ *
  * @example Version compacte
  * ```vue
- * <SearchBar 
+ * <SearchBar
  *   placeholder="Rechercher..."
  *   small
  * />
@@ -28,27 +28,55 @@ import IconButton from '@/Components/IconButton.vue';
 
 defineProps<{
     /** Placeholder de la barre de recherche*/
-    placeholder: string,
+    placeholder: string;
     /** Indique si la barre de recherche doit avoir un bouton d'import */
-    hasImport?: boolean,
+    hasImport?: boolean;
     /** Indique si la barre de recherche doit avoir un bouton d'ajout */
-    hasAdd?: boolean,
+    hasAdd?: boolean;
+    canAdd?: boolean;
     /** Indique si la barre de recherche doit être en version compacte */
-    small?: boolean
-}>()
+    small?: boolean;
+}>();
 
-const emit = defineEmits(['importClick', 'addClick', 'input']);
+const emit = defineEmits(["importClick", "addClick", "input"]);
 </script>
 
 <template>
-    <div v-if="!small" class="search-bar flex items-center gap-2 border border-black rounded-2xl p-1 pl-5 bg-gray-100 shadow-lg">
+    <div
+        v-if="!small"
+        class="search-bar flex items-center gap-2 border border-black rounded-2xl p-1 pl-5 bg-gray-100 shadow-lg"
+    >
         <Icon name="Search" :strokeWidth="2" />
-        <input class="border-none focus:ring-0 w-full bg-transparent" type="text" :placeholder="placeholder" @input="emit('input', $event)" />
-        <IconButton v-if="hasImport" iconClass="Import" bgColor="#E8DEF8" @click="emit('importClick')" />
-        <IconButton v-if="hasAdd" iconClass="Plus" bgColor="#FFD8E4" @click="emit('addClick')" />
+        <input
+            class="border-none focus:ring-0 w-full bg-transparent"
+            type="text"
+            :placeholder="placeholder"
+            @input="emit('input', $event)"
+        />
+        <IconButton
+            v-if="hasImport"
+            iconClass="Import"
+            bgColor="#E8DEF8"
+            @click="emit('importClick')"
+        />
+        <IconButton
+            v-if="hasAdd"
+            :disabled="!canAdd"
+            iconClass="Plus"
+            bgColor="#FFD8E4"
+            @click="emit('addClick')"
+        />
     </div>
-    <div v-else class="search-bar small flex items-center gap-1 border border-black rounded-2xl p-1 pl-2 bg-gray-100 shadow-lg">
+    <div
+        v-else
+        class="search-bar small flex items-center gap-1 border border-black rounded-2xl p-1 pl-2 bg-gray-100 shadow-lg"
+    >
         <Icon name="Search" :strokeWidth="2" />
-        <input class="border-none focus:ring-0 w-full bg-transparent py-0" type="text" :placeholder="placeholder" @input="emit('input', $event)" />
+        <input
+            class="border-none focus:ring-0 w-full bg-transparent py-0"
+            type="text"
+            :placeholder="placeholder"
+            @input="emit('input', $event)"
+        />
     </div>
 </template>

@@ -60,7 +60,7 @@ const handleCloseWithoutSaving = () => {
 </script>
 
 <template>
-    <Popup title="Modifier une subgroup" @close="handleCancel">
+    <Popup title="Modifier un sous-groupe" @close="handleCancel">
         <EditSubgroupForm
             v-if="subgroup"
             :subgroup

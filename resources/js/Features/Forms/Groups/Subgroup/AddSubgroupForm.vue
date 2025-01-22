@@ -58,7 +58,7 @@ const handleAdd = async () => {
 <template>
     <div class="flex flex-col gap-6">
         <FormInput
-            label="Nom de la subgroup"
+            label="Nom du sous-groupe"
             :value="subgroup.name"
             :error="nameError"
             @input="updateName($event.target.value)"

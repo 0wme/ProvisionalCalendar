@@ -45,7 +45,7 @@ const handleCloseWithoutSaving = () => {
 </script>
 
 <template>
-    <Popup title="Ajouter une group" @close="handleCancel">
+    <Popup title="Ajouter un groupe" @close="handleCancel">
         <AddGroupForm
             :promotionId
             @successfullyAdded="$emit('successfullyAdded')"

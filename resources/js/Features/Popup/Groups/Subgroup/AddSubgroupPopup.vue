@@ -45,7 +45,7 @@ const handleCloseWithoutSaving = () => {
 </script>
 
 <template>
-    <Popup title="Ajouter une subgroup" @close="handleCancel">
+    <Popup title="Ajouter un sous-groupe" @close="handleCancel">
         <AddSubgroupForm
             :groupId
             @successfullyAdded="$emit('successfullyAdded')"

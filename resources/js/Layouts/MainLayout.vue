@@ -14,17 +14,10 @@ onMounted(async () => {
 
 <template>
     <Head title="Calendrier prévisionnel" />
-    <div class="main-layout w-screen h-screen bg-gray-100 flex">
+    <div class="fixed left-0 top-0 right-0 bottom-0 bg-gray-100 flex">
         <Sidebar :items="sidebarMenuItems" />
-        <div class="main-content m-10">
+        <div class="m-10 w-[calc(100%-80px)] h-[calc(100%-80px)]">
             <slot />
         </div>
     </div>
 </template>
-
-<style scoped>
-.main-content {
-    width: calc(100% - 80px);
-    height: calc(100% - 80px);
-}
-</style>
