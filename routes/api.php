@@ -27,26 +27,26 @@ Route::middleware(['api.logger'])->group(function () {
         Route::get('/subgroups/{group_id}', [GroupController::class, 'getSubgroupsByGroup']);
 
         Route::get('/promotion/{promotion_id}', [GroupController::class, 'getPromotionById']);
-        Route::get('/groupe/{group_id}', [GroupController::class, 'getGroupById']);
-        Route::get('/sous-groupe/{subgroup_id}', [GroupController::class, 'getSubgroupById']);
+        Route::get('/group/{group_id}', [GroupController::class, 'getGroupById']);
+        Route::get('/subgroup/{subgroup_id}', [GroupController::class, 'getSubgroupById']);
 
         //Création des données
 
         Route::post('/promotion/{year}', [GroupController::class, 'storePromotion']);
-        Route::post('/groupe/{promotion}', [GroupController::class, 'storeGroup']);
-        Route::post('/sous-groupe/{group}', [GroupController::class, 'storeSubgroup']);
+        Route::post('/group/{promotion}', [GroupController::class, 'storeGroup']);
+        Route::post('/subgroup/{group}', [GroupController::class, 'storeSubgroup']);
 
         //Modification des données
 
         Route::put('/promotion/{promotion}', [GroupController::class, 'updatePromotion']);
-        Route::put('/groupe/{group}', [GroupController::class, 'updateGroup']);
-        Route::put('/sous-groupe/{subgroup}', [GroupController::class, 'updateSubgroup']);
+        Route::put('/group/{group}', [GroupController::class, 'updateGroup']);
+        Route::put('/subgroup/{subgroup}', [GroupController::class, 'updateSubgroup']);
 
         //Suppression des données
 
         Route::delete('/promotion/{promotion}', [GroupController::class, 'deletePromotion']);
-        Route::delete('/groupe/{group}', [GroupController::class, 'deleteGroup']);
-        Route::delete('/sous-groupe/{subgroup}', [GroupController::class, 'deleteSubgroup']);
+        Route::delete('/group/{group}', [GroupController::class, 'deleteGroup']);
+        Route::delete('/subgroup/{subgroup}', [GroupController::class, 'deleteSubgroup']);
 
     //Enseignants
 
