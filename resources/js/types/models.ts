@@ -27,22 +27,6 @@ export interface MenuItem {
 }
 
 /**
- * @interface Period
- *
- * Représente une période.
- */
-export interface Period {
-    /**
-     * L'ID de la période.
-     */
-    id: number;
-    /**
-     * Le nom de la période.
-     */
-    name: string;
-}
-
-/**
  * @interface Item
  *
  * Représente un élément.
@@ -51,7 +35,7 @@ export interface Item {
     /**
      * L'ID de l'élément.
      */
-    id: number;
+    id?: number;
     /**
      * Le nom de l'élément.
      */
@@ -109,30 +93,7 @@ export interface Teaching extends Item {
      * Le code apogee de l'enseignement.
      */
     apogee_code: string;
-    /**
-     * Le nombre initial de CM de l'enseignement.
-     */
-    initial_cm: number;
-    /**
-     * Le nombre initial de TD de l'enseignement.
-     */
-    initial_td: number;
-    /**
-     * Le nombre initial de TP de l'enseignement.
-     */
-    initial_tp: number;
-    /**
-     * Le nombre continu de CM de l'enseignement.
-     */
-    continuing_cm: number;
-    /**
-     * Le nombre continu de TD de l'enseignement.
-     */
-    continuing_td: number;
-    /**
-     * Le nombre continu de TP de l'enseignement.
-     */
-    continuing_tp: number;
+    mcccFormInput: MCCCFormInput;
     /**
      * Les enseignants de l'enseignement.
      */
@@ -148,22 +109,6 @@ export interface Teaching extends Item {
 export interface Class extends Item {
     groups: Group[];
 }
-
-/**
- * @interface Group
- *
- * Représente un groupe.
- */
-// export interface Group extends Item {
-//     subgroups: Subgroup[];
-// }
-
-/**
- * @interface Subgroup
- *
- * Représente un sous-groupe.
- */
-export interface Subgroup extends Item {}
 
 export enum SlotType {
     CM = "CM",
@@ -247,6 +192,33 @@ export enum FormInputType {
     PASSWORD = "password",
 }
 
+export interface MCCCFormInput {
+    /**
+     * Le nombre initial de CM de l'enseignement.
+     */
+    initial_cm?: number;
+    /**
+     * Le nombre initial de TD de l'enseignement.
+     */
+    initial_td?: number;
+    /**
+     * Le nombre initial de TP de l'enseignement.
+     */
+    initial_tp?: number;
+    /**
+     * Le nombre continu de CM de l'enseignement.
+     */
+    continuing_cm?: number;
+    /**
+     * Le nombre continu de TD de l'enseignement.
+     */
+    continuing_td?: number;
+    /**
+     * Le nombre continu de TP de l'enseignement.
+     */
+    continuing_tp?: number;
+}
+
 export interface Subgroup {
     id: number;
     name: string;
@@ -262,4 +234,9 @@ export interface Promotion {
     id: number;
     name: string;
     groups?: Group[];
+}
+
+export interface Period {
+    id: number;
+    number: string;
 }

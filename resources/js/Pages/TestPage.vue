@@ -1,13 +1,9 @@
 <script setup lang="ts">
-import SubgroupListManager from "@/Features/ListManager/Groups/SubGroupListManager.vue";
+import AddTeachingForm from "@/Features/Forms/Teaching/AddTeachingForm.vue";
 </script>
 
 <template>
     <div class="m-10">
-        <SubgroupListManager
-            class="w-full h-full"
-            :groupId="6"
-            :selectedSubgroupId="12"
-        />
+        <AddTeachingForm :year-id="1" />
     </div>
 </template>

@@ -2,6 +2,9 @@ export const API_ENDPOINTS = {
     PROMOTION: "/api/promotion",
     GROUP: "/api/group",
     SUBGROUP: "/api/subgroup",
+    TEACHING: "/api/teaching",
+    TEACHER: "/api/teacher",
+    PERIOD: "/api/period",
 };
 
 export const MESSAGES = {
@@ -11,4 +14,10 @@ export const MESSAGES = {
     EMPTY_GROUP_NAME_ERROR_MESSAGE: "Le nom du groupe ne peut pas être vide",
     EMPTY_SUBGROUP_NAME_ERROR_MESSAGE:
         "Le nom du sous-groupe ne peut pas être vide",
+    EMPTY_TEACHING_NAME_ERROR_MESSAGE:
+        "Le nom de la ressource ne peut pas être vide",
+    EMPTY_APOGEE_CODE_ERROR_MESSAGE: "Le code Apogée ne peut pas être vide",
+    EMPTY_PERIOD_ERROR_MESSAGE: "La periode ne peut pas être vide",
+    FETCH_PERIODS_ERROR_MESSAGE:
+        "Une erreur est survenue lors de la récupération des periodes",
 };

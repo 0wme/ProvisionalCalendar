@@ -7,8 +7,8 @@ use App\Http\Controllers\Api\CalendarController;
 use App\Http\Controllers\Api\YearController;
 use App\Http\Controllers\Api\UserControllerApi;
 use App\Http\Controllers\Api\RoleControllerApi;
+use App\Http\Controllers\Api\PeriodController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\TestEmailController;
 
 Route::middleware(['api.logger'])->group(function () {
     //Years
@@ -17,6 +17,8 @@ Route::middleware(['api.logger'])->group(function () {
     Route::post('/years', [YearController::class, 'store']);
     Route::get('/years/{year}', [YearController::class, 'show']);
     Route::post('/years/{id}/clone', [YearController::class, 'clone']);
+
+    Route::get('/periods/{year_id}', [PeriodController::class, 'getPeriodsByYear']);
 
     //Groupes
 
