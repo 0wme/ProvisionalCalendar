@@ -42,6 +42,10 @@ const handleCloseWithoutSaving = () => {
     hideCloseWithoutSaveConfirmationPopup();
     emit("cancel");
 };
+
+const handleHasBeenEdited = () => {
+    hasBeenEdited.value = true;
+};
 </script>
 
 <template>
@@ -49,7 +53,7 @@ const handleCloseWithoutSaving = () => {
         <AddPromotionForm
             :yearId
             @successfullyAdded="$emit('successfullyAdded')"
-            @edited="hasBeenEdited = true"
+            @edited="handleHasBeenEdited"
         />
     </Popup>
     <CloseWithoutSaveConfirmationPopup

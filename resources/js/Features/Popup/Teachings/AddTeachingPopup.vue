@@ -1,29 +1,22 @@
 <script setup lang="ts">
-import Button from "@/Components/FormButton.vue";
 import CloseWithoutSaveConfirmationPopup from "@/Components/CloseWithoutSaveConfirmationPopup.vue";
-import type { Teaching } from "@/types/models";
-import { ref } from "vue";
-import TeachingPopup from "./TeachingPopup.vue";
+import { onMounted, ref } from "vue";
+import Popup from "@/Components/Popup/Popup.vue";
+import AddTeachingForm from "@/Features/Forms/Teaching/AddTeachingForm.vue";
+import { API_ENDPOINTS } from "@/constants";
+import axios from "axios";
+import { Period, PeriodType } from "@/types/models";
 
-const props = defineProps<{ show: boolean }>();
-const emit = defineEmits(["close", "cancel"]);
+const props = defineProps<{ yearId: number }>();
 
-const teaching = ref<Teaching>({
-    id: 0,
-    semester: 0,
-    trimester: 0,
-    teachers: [],
-    name: "",
-    apogee_code: "",
-    initial_cm: 0,
-    initial_td: 0,
-    initial_tp: 0,
-    continuing_cm: 0,
-    continuing_td: 0,
-    continuing_tp: 0,
-});
+const emit = defineEmits(["cancel", "successfullyAdded"]);
 
 const isCloseWithoutSaveConfirmationPopupVisible = ref(false);
+const hasBeenEdited = ref<boolean>(false);
+const periods = ref<Period[] | undefined>();
+const periodsType = ref<PeriodType | undefined>();
+
+onMounted(() => fetchPeriods());
 
 const showCloseWithoutSaveConfirmationPopup = () => {
     isCloseWithoutSaveConfirmationPopupVisible.value = true;
@@ -33,86 +26,56 @@ const hideCloseWithoutSaveConfirmationPopup = () => {
     isCloseWithoutSaveConfirmationPopupVisible.value = false;
 };
 
-const handleUpdateTeachingName = (name: string) => {
-    teaching.value.name = name;
-};
-
-const handleUpdateApogeeCode = (apogeeCode: string) => {
-    teaching.value.apogee_code = apogeeCode;
-};
-
-const handleUpdateInitialCM = (initialCM: number) => {
-    teaching.value.initial_cm = initialCM;
-};
-
-const handleUpdateInitialTD = (initialTD: number) => {
-    teaching.value.initial_td = initialTD;
-};
-
-const handleUpdateInitialTP = (initialTP: number) => {
-    teaching.value.initial_tp = initialTP;
-};
-
-const handleUpdateContinuingCM = (continuingCM: number) => {
-    teaching.value.continuing_cm = continuingCM;
-};
-
-const handleUpdateContinuingTD = (continuingTD: number) => {
-    teaching.value.continuing_td = continuingTD;
-};
-
-const handleUpdateContinuingTP = (continuingTP: number) => {
-    teaching.value.continuing_tp = continuingTP;
-};
-
-const handleClose = () => {
-    if (
-        teaching.value.name !== "" ||
-        teaching.value.apogee_code !== "" ||
-        teaching.value.initial_cm !== 0 ||
-        teaching.value.initial_td !== 0 ||
-        teaching.value.initial_tp !== 0 ||
-        teaching.value.continuing_cm !== 0 ||
-        teaching.value.continuing_td !== 0 ||
-        teaching.value.continuing_tp !== 0
-    ) {
-        showCloseWithoutSaveConfirmationPopup();
-    } else {
-        emit("close");
-    }
-};
+const handleCancel = () =>
+    hasBeenEdited.value
+        ? showCloseWithoutSaveConfirmationPopup()
+        : emit("cancel");
 
 const handleCloseWithoutSaving = () => {
     hideCloseWithoutSaveConfirmationPopup();
     emit("cancel");
 };
 
-const handleAdd = () => {
-    // TODO : API CALL
+const handleHasBeenEdited = () => {
+    hasBeenEdited.value = true;
+};
+
+const fetchPeriods = async () => {
+    const response = await axios.get(
+        `${API_ENDPOINTS.PERIOD}s/${props.yearId}`
+    );
+    console.log(periods.value && periodsType.value);
+    console.log(periods.value);
+    console.log(periodsType.value);
+    if (response.data.semesters) {
+        periodsType.value = PeriodType.SEMESTER;
+        periods.value = response.data.semesters;
+    } else if (response.data.trimesters) {
+        periodsType.value = PeriodType.TRIMESTER;
+        periods.value = response.data.trimesters;
+    }
+    console.log(periods.value && periodsType.value);
+    console.log(periods.value);
+    console.log(periodsType.value);
 };
 </script>
 
 <template>
-    <TeachingPopup
-        title="Ajouter un enseignement"
-        :teaching
-        :show
-        @updateTeachingName="handleUpdateTeachingName"
-        @updateApogeeCode="handleUpdateApogeeCode"
-        @updateInitialCM="handleUpdateInitialCM"
-        @updateInitialTD="handleUpdateInitialTD"
-        @updateInitialTP="handleUpdateInitialTP"
-        @updateContinuingCM="handleUpdateContinuingCM"
-        @updateContinuingTD="handleUpdateContinuingTD"
-        @updateContinuingTP="handleUpdateContinuingTP"
-        @close="handleClose"
-    >
-        <Button class="bg-green-500 text-white" @click="handleAdd"
-            >Ajouter</Button
-        >
-    </TeachingPopup>
+    <Popup title="Ajouter un enseignement" @close="handleCancel">
+        <AddTeachingForm
+            v-if="periods !== undefined && periodsType !== undefined"
+            :periods
+            :periodsType
+            :yearId
+            @successfullyAdded="$emit('successfullyAdded')"
+            @edited="handleHasBeenEdited"
+        />
+        <div v-else class="w-full flex justify-center">
+            <div>Chargement...</div>
+        </div>
+    </Popup>
     <CloseWithoutSaveConfirmationPopup
-        :show="isCloseWithoutSaveConfirmationPopupVisible"
+        v-if="isCloseWithoutSaveConfirmationPopupVisible"
         @close="handleCloseWithoutSaving"
         @cancel="hideCloseWithoutSaveConfirmationPopup"
     />

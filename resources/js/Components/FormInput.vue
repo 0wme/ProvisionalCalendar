@@ -36,9 +36,7 @@ defineProps<{
                 class="border-gray-300 rounded-lg w-8 h-8 text-gray-500"
                 type="checkbox"
                 :checked
-                @input="
-                    $emit('input', ($event.target as HTMLInputElement).checked)
-                "
+                @input="$emit('input', $event)"
             />
             {{ label }}
         </label>
@@ -48,9 +46,7 @@ defineProps<{
                 v-if="type === FormInputType.SELECT"
                 class="border-gray-300 rounded-lg p-2"
                 :value
-                @input="
-                    $emit('input', ($event.target as HTMLSelectElement).value)
-                "
+                @input="$emit('input', $event)"
             >
                 <option
                     v-for="option in options"
@@ -66,9 +62,7 @@ defineProps<{
                 :value
                 :type
                 :placeholder
-                @input="
-                    $emit('input', ($event.target as HTMLInputElement).value)
-                "
+                @input="$emit('input', $event)"
             />
         </label>
         <span v-if="error" class="text-red-500">

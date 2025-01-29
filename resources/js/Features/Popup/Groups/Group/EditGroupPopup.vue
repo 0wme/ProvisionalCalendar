@@ -55,6 +55,10 @@ const handleCloseWithoutSaving = () => {
     hideCloseWithoutSaveConfirmationPopup();
     emit("cancel");
 };
+
+const handleHasBeenEdited = () => {
+    hasBeenEdited.value = true;
+};
 </script>
 
 <template>
@@ -64,7 +68,7 @@ const handleCloseWithoutSaving = () => {
             :group
             @successfullyEdited="$emit('successfullyEdited')"
             @successfullyDeleted="$emit('successfullyDeleted')"
-            @edited="hasBeenEdited = true"
+            @edited="handleHasBeenEdited"
         />
         <div v-else class="w-full flex justify-center">
             <div>Chargement...</div>

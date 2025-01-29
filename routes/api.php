@@ -67,7 +67,7 @@ Route::middleware(['api.logger'])->group(function () {
         //Création des données
 
         Route::post('/enseignant/{year}', [TeacherTeachingController::class, 'storeTeacher']);
-        Route::post('/enseignement/{year}', [TeacherTeachingController::class, 'storeTeaching']);
+        Route::post('/teaching/{year}', [TeacherTeachingController::class, 'storeTeaching']);
 
         Route::post('/enseignant/enseignement/{teacher_id}/{teaching_id}', [TeacherTeachingController::class, 'storeTeacherTeaching']);
 

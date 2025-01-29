@@ -4,20 +4,33 @@ import ErrorPopup from "@/Features/Popup/ErrorPopup.vue";
 import { FormInputType, MCCCFormInput } from "@/types/models";
 import FormMCCCTable from "@/Features/FormMCCCTable.vue";
 import FormButton from "@/Components/FormButton.vue";
-import { Teaching, Period, SelectOption } from "@/types/models";
-import { onMounted, ref } from "vue";
+import { Teaching, Period, SelectOption, PeriodType } from "@/types/models";
+import { ref, onMounted } from "vue";
 import axios, { AxiosError } from "axios";
 import { API_ENDPOINTS, MESSAGES } from "@/constants";
 
-const props = defineProps<{ yearId: number }>();
+const props = defineProps<{
+    yearId: number;
+    periods: Period[];
+    periodsType: PeriodType;
+}>();
 
 const teaching = ref<Teaching>({
     name: "",
     apogee_code: "",
-    mcccFormInput: {},
+    mcccFormInput: {
+        initial_cm: 0,
+        initial_td: 0,
+        initial_tp: 0,
+        continuing_cm: 0,
+        continuing_td: 0,
+        continuing_tp: 0,
+    },
 });
 
 const emit = defineEmits(["successfullyAdded", "edited"]);
+
+onMounted(() => convertPeriodsToOptions());
 
 const nameError = ref<string | undefined>();
 const apogeeCodeError = ref<string | undefined>();
@@ -27,9 +40,20 @@ const errorMessage = ref<string | undefined>();
 
 const periodsOptions = ref<SelectOption[]>();
 
-onMounted(() => {
-    fetchPeriods();
-});
+const convertPeriodsToOptions = () => {
+    if (props.periodsType === PeriodType.SEMESTER) {
+        periodsOptions.value = props.periods?.map((period) => ({
+            value: period.id,
+            label: `Semestre ${period.number}`,
+        }));
+    } else if (props.periodsType === PeriodType.TRIMESTER) {
+        periodsOptions.value = props.periods?.map((period) => ({
+            value: period.id,
+            label: `Trimestre ${period.number}`,
+        }));
+    }
+    teaching.value.period = props.periods[0];
+};
 
 const updateName = (value: string) => {
     nameError.value = undefined;
@@ -43,8 +67,10 @@ const updateApogeeCode = (value: string) => {
     emit("edited");
 };
 
-const updateSemester = (value: string) => {
-    teaching.value.semester = parseInt(value);
+const updatePeriod = (value: string) => {
+    teaching.value.period = props.periods?.find(
+        (p) => p.id === parseInt(value)
+    );
     emit("edited");
 };
 
@@ -55,37 +81,6 @@ const updateMCCCFormInput = (value: MCCCFormInput) => {
 
 const resetErrorMessage = () => {
     errorMessage.value = undefined;
-};
-
-const fetchPeriods = async () => {
-    try {
-        const response = await axios.get(
-            `${API_ENDPOINTS.PERIOD}s/${props.yearId}`
-        );
-        if (response.data.semesters) {
-            periodsOptions.value = response.data.semesters.map(
-                (semester: Period) => ({
-                    value: semester.id,
-                    label: `Semestre ${semester.number}`,
-                })
-            );
-            teaching.value.period = response.data.semesters[0];
-        } else if (response.data.trimesters) {
-            periodsOptions.value = response.data.trimesters.map(
-                (trimester: Period) => ({
-                    value: trimester.id,
-                    label: `Trimestre ${trimester.number}`,
-                })
-            );
-            teaching.value.period = response.data.trimesters[0];
-        }
-    } catch (error: unknown) {
-        if (error instanceof AxiosError && error.response?.data?.error) {
-            errorMessage.value = error.response.data.error;
-        } else {
-            errorMessage.value = MESSAGES.DEFAULT_ERROR_MESSAGE;
-        }
-    }
 };
 
 const handleAdd = async () => {
@@ -104,7 +99,24 @@ const handleAdd = async () => {
     try {
         const response = await axios.post(
             `${API_ENDPOINTS.TEACHING}/${props.yearId}`,
-            teaching.value
+            {
+                title: teaching.value.name,
+                apogee_code: teaching.value.apogee_code,
+                tp_hours_initial: teaching.value.mcccFormInput.initial_tp,
+                tp_hours_continued: teaching.value.mcccFormInput.continuing_tp,
+                td_hours_initial: teaching.value.mcccFormInput.initial_td,
+                td_hours_continued: teaching.value.mcccFormInput.continuing_td,
+                cm_hours_initial: teaching.value.mcccFormInput.initial_cm,
+                cm_hours_continued: teaching.value.mcccFormInput.continuing_cm,
+                semester:
+                    props.periodsType === PeriodType.SEMESTER
+                        ? teaching.value.period?.id
+                        : undefined,
+                trimester:
+                    props.periodsType === PeriodType.TRIMESTER
+                        ? teaching.value.period?.id
+                        : undefined,
+            }
         );
         emit("successfullyAdded", response.data.teaching);
     } catch (error: unknown) {
@@ -123,27 +135,27 @@ const handleAdd = async () => {
             label="Intitulé de la ressource"
             placeholder="ex : R1.01 - Développement web"
             :error="nameError"
-            @input="updateName"
+            @input="updateName($event.target.value)"
         />
         <FormInput
             label="Code Apogée"
             placeholder="ex : TIN13A1S"
             :error="apogeeCodeError"
-            @input="updateApogeeCode"
+            @input="updateApogeeCode($event.target.value)"
         />
         <FormInput
-            label="Semestre"
+            label="Période"
             :type="FormInputType.SELECT"
             :options="periodsOptions"
             :value="teaching.period?.id"
             placeholder="ex : TIN13A1S"
             :error="periodError"
-            @input="updateSemester"
+            @input="updatePeriod($event.target.value)"
         />
         <FormMCCCTable
             class="w-full h-full"
-            :mccc-form-input="teaching.mcccFormInput"
-            @updateMCCCFormInput="updateMCCCFormInput"
+            :mcccFormInput="teaching.mcccFormInput"
+            @updateMCCCFormInput="updateMCCCFormInput($event)"
         />
         <FormButton class="bg-green-500 text-white" @click="handleAdd"
             >Ajouter</FormButton

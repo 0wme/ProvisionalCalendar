@@ -97,8 +97,7 @@ export interface Teaching extends Item {
     /**
      * Les enseignants de l'enseignement.
      */
-    semester?: number;
-    trimester?: number;
+    period?: Period;
 }
 
 /**
@@ -180,7 +179,7 @@ export interface CalendarWeek {
 export type Calendar = CalendarWeek[];
 
 export interface SelectOption {
-    value: string | number;
+    value?: string | number;
     label: string;
 }
 
@@ -239,4 +238,9 @@ export interface Promotion {
 export interface Period {
     id: number;
     number: string;
+}
+
+export enum PeriodType {
+    SEMESTER,
+    TRIMESTER,
 }
