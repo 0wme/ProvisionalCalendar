@@ -44,9 +44,6 @@ const fetchPeriods = async () => {
     const response = await axios.get(
         `${API_ENDPOINTS.PERIOD}s/${props.yearId}`
     );
-    console.log(periods.value && periodsType.value);
-    console.log(periods.value);
-    console.log(periodsType.value);
     if (response.data.semesters) {
         periodsType.value = PeriodType.SEMESTER;
         periods.value = response.data.semesters;
@@ -54,9 +51,6 @@ const fetchPeriods = async () => {
         periodsType.value = PeriodType.TRIMESTER;
         periods.value = response.data.trimesters;
     }
-    console.log(periods.value && periodsType.value);
-    console.log(periods.value);
-    console.log(periodsType.value);
 };
 </script>
 

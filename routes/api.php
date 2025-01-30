@@ -59,7 +59,7 @@ Route::middleware(['api.logger'])->group(function () {
         Route::get('/enseignement/enseignants/{teaching}', [TeacherTeachingController::class, 'getTeachersByTeaching']);
         Route::get('/enseignant/enseignements/{teacher}', [TeacherTeachingController::class, 'getTeachingsByTeacher']);
         Route::get('/enseignant/{teacher}', [TeacherTeachingController::class, 'getTeacher']);
-        Route::get('/enseignement/{teaching}', [TeacherTeachingController::class, 'getTeaching']);
+        Route::get('/teaching/{teaching}', [TeacherTeachingController::class, 'getTeaching']);
         Route::get('/enseignement/{teaching}/check-hours', [TeacherTeachingController::class, 'checkTeachingHours']);
 
         Route::get('/enseignant/enseignement/{teacher}/{teaching}', [TeacherTeachingController::class, 'getTeacherTeaching']);
@@ -75,12 +75,12 @@ Route::middleware(['api.logger'])->group(function () {
         //Modification des données
 
         Route::put('/enseignant/{teacher}', [TeacherTeachingController::class, 'updateTeacher']);
-        Route::put('/enseignement/{teaching}', [TeacherTeachingController::class, 'updateTeaching']);
+        Route::put('/teaching/{teaching}', [TeacherTeachingController::class, 'updateTeaching']);
 
         //Suppression des données
 
         Route::delete('/enseignant/{teacher}', [TeacherTeachingController::class, 'deleteTeacher']);
-        Route::delete('/enseignement/{teaching}', [TeacherTeachingController::class, 'deleteTeaching']);
+        Route::delete('/teaching/{teaching}', [TeacherTeachingController::class, 'deleteTeaching']);
 
         Route::delete('/enseignant/enseignement/{teacher}/{teaching}', [TeacherTeachingController::class, 'deleteTeacherTeaching']);
 
