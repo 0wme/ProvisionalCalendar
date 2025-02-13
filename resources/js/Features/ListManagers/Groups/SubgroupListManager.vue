@@ -4,9 +4,9 @@ import { defineProps, defineEmits, onMounted, computed, ref, watch } from "vue";
 import { useLabelsStore } from "@/stores/labelsStore";
 import { Item } from "@/types/models";
 import { Subgroup } from "@/types/models";
-import AddSubgroupPopup from "@/Features/Popup/Groups/Subgroup/AddSubgroupPopup.vue";
-import EditSubgroupPopup from "@/Features/Popup/Groups/Subgroup/EditSubgroupPopup.vue";
-import ErrorPopup from "@/Features/Popup/ErrorPopup.vue";
+import AddSubgroupPopup from "@/Features/Popups/Groups/Subgroup/AddSubgroupPopup.vue";
+import EditSubgroupPopup from "@/Features/Popups/Groups/Subgroup/EditSubgroupPopup.vue";
+import ErrorPopup from "@/Features/Popups/ErrorPopup.vue";
 import { useSubgroupService } from "@/services/groups/subgroupService";
 
 const labelsStore = useLabelsStore();
@@ -73,16 +73,16 @@ const handleSuccessfullyAdded = () => {
     emit("successfullyAdded");
 };
 
-const handleSuccessfullyEdited = () => {
+const handleSuccessfullyEdited = (subgroup: Subgroup) => {
     hideEditSubgroupPopup();
     fetchSubgroups();
-    emit("successfullyEdited");
+    emit("successfullyEdited", subgroup);
 };
 
-const handleSuccessfullyDeleted = () => {
+const handleSuccessfullyDeleted = (id: number) => {
     hideEditSubgroupPopup();
     fetchSubgroups();
-    emit("successfullyDeleted");
+    emit("successfullyDeleted", id);
 };
 </script>
 

@@ -1,10 +1,10 @@
 <script setup lang="ts">
 /**
- * Script setup for the add group popup.
+ * Script setup for the add promotion popup.
  *
- * This popup is used to add a new group. It contains a form to enter the
- * group's name and year, and a button to save the group. When the user
- * clicks on the button, the popup emits a "success" event with the group's
+ * This popup is used to add a new promotion. It contains a form to enter the
+ * promotion's name and year, and a button to save the promotion. When the user
+ * clicks on the button, the popup emits a "success" event with the promotion's
  * details.
  *
  * The popup also contains a "cancel" button that emits a "cancel" event when
@@ -16,11 +16,11 @@
  * confirmation popup is hidden.
  */
 import { ref } from "vue";
-import AddGroupForm from "@/Features/Forms/Groups/Group/AddGroupForm.vue";
-import CloseWithoutSaveConfirmationPopup from "@/Features/Popup/CloseWithoutSaveConfirmationPopup.vue";
-import Popup from "@/Components/Popup/Popup.vue";
+import AddPromotionForm from "@/Features/Forms/Groups/Promotion/AddPromotionForm.vue";
+import CloseWithoutSaveConfirmationPopup from "@/Features/Popups/CloseWithoutSaveConfirmationPopup.vue";
+import Popup from "@/Components/Popup/PopupComponent.vue";
 
-defineProps<{ promotionId: number }>();
+defineProps<{ yearId: number }>();
 
 const emit = defineEmits(["cancel", "successfullyAdded"]);
 
@@ -49,9 +49,9 @@ const handleHasBeenEdited = () => {
 </script>
 
 <template>
-    <Popup title="Ajouter un groupe" @close="handleCancel">
-        <AddGroupForm
-            :promotionId
+    <Popup title="Ajouter une promotion" @close="handleCancel">
+        <AddPromotionForm
+            :yearId
             @successfullyAdded="$emit('successfullyAdded')"
             @edited="handleHasBeenEdited"
         />

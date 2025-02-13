@@ -12,7 +12,7 @@ import FormButton from "@/Components/FormButton.vue";
 import { Promotion } from "@/types/models";
 import { MESSAGES } from "@/constants";
 import { ref } from "vue";
-import ErrorPopup from "@/Features/Popup/ErrorPopup.vue";
+import ErrorPopup from "@/Features/Popups/ErrorPopup.vue";
 import { usePromotionService } from "@/services/groups/promotionService";
 
 const props = defineProps<{ yearId: number }>();

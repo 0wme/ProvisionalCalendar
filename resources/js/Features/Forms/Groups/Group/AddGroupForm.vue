@@ -12,7 +12,7 @@ import FormButton from "@/Components/FormButton.vue";
 import { Group } from "@/types/models";
 import { MESSAGES } from "@/constants";
 import { ref } from "vue";
-import ErrorPopup from "@/Features/Popup/ErrorPopup.vue";
+import ErrorPopup from "@/Features/Popups/ErrorPopup.vue";
 import { useGroupService } from "@/services/groups/groupService";
 
 const props = defineProps<{ promotionId: number }>();

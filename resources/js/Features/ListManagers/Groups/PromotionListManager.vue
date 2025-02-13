@@ -3,9 +3,9 @@ import ListManager from "@/Components/ListManager/ListManager.vue";
 import { defineProps, defineEmits, onMounted, computed, ref } from "vue";
 import { useLabelsStore } from "@/stores/labelsStore";
 import { Item } from "@/types/models";
-import AddPromotionPopup from "@/Features/Popup/Groups/Promotion/AddPromotionPopup.vue";
-import EditPromotionPopup from "@/Features/Popup/Groups/Promotion/EditPromotionPopup.vue";
-import ErrorPopup from "@/Features/Popup/ErrorPopup.vue";
+import AddPromotionPopup from "@/Features/Popups/Groups/Promotion/AddPromotionPopup.vue";
+import EditPromotionPopup from "@/Features/Popups/Groups/Promotion/EditPromotionPopup.vue";
+import ErrorPopup from "@/Features/Popups/ErrorPopup.vue";
 import type { Promotion } from "@/types/models";
 import { usePromotionService } from "@/services/groups/promotionService";
 
@@ -71,16 +71,16 @@ const handleSuccessfullyAdded = () => {
     emit("successfullyAdded");
 };
 
-const handleSuccessfullyEdited = () => {
+const handleSuccessfullyEdited = (promotion: Promotion) => {
     hideEditPromotionPopup();
     fetchPromotions();
-    emit("successfullyEdited");
+    emit("successfullyEdited", promotion);
 };
 
-const handleSuccessfullyDeleted = () => {
+const handleSuccessfullyDeleted = (id: number) => {
     hideEditPromotionPopup();
     fetchPromotions();
-    emit("successfullyDeleted");
+    emit("successfullyDeleted", id);
 };
 </script>
 

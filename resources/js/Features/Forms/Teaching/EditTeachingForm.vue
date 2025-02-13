@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import FormInput from "@/Components/FormInput.vue";
-import ErrorPopup from "@/Features/Popup/ErrorPopup.vue";
+import ErrorPopup from "@/Features/Popups/ErrorPopup.vue";
 import { FormInputType, MCCCFormInput } from "@/types/models";
 import FormMCCCTable from "@/Features/FormMCCCTable.vue";
 import FormButton from "@/Components/FormButton.vue";
@@ -8,7 +8,7 @@ import { Teaching, Period, SelectOption, PeriodType } from "@/types/models";
 import { ref, onMounted } from "vue";
 import axios, { AxiosError } from "axios";
 import { API_ENDPOINTS, MESSAGES } from "@/constants";
-import DeleteConfirmationPopup from "@/Features/Popup/DeleteConfirmationPopup.vue";
+import DeleteConfirmationPopup from "@/Features/Popups/DeleteConfirmationPopup.vue";
 
 const props = defineProps<{
     teaching: Teaching;

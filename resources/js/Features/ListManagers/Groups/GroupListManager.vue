@@ -4,9 +4,10 @@ import { defineProps, defineEmits, onMounted, computed, ref, watch } from "vue";
 import { useLabelsStore } from "@/stores/labelsStore";
 import { Item } from "@/types/models";
 import { useGroupService } from "@/services/groups/groupService";
-import AddGroupPopup from "@/Features/Popup/Groups/Group/AddGroupPopup.vue";
-import EditGroupPopup from "@/Features/Popup/Groups/Group/EditGroupPopup.vue";
-import ErrorPopup from "@/Features/Popup/ErrorPopup.vue";
+import AddGroupPopup from "@/Features/Popups/Groups/Group/AddGroupPopup.vue";
+import EditGroupPopup from "@/Features/Popups/Groups/Group/EditGroupPopup.vue";
+import ErrorPopup from "@/Features/Popups/ErrorPopup.vue";
+import { Group } from "@/types/models";
 
 const labelsStore = useLabelsStore();
 
@@ -67,16 +68,16 @@ const handleSuccessfullyAdded = () => {
     emit("successfullyAdded");
 };
 
-const handleSuccessfullyEdited = () => {
+const handleSuccessfullyEdited = (group: Group) => {
     hideEditGroupPopup();
     fetchGroups();
-    emit("successfullyEdited");
+    emit("successfullyEdited", group);
 };
 
-const handleSuccessfullyDeleted = () => {
+const handleSuccessfullyDeleted = (id: number) => {
     hideEditGroupPopup();
     fetchGroups();
-    emit("successfullyDeleted");
+    emit("successfullyDeleted", id);
 };
 
 const resetErrorMessage = () => (errorMessage.value = undefined);

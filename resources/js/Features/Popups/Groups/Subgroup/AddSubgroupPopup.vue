@@ -17,8 +17,8 @@
  */
 import { ref } from "vue";
 import AddSubgroupForm from "@/Features/Forms/Groups/Subgroup/AddSubgroupForm.vue";
-import CloseWithoutSaveConfirmationPopup from "@/Features/Popup/CloseWithoutSaveConfirmationPopup.vue";
-import Popup from "@/Components/Popup/Popup.vue";
+import CloseWithoutSaveConfirmationPopup from "@/Features/Popups/CloseWithoutSaveConfirmationPopup.vue";
+import Popup from "@/Components/Popup/PopupComponent.vue";
 
 defineProps<{ groupId: number }>();
 

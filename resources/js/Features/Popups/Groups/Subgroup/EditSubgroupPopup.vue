@@ -17,8 +17,8 @@
  */
 import { ref, onMounted } from "vue";
 import EditSubgroupForm from "@/Features/Forms/Groups/Subgroup/EditSubgroupForm.vue";
-import CloseWithoutSaveConfirmationPopup from "@/Features/Popup/CloseWithoutSaveConfirmationPopup.vue";
-import Popup from "@/Components/Popup/Popup.vue";
+import CloseWithoutSaveConfirmationPopup from "@/Features/Popups/CloseWithoutSaveConfirmationPopup.vue";
+import Popup from "@/Components/Popup/PopupComponent.vue";
 import { Subgroup } from "@/types/models";
 import { useSubgroupService } from "@/services/groups/subgroupService";
 import ErrorPopup from "../../ErrorPopup.vue";
@@ -70,6 +70,16 @@ const handleCloseWithoutSaving = () => {
 const handleHasBeenEdited = () => {
     hasBeenEdited.value = true;
 };
+
+const handleSuccessfullyEdited = (subgroup: Subgroup) => {
+    hideCloseWithoutSaveConfirmationPopup();
+    emit("successfullyEdited", subgroup);
+};
+
+const handleSuccessfullyDeleted = (id: number) => {
+    hideCloseWithoutSaveConfirmationPopup();
+    emit("successfullyDeleted", id);
+};
 </script>
 
 <template>
@@ -77,8 +87,8 @@ const handleHasBeenEdited = () => {
         <EditSubgroupForm
             v-if="subgroup"
             :subgroup
-            @successfullyEdited="$emit('successfullyEdited')"
-            @successfullyDeleted="$emit('successfullyDeleted')"
+            @successfullyEdited="handleSuccessfullyEdited"
+            @successfullyDeleted="handleSuccessfullyDeleted"
             @edited="handleHasBeenEdited"
         />
         <div v-else class="w-full flex justify-center">

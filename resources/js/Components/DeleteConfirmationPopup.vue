@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Popup from "@/Components/Popup/Popup.vue";
+import Popup from "@/Components/Popup/PopupComponent.vue";
 import Button from "@/Components/FormButton.vue";
 defineProps<{
     show?: boolean;

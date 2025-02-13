@@ -17,8 +17,8 @@ import FormButton from "@/Components/FormButton.vue";
 import { Subgroup } from "@/types/models";
 import { MESSAGES } from "@/constants";
 import { ref } from "vue";
-import ErrorPopup from "@/Features/Popup/ErrorPopup.vue";
-import DeleteConfirmationPopup from "@/Features/Popup/DeleteConfirmationPopup.vue";
+import ErrorPopup from "@/Features/Popups/ErrorPopup.vue";
+import DeleteConfirmationPopup from "@/Features/Popups/DeleteConfirmationPopup.vue";
 import { useSubgroupService } from "@/services/groups/subgroupService";
 
 const props = defineProps<{ subgroup: Subgroup }>();
@@ -70,9 +70,7 @@ const handleEdit = () => {
 const handleDelete = () => {
     subgroupService
         .deleteSubgroup(props.subgroup.id)
-        .then((returnedSubgroup) =>
-            emit("successfullyDeleted", returnedSubgroup)
-        )
+        .then(() => emit("successfullyDeleted", props.subgroup.id))
         .catch(showErrorPopup);
 };
 </script>

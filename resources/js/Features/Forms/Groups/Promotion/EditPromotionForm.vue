@@ -17,8 +17,8 @@ import FormButton from "@/Components/FormButton.vue";
 import { Promotion } from "@/types/models";
 import { MESSAGES } from "@/constants";
 import { ref } from "vue";
-import ErrorPopup from "@/Features/Popup/ErrorPopup.vue";
-import DeleteConfirmationPopup from "@/Features/Popup/DeleteConfirmationPopup.vue";
+import ErrorPopup from "@/Features/Popups/ErrorPopup.vue";
+import DeleteConfirmationPopup from "@/Features/Popups/DeleteConfirmationPopup.vue";
 import { usePromotionService } from "@/services/groups/promotionService";
 
 const props = defineProps<{ promotion: Promotion }>();
@@ -68,9 +68,7 @@ const handleEdit = () => {
 const handleDelete = () => {
     promotionService
         .deletePromotion(props.promotion.id)
-        .then((returnedPromotion) =>
-            emit("successfullyDeleted", returnedPromotion)
-        )
+        .then(() => emit("successfullyDeleted", props.promotion.id))
         .catch((error) => (errorMessage.value = error));
 };
 </script>

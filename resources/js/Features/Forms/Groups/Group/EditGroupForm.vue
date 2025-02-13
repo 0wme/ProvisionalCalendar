@@ -17,8 +17,8 @@ import FormButton from "@/Components/FormButton.vue";
 import { Group } from "@/types/models";
 import { MESSAGES } from "@/constants";
 import { ref } from "vue";
-import ErrorPopup from "@/Features/Popup/ErrorPopup.vue";
-import DeleteConfirmationPopup from "@/Features/Popup/DeleteConfirmationPopup.vue";
+import ErrorPopup from "@/Features/Popups/ErrorPopup.vue";
+import DeleteConfirmationPopup from "@/Features/Popups/DeleteConfirmationPopup.vue";
 import { useGroupService } from "@/services/groups/groupService";
 
 const props = defineProps<{ group: Group }>();
@@ -67,7 +67,7 @@ const handleEdit = async () => {
 const handleDelete = async () => {
     groupService
         .deleteGroup(props.group.id)
-        .then((returnedGroup) => emit("successfullyDeleted", returnedGroup))
+        .then(() => emit("successfullyDeleted", props.group.id))
         .catch((error) => (errorMessage.value = error));
 };
 </script>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import FormInput from "@/Components/FormInput.vue";
-import ErrorPopup from "@/Features/Popup/ErrorPopup.vue";
+import ErrorPopup from "@/Features/Popups/ErrorPopup.vue";
 import { FormInputType, MCCCFormInput } from "@/types/models";
 import FormMCCCTable from "@/Features/FormMCCCTable.vue";
 import FormButton from "@/Components/FormButton.vue";
@@ -16,6 +16,7 @@ const props = defineProps<{
 }>();
 
 const teaching = ref<Teaching>({
+    id: 0,
     name: "",
     apogee_code: "",
     mcccFormInput: {

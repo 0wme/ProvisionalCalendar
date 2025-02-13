@@ -12,7 +12,7 @@ import FormButton from "@/Components/FormButton.vue";
 import { Subgroup } from "@/types/models";
 import { MESSAGES } from "@/constants";
 import { ref } from "vue";
-import ErrorPopup from "@/Features/Popup/ErrorPopup.vue";
+import ErrorPopup from "@/Features/Popups/ErrorPopup.vue";
 import { useSubgroupService } from "@/services/groups/subgroupService";
 
 const props = defineProps<{ groupId: number }>();

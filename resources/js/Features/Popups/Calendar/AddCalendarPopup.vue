@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
-import Popup from "@/Components/Popup/Popup.vue";
+import Popup from "@/Components/Popup/PopupComponent.vue";
 import CloseWithoutSaveConfirmationPopup from "@/Components/CloseWithoutSaveConfirmationPopup.vue";
 
 defineProps<{
