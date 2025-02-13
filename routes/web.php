@@ -15,6 +15,14 @@ use Inertia\Inertia;
 Route::get('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/login', [AuthController::class, 'authenticate']);
 
+// Routes pour la création du mot de passe personnel
+Route::get('/create-personal-password', [AuthController::class, 'showCreatePersonalPassword'])
+    ->middleware(['auth'])
+    ->name('create.personal.password');
+Route::post('/store-personal-password', [AuthController::class, 'createPersonalPassword'])
+    ->middleware(['auth'])
+    ->name('store.personal.password');
+
 Route::get('/test', function () {
     return Inertia::render('TestPage');
 });

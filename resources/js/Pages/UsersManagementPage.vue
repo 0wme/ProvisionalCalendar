@@ -108,7 +108,7 @@
 
             <!-- Modal de création/modification -->
             <Popup
-                :show="isModalOpen"
+                v-if="isModalOpen"
                 :title="
                     editingUser
                         ? 'Modifier un utilisateur'
@@ -204,7 +204,7 @@
 
             <!-- Modal de confirmation de suppression -->
             <Popup
-                :show="isDeleteModalOpen"
+               v-if ="isDeleteModalOpen"
                 title="Confirmer la suppression"
                 @close="closeDeleteModal"
             >

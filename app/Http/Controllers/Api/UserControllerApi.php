@@ -149,19 +149,25 @@ class UserControllerApi extends Controller
         }
     }
 
+    /**
+     * Générer et envoyer un nouveau mot de passe par email
+     */
     public function createOrResetPassword(User $user)
     {
         // Générer un mot de passe aléatoire
-        $newPassword = Str::random(4);
+        $newPassword = Str::random(12);
         
         // Mettre à jour le mot de passe de l'utilisateur
         $user->password = Hash::make($newPassword);
         $user->save();
 
         // Envoyer le mot de passe par email
-        Mail::send('emails.password-reset', ['password' => $newPassword], function($message) use ($user) {
+        Mail::send('emails.password-reset', [
+            'password' => $newPassword,
+            'username' => $user->username
+        ], function($message) use ($user) {
             $message->to($user->email)
-                   ->subject('Votre nouveau mot de passe');
+                   ->subject('Vos identifiants de connexion');
         });
 
         return response()->json(['message' => 'Nouveau mot de passe envoyé par email']);

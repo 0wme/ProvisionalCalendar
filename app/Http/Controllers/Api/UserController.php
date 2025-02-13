@@ -69,9 +69,12 @@ class UserControllerApi extends Controller
         $user->save();
 
         // Envoyer le mot de passe par email
-        Mail::send('emails.password-reset', ['password' => $newPassword], function($message) use ($user) {
+        Mail::send('emails.password-reset', [
+            'password' => $newPassword,
+            'username' => $user->username
+        ], function($message) use ($user) {
             $message->to($user->email)
-                   ->subject('Votre nouveau mot de passe');
+                   ->subject('Vos identifiants de connexion');
         });
 
         return response()->json(['message' => 'Nouveau mot de passe envoyé par email']);
