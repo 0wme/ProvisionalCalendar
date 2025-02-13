@@ -16,7 +16,7 @@
  * confirmation popup is hidden.
  */
 import { ref } from "vue";
-import AddPromotionForm from "@/Features/Forms/Groups/Promotion/AddPromotionForm.vue";
+import AddPromotionForm from "@/Features/Forms/Groups/Promotions/AddPromotionForm.vue";
 import CloseWithoutSaveConfirmationPopup from "@/Features/Popups/CloseWithoutSaveConfirmationPopup.vue";
 import Popup from "@/Components/Popup/PopupComponent.vue";
 

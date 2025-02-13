@@ -1,10 +1,10 @@
 <script setup lang="ts">
 /**
- * Script setup for the add group popup.
+ * Script setup for the add promotion popup.
  *
- * This popup is used to add a new group. It contains a form to enter the
- * group's name and year, and a button to save the group. When the user
- * clicks on the button, the popup emits a "success" event with the group's
+ * This popup is used to add a new promotion. It contains a form to enter the
+ * promotion's name and year, and a button to save the promotion. When the user
+ * clicks on the button, the popup emits a "success" event with the promotion's
  * details.
  *
  * The popup also contains a "cancel" button that emits a "cancel" event when
@@ -16,14 +16,14 @@
  * confirmation popup is hidden.
  */
 import { ref, onMounted } from "vue";
-import EditGroupForm from "@/Features/Forms/Groups/Group/EditGroupForm.vue";
+import EditPromotionForm from "@/Features/Forms/Groups/Promotions/EditPromotionForm.vue";
 import CloseWithoutSaveConfirmationPopup from "@/Features/Popups/CloseWithoutSaveConfirmationPopup.vue";
 import Popup from "@/Components/Popup/PopupComponent.vue";
-import { Group } from "@/types/models";
-import { useGroupService } from "@/services/groups/groupService";
+import { Promotion } from "@/types/models";
+import { usePromotionService } from "@/services/groups/promotionService";
 import ErrorPopup from "../../ErrorPopup.vue";
 
-const props = defineProps<{ groupId: number }>();
+const props = defineProps<{ promotionId: number }>();
 
 const emit = defineEmits([
     "cancel",
@@ -31,19 +31,20 @@ const emit = defineEmits([
     "successfullyDeleted",
 ]);
 
-const groupService = useGroupService();
-const group = ref<Group | undefined>();
+const promotionService = usePromotionService();
+
+const promotion = ref<Promotion | undefined>();
+const errorMessage = ref<string | undefined>();
 const isCloseWithoutSaveConfirmationPopupVisible = ref<boolean>(false);
 const hasBeenEdited = ref<boolean>(false);
-const errorMessage = ref<string | undefined>();
 
-const fetchGroup = () =>
-    groupService
-        .getGroup(props.groupId)
-        .then((returnedGroup) => (group.value = returnedGroup))
+const fetchPromotion = () =>
+    promotionService
+        .getPromotion(props.promotionId)
+        .then((returnedPromotion) => (promotion.value = returnedPromotion))
         .catch((error) => (errorMessage.value = error));
 
-onMounted(fetchGroup);
+onMounted(fetchPromotion);
 
 const showCloseWithoutSaveConfirmationPopup = () =>
     (isCloseWithoutSaveConfirmationPopupVisible.value = true);
@@ -65,13 +66,11 @@ const handleHasBeenEdited = () => {
     hasBeenEdited.value = true;
 };
 
-const resetErrorMessage = () => {
-    errorMessage.value = undefined;
-};
+const resetErrorMessage = () => (errorMessage.value = undefined);
 
-const handleSuccessfullyEdited = (group: Group) => {
+const handleSuccessfullyEdited = (promotion: Promotion) => {
     hideCloseWithoutSaveConfirmationPopup();
-    emit("successfullyEdited", group);
+    emit("successfullyEdited", promotion);
 };
 
 const handleSuccessfullyDeleted = (id: number) => {
@@ -81,10 +80,10 @@ const handleSuccessfullyDeleted = (id: number) => {
 </script>
 
 <template>
-    <Popup title="Modifier un groupe" @close="handleCancel">
-        <EditGroupForm
-            v-if="group"
-            :group="group"
+    <Popup title="Modifier une promotion" @close="handleCancel">
+        <EditPromotionForm
+            v-if="promotion"
+            :promotion
             @successfullyEdited="handleSuccessfullyEdited"
             @successfullyDeleted="handleSuccessfullyDeleted"
             @edited="handleHasBeenEdited"

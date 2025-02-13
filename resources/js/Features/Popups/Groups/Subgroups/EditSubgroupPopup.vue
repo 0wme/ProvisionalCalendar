@@ -1,10 +1,10 @@
 <script setup lang="ts">
 /**
- * Script setup for the add promotion popup.
+ * Script setup for the add subgroup popup.
  *
- * This popup is used to add a new promotion. It contains a form to enter the
- * promotion's name and year, and a button to save the promotion. When the user
- * clicks on the button, the popup emits a "success" event with the promotion's
+ * This popup is used to add a new subgroup. It contains a form to enter the
+ * subgroup's name and year, and a button to save the subgroup. When the user
+ * clicks on the button, the popup emits a "success" event with the subgroup's
  * details.
  *
  * The popup also contains a "cancel" button that emits a "cancel" event when
@@ -16,14 +16,14 @@
  * confirmation popup is hidden.
  */
 import { ref, onMounted } from "vue";
-import EditPromotionForm from "@/Features/Forms/Groups/Promotion/EditPromotionForm.vue";
+import EditSubgroupForm from "@/Features/Forms/Groups/Subgroups/EditSubgroupForm.vue";
 import CloseWithoutSaveConfirmationPopup from "@/Features/Popups/CloseWithoutSaveConfirmationPopup.vue";
 import Popup from "@/Components/Popup/PopupComponent.vue";
-import { Promotion } from "@/types/models";
-import { usePromotionService } from "@/services/groups/promotionService";
+import { Subgroup } from "@/types/models";
+import { useSubgroupService } from "@/services/groups/subgroupService";
 import ErrorPopup from "../../ErrorPopup.vue";
 
-const props = defineProps<{ promotionId: number }>();
+const props = defineProps<{ subgroupId: number }>();
 
 const emit = defineEmits([
     "cancel",
@@ -31,26 +31,31 @@ const emit = defineEmits([
     "successfullyDeleted",
 ]);
 
-const promotionService = usePromotionService();
-
-const promotion = ref<Promotion | undefined>();
-const errorMessage = ref<string | undefined>();
+const subgroupService = useSubgroupService();
+const subgroup = ref<Subgroup | undefined>();
 const isCloseWithoutSaveConfirmationPopupVisible = ref<boolean>(false);
 const hasBeenEdited = ref<boolean>(false);
+const errorMessage = ref<string | undefined>();
 
-const fetchPromotion = () =>
-    promotionService
-        .getPromotion(props.promotionId)
-        .then((returnedPromotion) => (promotion.value = returnedPromotion))
-        .catch((error) => (errorMessage.value = error));
+const fetchSubgroup = () =>
+    subgroupService
+        .getSubgroup(props.subgroupId)
+        .then(
+            (returnedSubgroup: Subgroup) => (subgroup.value = returnedSubgroup)
+        )
+        .catch(showErrorPopup);
 
-onMounted(fetchPromotion);
+onMounted(fetchSubgroup);
+
+const showErrorPopup = (error: string) => (errorMessage.value = error);
 
 const showCloseWithoutSaveConfirmationPopup = () =>
     (isCloseWithoutSaveConfirmationPopupVisible.value = true);
 
 const hideCloseWithoutSaveConfirmationPopup = () =>
     (isCloseWithoutSaveConfirmationPopupVisible.value = false);
+
+const resetErrorMessage = () => (errorMessage.value = undefined);
 
 const handleCancel = () =>
     hasBeenEdited.value
@@ -66,11 +71,9 @@ const handleHasBeenEdited = () => {
     hasBeenEdited.value = true;
 };
 
-const resetErrorMessage = () => (errorMessage.value = undefined);
-
-const handleSuccessfullyEdited = (promotion: Promotion) => {
+const handleSuccessfullyEdited = (subgroup: Subgroup) => {
     hideCloseWithoutSaveConfirmationPopup();
-    emit("successfullyEdited", promotion);
+    emit("successfullyEdited", subgroup);
 };
 
 const handleSuccessfullyDeleted = (id: number) => {
@@ -80,10 +83,10 @@ const handleSuccessfullyDeleted = (id: number) => {
 </script>
 
 <template>
-    <Popup title="Modifier une promotion" @close="handleCancel">
-        <EditPromotionForm
-            v-if="promotion"
-            :promotion
+    <Popup title="Modifier un sous-groupe" @close="handleCancel">
+        <EditSubgroupForm
+            v-if="subgroup"
+            :subgroup
             @successfullyEdited="handleSuccessfullyEdited"
             @successfullyDeleted="handleSuccessfullyDeleted"
             @edited="handleHasBeenEdited"

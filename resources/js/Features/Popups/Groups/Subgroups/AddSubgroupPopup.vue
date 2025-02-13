@@ -1,10 +1,10 @@
 <script setup lang="ts">
 /**
- * Script setup for the add group popup.
+ * Script setup for the add subgroup popup.
  *
- * This popup is used to add a new group. It contains a form to enter the
- * group's name and year, and a button to save the group. When the user
- * clicks on the button, the popup emits a "success" event with the group's
+ * This popup is used to add a new subgroup. It contains a form to enter the
+ * subgroup's name and year, and a button to save the subgroup. When the user
+ * clicks on the button, the popup emits a "success" event with the subgroup's
  * details.
  *
  * The popup also contains a "cancel" button that emits a "cancel" event when
@@ -16,11 +16,11 @@
  * confirmation popup is hidden.
  */
 import { ref } from "vue";
-import AddGroupForm from "@/Features/Forms/Groups/Group/AddGroupForm.vue";
+import AddSubgroupForm from "@/Features/Forms/Groups/Subgroups/AddSubgroupForm.vue";
 import CloseWithoutSaveConfirmationPopup from "@/Features/Popups/CloseWithoutSaveConfirmationPopup.vue";
 import Popup from "@/Components/Popup/PopupComponent.vue";
 
-defineProps<{ promotionId: number }>();
+defineProps<{ groupId: number }>();
 
 const emit = defineEmits(["cancel", "successfullyAdded"]);
 
@@ -49,9 +49,9 @@ const handleHasBeenEdited = () => {
 </script>
 
 <template>
-    <Popup title="Ajouter un groupe" @close="handleCancel">
-        <AddGroupForm
-            :promotionId
+    <Popup title="Ajouter un sous-groupe" @close="handleCancel">
+        <AddSubgroupForm
+            :groupId
             @successfullyAdded="$emit('successfullyAdded')"
             @edited="handleHasBeenEdited"
         />

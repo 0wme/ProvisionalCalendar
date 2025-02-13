@@ -4,8 +4,8 @@ import { defineProps, defineEmits, onMounted, computed, ref, watch } from "vue";
 import { useLabelsStore } from "@/stores/labelsStore";
 import { Item } from "@/types/models";
 import { Subgroup } from "@/types/models";
-import AddSubgroupPopup from "@/Features/Popups/Groups/Subgroup/AddSubgroupPopup.vue";
-import EditSubgroupPopup from "@/Features/Popups/Groups/Subgroup/EditSubgroupPopup.vue";
+import AddSubgroupPopup from "@/Features/Popups/Groups/Subgroups/AddSubgroupPopup.vue";
+import EditSubgroupPopup from "@/Features/Popups/Groups/Subgroups/EditSubgroupPopup.vue";
 import ErrorPopup from "@/Features/Popups/ErrorPopup.vue";
 import { useSubgroupService } from "@/services/groups/subgroupService";
 
