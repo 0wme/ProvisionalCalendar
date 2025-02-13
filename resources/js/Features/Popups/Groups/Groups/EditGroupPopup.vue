@@ -19,7 +19,7 @@ import { ref, onMounted } from "vue";
 import EditGroupForm from "@/Features/Forms/Groups/Groups/EditGroupForm.vue";
 import CloseWithoutSaveConfirmationPopup from "@/Features/Popups/CloseWithoutSaveConfirmationPopup.vue";
 import Popup from "@/Components/Popup/PopupComponent.vue";
-import { Group } from "@/types/models";
+import { Group } from "@/types/models/groups";
 import { useGroupService } from "@/services/groups/groupService";
 import ErrorPopup from "../../ErrorPopup.vue";
 

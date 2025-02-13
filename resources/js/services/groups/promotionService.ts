@@ -1,6 +1,6 @@
 import axios from "axios";
 import { API_ENDPOINTS, MESSAGES } from "@/constants";
-import { Promotion } from "@/types/models";
+import { Promotion } from "@/types/models/groups";
 
 export const usePromotionService = () => {
     const getPromotions = (yearId: number): Promise<Promotion[]> => {

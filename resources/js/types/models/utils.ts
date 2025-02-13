@@ -1,3 +1,5 @@
+import { Period } from "./periods";
+
 /**
  * @interface MenuItem
  *
@@ -45,3 +47,29 @@ export type Item = {
      */
     period?: Period;
 };
+
+export enum EditedItemStatus {
+    ADDED,
+    DELETED,
+    MODIFIED,
+}
+
+export type EditedItem = Item & {
+    /**
+     * Indique si l'élément a été modifié.
+     */
+    editStatus: EditedItemStatus;
+};
+
+export enum FormInputType {
+    TEXT = "text",
+    NUMBER = "number",
+    SELECT = "select",
+    CHECKBOX = "checkbox",
+    PASSWORD = "password",
+}
+
+export interface SelectOption {
+    value?: string | number;
+    label: string;
+}

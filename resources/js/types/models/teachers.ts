@@ -1,3 +1,6 @@
+import { Item } from "./utils";
+import { Teaching } from "./teachings";
+
 /**
  * @interface Teacher
  *
@@ -19,5 +22,5 @@ export type Teacher = Item & {
     /**
      * Les enseignements de l'enseignant.
      */
-    teachings: Teaching[];
+    teachings?: Teaching[];
 };

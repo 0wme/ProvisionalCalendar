@@ -14,7 +14,7 @@
  */
 import FormInput from "@/Components/FormInput.vue";
 import FormButton from "@/Components/FormButton.vue";
-import { Subgroup } from "@/types/models";
+import { Subgroup } from "@/types/models/groups";
 import { MESSAGES } from "@/constants";
 import { ref } from "vue";
 import ErrorPopup from "@/Features/Popups/ErrorPopup.vue";
@@ -69,7 +69,7 @@ const handleEdit = () => {
 
 const handleDelete = () => {
     subgroupService
-        .deleteSubgroup(props.subgroup.id)
+        .deleteSubgroup(props.subgroup.id!)
         .then(() => emit("successfullyDeleted", props.subgroup.id))
         .catch(showErrorPopup);
 };

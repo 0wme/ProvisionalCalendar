@@ -1,6 +1,6 @@
 import axios from "axios";
 import { API_ENDPOINTS, MESSAGES } from "@/constants";
-import { Period } from "@/types/models";
+import { Period } from "@/types/models/periods";
 
 export const usePeriodService = () => {
     const getPeriods = (promotionId: number): Promise<Period[]> => {

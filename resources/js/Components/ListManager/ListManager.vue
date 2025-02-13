@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { ref, computed, defineEmits, onMounted, onUnmounted, watch } from "vue";
+import { ref, computed, defineEmits, onMounted, onUnmounted } from "vue";
 import Filter from "@/Components/Filter.vue";
 import SearchBar from "@/Components/SearchBar.vue";
 import SelectionnableEditableButtonList from "./SelectionnableEditableButtonList.vue";
-import { Period, Item } from "@/types/models";
+import { Item } from "@/types/models/utils";
+import { Period } from "@/types/models/periods";
 
 const props = defineProps<{
     title: string;
@@ -28,7 +29,7 @@ const visibleItems = computed(() => {
 
     if (props.periods)
         return props.items
-            .filter((item) => item.period?.id! - 1 === selectedPeriodId.value)
+            .filter((item) => item.period?.id - 1 === selectedPeriodId.value)
             .filter((item) =>
                 item.name
                     .toLowerCase()

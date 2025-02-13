@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import Popup from "../Popup/Popup.vue";
+import Popup from "@/Components/Popup/PopupComponent.vue";
 import Button from "@/Components/FormButton.vue";
 import DeleteConfirmationPopup from "@/Components/DeleteConfirmationPopup.vue";
 import CloseWithoutSaveConfirmationPopup from "@/Components/CloseWithoutSaveConfirmationPopup.vue";
 import { ref, watch } from "vue";
-import { Teacher } from "@/types/models";
+import { Teacher } from "@/types/models/teachers";
 
 const props = withDefaults(
     defineProps<{

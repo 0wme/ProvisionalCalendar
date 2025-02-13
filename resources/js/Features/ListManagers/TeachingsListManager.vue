@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import ListManager from "@/Components/ListManager/ListManager.vue";
-import { Item, Teaching } from "@/types/models";
+import { Teaching } from "@/types/models/teachings";
 import { defineProps, computed } from "vue";
 import AddTeachingPopup from "@/Features/Popups/Teachings/AddTeachingPopup.vue";
 import EditTeachingPopup from "@/Features/Popups/Teachings/EditTeachingPopup.vue";

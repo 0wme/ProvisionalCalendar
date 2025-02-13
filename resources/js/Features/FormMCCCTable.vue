@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { MCCCFormInput } from "@/types/models";
+import { MCCCFormInput } from "@/types/models/teachings";
 
 defineProps<{ mcccFormInput: MCCCFormInput }>();
 

@@ -9,7 +9,7 @@
  */
 import FormInput from "@/Components/FormInput.vue";
 import FormButton from "@/Components/FormButton.vue";
-import { Group } from "@/types/models";
+import { Group } from "@/types/models/groups";
 import { MESSAGES } from "@/constants";
 import { ref } from "vue";
 import ErrorPopup from "@/Features/Popups/ErrorPopup.vue";

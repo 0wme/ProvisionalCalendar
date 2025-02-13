@@ -1,3 +1,5 @@
+import { Item } from "./utils";
+
 export type Subgroup = Item;
 
 export type Group = Item & {

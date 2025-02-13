@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import Popup from '@/Components/Popup/PopupComponent.vue';
 import Button from '@/Components/FormButton.vue';
-import { EditedItem, EditedItemStatus } from '@/types/models';
+import { EditedItem, EditedItemStatus } from '@/types/models/utils';
 
 defineProps<{
     show?: boolean;

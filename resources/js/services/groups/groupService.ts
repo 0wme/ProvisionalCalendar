@@ -1,6 +1,6 @@
 import axios from "axios";
 import { API_ENDPOINTS, MESSAGES } from "@/constants";
-import { Group } from "@/types/models";
+import { Group } from "@/types/models/groups";
 
 export const useGroupService = () => {
     const getGroups = (promotionId: number): Promise<Group[]> => {

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import SelectionnableEditableButton from "./SelectionnableEditableButton.vue";
-import { Item } from "@/types/models";
+import { Item } from "@/types/models/utils";
 
 const emit = defineEmits(["select", "edit"]);
 

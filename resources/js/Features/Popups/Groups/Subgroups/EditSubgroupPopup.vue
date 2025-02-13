@@ -19,7 +19,7 @@ import { ref, onMounted } from "vue";
 import EditSubgroupForm from "@/Features/Forms/Groups/Subgroups/EditSubgroupForm.vue";
 import CloseWithoutSaveConfirmationPopup from "@/Features/Popups/CloseWithoutSaveConfirmationPopup.vue";
 import Popup from "@/Components/Popup/PopupComponent.vue";
-import { Subgroup } from "@/types/models";
+import { Subgroup } from "@/types/models/groups";
 import { useSubgroupService } from "@/services/groups/subgroupService";
 import ErrorPopup from "../../ErrorPopup.vue";
 

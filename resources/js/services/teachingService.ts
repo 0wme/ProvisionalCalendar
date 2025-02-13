@@ -1,6 +1,6 @@
 import axios from "axios";
 import { API_ENDPOINTS, MESSAGES } from "@/constants";
-import { Teaching } from "@/types/models";
+import { Teaching } from "@/types/models/teachings";
 
 export const useTeachingService = () => {
     const getTeachings = (promotionId: number): Promise<Teaching[]> => {

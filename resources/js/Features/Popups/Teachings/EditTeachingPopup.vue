@@ -5,8 +5,8 @@ import Popup from "@/Components/Popup/PopupComponent.vue";
 import EditTeachingForm from "@/Features/Forms/Teachings/EditTeachingForm.vue";
 import { API_ENDPOINTS } from "@/constants";
 import axios from "axios";
-import { Period, PeriodType } from "@/types/models";
-import { Teaching } from "@/types/models";
+import { Period, PeriodType } from "@/types/models/periods";
+import { Teaching } from "@/types/models/teachings";
 
 const props = defineProps<{ yearId: number; teachingId: number }>();
 

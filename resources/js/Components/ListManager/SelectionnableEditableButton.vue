@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import SelectionnableButton from "./SelectionnableButton.vue";
 import IconButton from "@/Components/IconButton.vue";
-import { Item } from "@/types/models";
+import { Item } from "@/types/models/utils";
 
 const props = defineProps<{
     item: Item;
