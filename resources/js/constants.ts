@@ -6,6 +6,7 @@ export const API_ENDPOINTS = {
     SUBGROUP: "/api/subgroup",
     SUBGROUPS: "/api/subgroups",
     TEACHING: "/api/teaching",
+    TEACHINGS: "/api/teachings",
     TEACHER: "/api/teacher",
     PERIOD: "/api/period",
 };

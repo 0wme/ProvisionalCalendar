@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import FormButton from "@/Components/FormButton.vue";
-import EditTeachingPopup from "@/Features/Popup/Teachings/EditTeachingPopup.vue";
+import TeachingsListManager from "@/Features/ListManagers/TeachingsListManager.vue";
 import { ref } from "vue";
 
 const isAddTeachingPopupVisible = ref(false);
@@ -16,16 +15,6 @@ const hideAddTeachingPopup = () => {
 
 <template>
     <div class="m-10">
-        <FormButton @click="showAddTeachingPopup"
-            >Ajouter une enseignement</FormButton
-        >
-        <EditTeachingPopup
-            v-if="isAddTeachingPopupVisible"
-            :yearId="1"
-            :teachingId="1"
-            @cancel="hideAddTeachingPopup"
-            @successfullyEdited="hideAddTeachingPopup"
-            @successfullyDeleted="hideAddTeachingPopup"
-        />
+        <TeachingsListManager />
     </div>
 </template>

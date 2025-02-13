@@ -1,17 +1,17 @@
 <script setup lang="ts">
 import ListManager from "@/Components/ListManager/ListManager.vue";
-import { Teaching, Period } from "@/types/models";
+import { Item, Teaching } from "@/types/models";
 import { defineProps, computed } from "vue";
 import AddTeachingPopup from "@/Features/Popups/Teachings/AddTeachingPopup.vue";
 import EditTeachingPopup from "@/Features/Popups/Teachings/EditTeachingPopup.vue";
 import { ref } from "vue";
-import { useLabelsStore } from "@/Stores/labelsStore";
+import { useLabelsStore } from "@/stores/labelsStore";
+import { useTeachingService } from "@/services/teachingService";
 
 const labelsStore = useLabelsStore();
 
 defineProps<{
-    periods: Period[];
-    teachings: Teaching[];
+    yearId: number;
     selectedTeachingIds: number[];
 }>();
 
@@ -19,16 +19,30 @@ const title = computed(() => {
     return labelsStore.getLabel("Enseignements");
 });
 
-const emit = defineEmits(["select"]);
+const emit = defineEmits([
+    "select",
+    "successfullyAdded",
+    "successfullyEdited",
+    "successfullyDeleted",
+]);
 
-const showPopup = ref(false);
-const showPopupEdit = ref(false);
-const openPopup = () => {
-    showPopup.value = true;
-};
+const teachingService = useTeachingService();
 
-const handleEdit = (teaching: Teaching) => {
-    showPopupEdit.value = true;
+const teachings = ref<Teaching[] | undefined>();
+
+const isAddTeachingPopupVisible = ref<boolean>(false);
+
+const teachingToEditId = ref<number | undefined>();
+
+const showAddTeachingPopup = () => (isAddTeachingPopupVisible.value = true);
+const hideAddTeachingPopup = () => (isAddTeachingPopupVisible.value = false);
+
+const showEditTeachingPopup = (teachingId: number) =>
+    (teachingToEditId.value = teachingId);
+const hideEditTeachingPopup = () => (teachingToEditId.value = undefined);
+
+const handleEdit = (id: number) => {
+    showEditTeachingPopup(id);
 };
 
 const handleSelect = (teaching: Teaching) => {
@@ -45,23 +59,137 @@ const handleSelect = (teaching: Teaching) => {
             :periods
             :items="teachings"
             :selectedItemsId="selectedTeachingIds"
-            @add="openPopup"
+            @add="showAddTeachingPopup"
             @edit="handleEdit"
             @select="handleSelect"
         />
 
-        <!--<AddTeachingPopup
-            class="z-50"
-            v-if="showPopup"
-            :is-editing="false"
-            @close="showPopup = false"
+        <AddTeachingPopup
+            v-if="isAddTeachingPopupVisible"
+            @cancel="hideAddTeachingPopup"
         />
 
         <EditTeachingPopup
-            class="z-50"
-            v-if="showPopupEdit"
-            :is-editing="true"
-            @close="showPopupEdit = false"
-            />-->
+            v-if="teachingToEditId"
+            @cancel="hideEditTeachingPopup"
+        />
     </div>
 </template>
+
+<!-- <script setup lang="ts">
+import ListManager from "@/Components/ListManager/ListManager.vue";
+import { defineProps, defineEmits, onMounted, computed, ref, watch } from "vue";
+import { useLabelsStore } from "@/stores/labelsStore";
+import { Item } from "@/types/models";
+import { useGroupService } from "@/services/groups/groupService";
+import AddGroupPopup from "@/Features/Popups/Groups/Groups/AddGroupPopup.vue";
+import EditGroupPopup from "@/Features/Popups/Groups/Groups/EditGroupPopup.vue";
+import ErrorPopup from "@/Features/Popups/ErrorPopup.vue";
+import { Group } from "@/types/models";
+
+const labelsStore = useLabelsStore();
+
+const props = defineProps<{ promotionId?: number; selectedGroupId?: number }>();
+
+const emit = defineEmits([
+    "select",
+    "successfullyAdded",
+    "successfullyEdited",
+    "successfullyDeleted",
+]);
+
+const groupService = useGroupService();
+
+const groups = ref<Item[] | undefined>();
+
+const groupToEditId = ref<number | undefined>();
+
+const isAddGroupPopupVisible = ref<boolean>(false);
+
+const errorMessage = ref<string>();
+
+watch(
+    () => props.promotionId,
+    () => fetchGroups()
+);
+
+const title = computed(() => {
+    return labelsStore.getLabel("Groupe");
+});
+
+onMounted(() => labelsStore.fetchLabels());
+
+const showAddGroupPopup = () => (isAddGroupPopupVisible.value = true);
+const hideAddGroupPopup = () => (isAddGroupPopupVisible.value = false);
+
+const showEditGroupPopup = (groupId: number) => (groupToEditId.value = groupId);
+const hideEditGroupPopup = () => (groupToEditId.value = undefined);
+
+const fetchGroups = () => {
+    groupService
+        .getGroups(props.promotionId!)
+        .then((returnedGroups) => (groups.value = returnedGroups))
+        .catch((error) => (errorMessage.value = error));
+};
+
+const handleSelect = (item: number) => {
+    emit("select", item);
+};
+
+const handleAdd = () => {
+    showAddGroupPopup();
+};
+
+const handleSuccessfullyAdded = () => {
+    hideAddGroupPopup();
+    fetchGroups();
+    emit("successfullyAdded");
+};
+
+const handleSuccessfullyEdited = (group: Group) => {
+    hideEditGroupPopup();
+    fetchGroups();
+    emit("successfullyEdited", group);
+};
+
+const handleSuccessfullyDeleted = (id: number) => {
+    hideEditGroupPopup();
+    fetchGroups();
+    emit("successfullyDeleted", id);
+};
+
+const resetErrorMessage = () => (errorMessage.value = undefined);
+</script>
+
+<template>
+    <div>
+        <ListManager
+            :title="title"
+            hasAdd
+            :canAdd="!!promotionId"
+            :items="groups"
+            :selectedItemsId="selectedGroupId ? [selectedGroupId] : undefined"
+            @select="handleSelect"
+            @edit="showEditGroupPopup"
+            @add="handleAdd"
+        />
+        <AddGroupPopup
+            v-if="isAddGroupPopupVisible"
+            :promotionId="promotionId!"
+            @successfullyAdded="handleSuccessfullyAdded"
+            @cancel="hideAddGroupPopup"
+        />
+        <EditGroupPopup
+            v-if="groupToEditId"
+            :groupId="groupToEditId"
+            @successfullyEdited="handleSuccessfullyEdited"
+            @successfullyDeleted="handleSuccessfullyDeleted"
+            @cancel="hideEditGroupPopup"
+        />
+        <ErrorPopup
+            v-if="errorMessage"
+            :message="errorMessage"
+            @close="resetErrorMessage"
+        />
+    </div>
+</template> -->

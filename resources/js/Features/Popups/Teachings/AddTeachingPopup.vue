@@ -2,7 +2,7 @@
 import CloseWithoutSaveConfirmationPopup from "@/Components/CloseWithoutSaveConfirmationPopup.vue";
 import { onMounted, ref } from "vue";
 import Popup from "@/Components/Popup/PopupComponent.vue";
-import AddTeachingForm from "@/Features/Forms/Teaching/AddTeachingForm.vue";
+import AddTeachingForm from "@/Features/Forms/Teachings/AddTeachingForm.vue";
 import { API_ENDPOINTS } from "@/constants";
 import axios from "axios";
 import { Period, PeriodType } from "@/types/models";
