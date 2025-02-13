@@ -26,12 +26,14 @@ return new class extends Migration
             $table->foreignId('group_id')
                 ->nullable()
                 ->default(null)
-                ->constrained('groups');
+                ->constrained('groups')
+                ->onDelete('cascade');
 
             $table->foreignId('subgroup_id')
                 ->nullable()
                 ->default(null)
-                ->constrained('subgroups');
+                ->constrained('subgroups')
+                ->onDelete('cascade');
 
             $table->boolean('is_neutralized')->default(false);
             $table->foreignId('week_id')->constrained('weeks');

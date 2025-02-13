@@ -158,17 +158,7 @@ class GroupController extends Controller
                 ], 404);
             }
 
-            DB::beginTransaction();
-            try {
-                // Delete associated slots first
-                $groupToDelete->slots()->delete();
-                // Then delete the group (which will cascade to subgroups)
-                $groupToDelete->delete();
-                DB::commit();
-            } catch (\Exception $e) {
-                DB::rollback();
-                throw $e;
-            }
+            $groupToDelete->delete();
 
             return response()->json([]);
 

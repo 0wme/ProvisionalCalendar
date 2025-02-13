@@ -14,7 +14,9 @@ return new class extends Migration
         Schema::create('promotions', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->foreignId('year_id')->constrained('years');
+            $table->foreignId('year_id')
+                ->constrained('years')
+                ->onDelete('cascade');
             $table->timestamps();
         });
     }
