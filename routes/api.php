@@ -1,6 +1,8 @@
 <?php
 
-use App\Http\Controllers\Api\GroupController;
+use App\Http\Controllers\Api\Groups\GroupController;
+use App\Http\Controllers\Api\Groups\SubgroupController;
+use App\Http\Controllers\Api\Groups\PromotionController;
 use App\Http\Controllers\Api\TeacherTeachingController;
 use App\Http\Controllers\Api\LabelController;
 use App\Http\Controllers\Api\CalendarController;
@@ -24,31 +26,31 @@ Route::middleware(['api.logger'])->group(function () {
 
         //Récupération des données
 
-        Route::get('/promotions/{year_id}', [GroupController::class, 'getPromotionsByYear']);
+        Route::get('/promotions/{year_id}', [PromotionController::class, 'getPromotionsByYear']);
         Route::get('/groups/{promotion_id}', [GroupController::class, 'getGroupsByPromotion']);
-        Route::get('/subgroups/{group_id}', [GroupController::class, 'getSubgroupsByGroup']);
+        Route::get('/subgroups/{group_id}', [SubgroupController::class, 'getSubgroupsByGroup']);
 
-        Route::get('/promotion/{promotion_id}', [GroupController::class, 'getPromotionById']);
+        Route::get('/promotion/{promotion_id}', [PromotionController::class, 'getPromotionById']);
         Route::get('/group/{group_id}', [GroupController::class, 'getGroupById']);
-        Route::get('/subgroup/{subgroup_id}', [GroupController::class, 'getSubgroupById']);
+        Route::get('/subgroup/{subgroup_id}', [SubgroupController::class, 'getSubgroupById']);
 
         //Création des données
 
-        Route::post('/promotion/{year}', [GroupController::class, 'storePromotion']);
+        Route::post('/promotion/{year}', [PromotionController::class, 'storePromotion']);
         Route::post('/group/{promotion}', [GroupController::class, 'storeGroup']);
-        Route::post('/subgroup/{group}', [GroupController::class, 'storeSubgroup']);
+        Route::post('/subgroup/{group}', [SubgroupController::class, 'storeSubgroup']);
 
         //Modification des données
 
-        Route::put('/promotion/{promotion}', [GroupController::class, 'updatePromotion']);
+        Route::put('/promotion/{promotion}', [PromotionController::class, 'updatePromotion']);
         Route::put('/group/{group}', [GroupController::class, 'updateGroup']);
-        Route::put('/subgroup/{subgroup}', [GroupController::class, 'updateSubgroup']);
+        Route::put('/subgroup/{subgroup}', [SubgroupController::class, 'updateSubgroup']);
 
         //Suppression des données
 
-        Route::delete('/promotion/{promotion}', [GroupController::class, 'deletePromotion']);
+        Route::delete('/promotion/{promotion}', [PromotionController::class, 'deletePromotion']);
         Route::delete('/group/{group}', [GroupController::class, 'deleteGroup']);
-        Route::delete('/subgroup/{subgroup}', [GroupController::class, 'deleteSubgroup']);
+        Route::delete('/subgroup/{subgroup}', [SubgroupController::class, 'deleteSubgroup']);
 
     //Enseignants
 

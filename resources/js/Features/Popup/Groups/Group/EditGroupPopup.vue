@@ -20,10 +20,10 @@ import EditGroupForm from "@/Features/Forms/Groups/Group/EditGroupForm.vue";
 import CloseWithoutSaveConfirmationPopup from "@/Features/Popup/CloseWithoutSaveConfirmationPopup.vue";
 import Popup from "@/Components/Popup/Popup.vue";
 import { Group } from "@/types/models";
-import { API_ENDPOINTS } from "@/constants";
-import axios from "axios";
+import { useGroupService } from "@/services/groups/groupService";
+import ErrorPopup from "../../ErrorPopup.vue";
 
-const props = defineProps<{ groupId: number | undefined }>();
+const props = defineProps<{ groupId: number }>();
 
 const emit = defineEmits([
     "cancel",
@@ -31,14 +31,19 @@ const emit = defineEmits([
     "successfullyDeleted",
 ]);
 
+const groupService = useGroupService();
 const group = ref<Group | undefined>();
 const isCloseWithoutSaveConfirmationPopupVisible = ref<boolean>(false);
 const hasBeenEdited = ref<boolean>(false);
+const errorMessage = ref<string | undefined>();
 
-onMounted(async () => {
-    const response = await axios.get(`${API_ENDPOINTS.GROUP}/${props.groupId}`);
-    group.value = response.data;
-});
+const fetchGroup = () =>
+    groupService
+        .getGroup(props.groupId)
+        .then((returnedGroup) => (group.value = returnedGroup))
+        .catch((error) => (errorMessage.value = error));
+
+onMounted(fetchGroup);
 
 const showCloseWithoutSaveConfirmationPopup = () =>
     (isCloseWithoutSaveConfirmationPopupVisible.value = true);
@@ -59,6 +64,10 @@ const handleCloseWithoutSaving = () => {
 const handleHasBeenEdited = () => {
     hasBeenEdited.value = true;
 };
+
+const resetErrorMessage = () => {
+    errorMessage.value = undefined;
+};
 </script>
 
 <template>
@@ -78,5 +87,10 @@ const handleHasBeenEdited = () => {
         v-if="isCloseWithoutSaveConfirmationPopupVisible"
         @close="handleCloseWithoutSaving"
         @cancel="hideCloseWithoutSaveConfirmationPopup"
+    />
+    <ErrorPopup
+        v-if="errorMessage"
+        :message="errorMessage"
+        @close="resetErrorMessage"
     />
 </template>

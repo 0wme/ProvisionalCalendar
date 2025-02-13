@@ -1,7 +1,10 @@
 export const API_ENDPOINTS = {
     PROMOTION: "/api/promotion",
+    PROMOTIONS: "/api/promotions",
     GROUP: "/api/group",
+    GROUPS: "/api/groups",
     SUBGROUP: "/api/subgroup",
+    SUBGROUPS: "/api/subgroups",
     TEACHING: "/api/teaching",
     TEACHER: "/api/teacher",
     PERIOD: "/api/period",

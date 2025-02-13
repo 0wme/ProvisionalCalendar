@@ -15,11 +15,11 @@
 import FormInput from "@/Components/FormInput.vue";
 import FormButton from "@/Components/FormButton.vue";
 import { Promotion } from "@/types/models";
-import axios, { AxiosError } from "axios";
-import { API_ENDPOINTS, MESSAGES } from "@/constants";
+import { MESSAGES } from "@/constants";
 import { ref } from "vue";
 import ErrorPopup from "@/Features/Popup/ErrorPopup.vue";
 import DeleteConfirmationPopup from "@/Features/Popup/DeleteConfirmationPopup.vue";
+import { usePromotionService } from "@/services/groups/promotionService";
 
 const props = defineProps<{ promotion: Promotion }>();
 
@@ -29,6 +29,7 @@ const emit = defineEmits([
     "edited",
 ]);
 
+const promotionService = usePromotionService();
 const editedPromotion = ref<Promotion>(props.promotion);
 const nameError = ref<string | undefined>();
 
@@ -51,40 +52,26 @@ const resetErrorMessage = () => {
     errorMessage.value = undefined;
 };
 
-const handleEdit = async () => {
+const handleEdit = () => {
     if (editedPromotion.value.name.trim() === "") {
         nameError.value = MESSAGES.EMPTY_PROMOTION_NAME_ERROR_MESSAGE;
         return;
     }
-    try {
-        const response = await axios.put(
-            `${API_ENDPOINTS.PROMOTION}/${props.promotion.id}`,
-            editedPromotion.value
-        );
-        emit("successfullyEdited", response.data.promotion);
-    } catch (error: unknown) {
-        if (error instanceof AxiosError && error.response?.data?.error) {
-            errorMessage.value = error.response.data.error;
-        } else {
-            errorMessage.value = MESSAGES.DEFAULT_ERROR_MESSAGE;
-        }
-    }
+    promotionService
+        .updatePromotion(editedPromotion.value)
+        .then((returnedPromotion) =>
+            emit("successfullyEdited", returnedPromotion)
+        )
+        .catch((error) => (errorMessage.value = error));
 };
 
-const handleDelete = async () => {
-    try {
-        const response = await axios.delete(
-            `${API_ENDPOINTS.PROMOTION}/${props.promotion.id}`
-        );
-        hideDeleteConfirmationPopup();
-        emit("successfullyDeleted", response.data.promotion);
-    } catch (error: unknown) {
-        if (error instanceof AxiosError && error.response?.data?.error) {
-            errorMessage.value = error.response.data.error;
-        } else {
-            errorMessage.value = MESSAGES.DEFAULT_ERROR_MESSAGE;
-        }
-    }
+const handleDelete = () => {
+    promotionService
+        .deletePromotion(props.promotion.id)
+        .then((returnedPromotion) =>
+            emit("successfullyDeleted", returnedPromotion)
+        )
+        .catch((error) => (errorMessage.value = error));
 };
 </script>
 

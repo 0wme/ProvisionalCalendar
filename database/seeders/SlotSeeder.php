@@ -14,7 +14,7 @@ class SlotSeeder extends Seeder
             'duration' => 2,
             'teacher_id' => 1,
             'teaching_id' => 1,
-            'academic_promotion_id' => 1,
+            'promotion_id' => 1,
             'week_id' => 1,
             'type' => 'CM',
             'substitute_teacher_id' => null  // Ajout du champ
@@ -27,8 +27,8 @@ class SlotSeeder extends Seeder
                 'duration' => 1.5,
                 'teacher_id' => 2,
                 'teaching_id' => 1,
-                'academic_promotion_id' => 1,
-                'academic_group_id' => $groupId,
+                'promotion_id' => 1,
+                'group_id' => $groupId,
                 'week_id' => 2,
                 'type' => 'TD',
                 'substitute_teacher_id' => null  // Ajout du champ
@@ -42,9 +42,9 @@ class SlotSeeder extends Seeder
                 'duration' => 1,
                 'teacher_id' => 3,
                 'teaching_id' => 1,
-                'academic_promotion_id' => 1,
-                'academic_group_id' => ceil($subgroupId/2), // Associe aux bons groupes
-                'academic_subgroup_id' => $subgroupId,
+                'promotion_id' => 1,
+                'group_id' => ceil($subgroupId/2), // Associe aux bons groupes
+                'subgroup_id' => $subgroupId,
                 'week_id' => 2,
                 'type' => 'TP',
                 'substitute_teacher_id' => null  // Ajout du champ
@@ -56,7 +56,7 @@ class SlotSeeder extends Seeder
             'duration' => 2,
             'teacher_id' => 4,
             'teaching_id' => 2,
-            'academic_promotion_id' => 1,
+            'promotion_id' => 1,
             'week_id' => 3,
             'type' => 'CM',
             'substitute_teacher_id' => null  // Ajout du champ
@@ -67,8 +67,8 @@ class SlotSeeder extends Seeder
                 'duration' => 1.5,
                 'teacher_id' => 4,
                 'teaching_id' => 2,
-                'academic_promotion_id' => 1,
-                'academic_group_id' => $groupId,
+                'promotion_id' => 1,
+                'group_id' => $groupId,
                 'week_id' => 3,
                 'type' => 'TD',
                 'substitute_teacher_id' => null  // Ajout du champ

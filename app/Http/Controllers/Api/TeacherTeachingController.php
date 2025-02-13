@@ -82,7 +82,6 @@ class TeacherTeachingController extends Controller
                         'cm_hours_continued' => $teaching->cm_hours_continued,
                         'semester' => $teaching->semester?->semester_number,
                         'trimester' => $teaching->trimester?->trimester_number,
-                        'year_id' => $teaching->year_id,
                     ];
                 });
 
@@ -143,7 +142,7 @@ class TeacherTeachingController extends Controller
                 return [
                     'id' => $teaching->id,
                     'title' => $teaching->title,
-                    'apogee_code' => $teaching->apogee_code,                
+                    'apogee_code' => $teaching->apogee_code,
                 ];
             });
 
@@ -362,25 +361,25 @@ class TeacherTeachingController extends Controller
                 $semester = Semester::where('semester_number', $request->semester)
                     ->where('year_id', $year)
                     ->first();
-                
+
                 if (!$semester) {
                     return response()->json([
                         'error' => 'Le semestre spécifié n\'existe pas pour cette année'
                     ], 422);
                 }
-                
+
                 $semester_id = $semester->id;
             } else {
                 $trimester = Trimester::where('trimester_number', $request->trimester)
                     ->where('year_id', $year)
                     ->first();
-                
+
                 if (!$trimester) {
                     return response()->json([
                         'error' => 'Le trimestre spécifié n\'existe pas pour cette année'
                     ], 422);
                 }
-                
+
                 $trimester_id = $trimester->id;
             }
 
@@ -537,25 +536,25 @@ class TeacherTeachingController extends Controller
                 $semester = Semester::where('semester_number', $request->semester)
                     ->where('year_id', $teaching->year_id)
                     ->first();
-                
+
                 if (!$semester) {
                     return response()->json([
                         'error' => 'Le semestre spécifié n\'existe pas pour cette année'
                     ], 422);
                 }
-                
+
                 $semester_id = $semester->id;
             } else {
                 $trimester = Trimester::where('trimester_number', $request->trimester)
                     ->where('year_id', $teaching->year_id)
                     ->first();
-                
+
                 if (!$trimester) {
                     return response()->json([
                         'error' => 'Le trimestre spécifié n\'existe pas pour cette année'
                     ], 422);
                 }
-                
+
                 $trimester_id = $trimester->id;
             }
 
@@ -750,14 +749,14 @@ class TeacherTeachingController extends Controller
     {
         try {
             $teaching = Teaching::with(['slots'])->findOrFail($teaching_id);
-            
+
             // Initialisation des compteurs
             $totalTP = 0;
             $totalTD = 0;
             $totalCM = 0;
             $groupHours = [];
             $slotDetails = [];
-            
+
             // Calcul des heures par groupe et total
             foreach ($teaching->slots as $slot) {
                 switch($slot->type) {
@@ -771,7 +770,7 @@ class TeacherTeachingController extends Controller
                         $totalCM += $slot->duration;
                         break;
                 }
-                
+
                 if (!isset($groupHours[$slot->academic_promotion_id])) {
                     $groupHours[$slot->academic_promotion_id] = [
                         'total' => 0,
@@ -782,7 +781,7 @@ class TeacherTeachingController extends Controller
                 }
                 $groupHours[$slot->academic_promotion_id]['total'] += $slot->duration;
                 $groupHours[$slot->academic_promotion_id][$slot->type] += $slot->duration;
-                
+
                 // Ajoute les détails du slot
                 $slotDetails[] = [
                     'id' => $slot->id,
@@ -797,7 +796,7 @@ class TeacherTeachingController extends Controller
 
             $hoursMatch = true;
             $errors = [];
-            
+
             // Vérifie les heures définies
             $definedHours = [
                 'TP' => [
@@ -819,7 +818,7 @@ class TeacherTeachingController extends Controller
                     'actual' => $totalCM
                 ]
             ];
-            
+
             // Vérifie chaque type d'heures
             foreach (['TP', 'TD', 'CM'] as $type) {
                 if ($definedHours[$type]['actual'] !== $definedHours[$type]['total']) {

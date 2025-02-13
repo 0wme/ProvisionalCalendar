@@ -1,24 +1,25 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Groups;
 
+use App\Models\Slot;
 use Illuminate\Database\Eloquent\Model;
 
-class AcademicGroup extends Model
+class Group extends Model
 {
     protected $fillable = [
         'name',
-        'academic_promotion_id',
+        'promotion_id',
     ];
 
     public function academicPromotion()
     {
-        return $this->belongsTo(AcademicPromotion::class);
+        return $this->belongsTo(Promotion::class);
     }
 
     public function academicSubgroups()
     {
-        return $this->hasMany(AcademicSubgroup::class);
+        return $this->hasMany(Subgroup::class);
     }
 
     public function slots()

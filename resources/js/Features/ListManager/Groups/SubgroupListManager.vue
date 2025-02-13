@@ -3,11 +3,11 @@ import ListManager from "@/Components/ListManager/ListManager.vue";
 import { defineProps, defineEmits, onMounted, computed, ref, watch } from "vue";
 import { useLabelsStore } from "@/stores/labelsStore";
 import { Item } from "@/types/models";
-import { API_ENDPOINTS, MESSAGES } from "@/constants";
-import axios, { AxiosError } from "axios";
+import { Subgroup } from "@/types/models";
 import AddSubgroupPopup from "@/Features/Popup/Groups/Subgroup/AddSubgroupPopup.vue";
 import EditSubgroupPopup from "@/Features/Popup/Groups/Subgroup/EditSubgroupPopup.vue";
 import ErrorPopup from "@/Features/Popup/ErrorPopup.vue";
+import { useSubgroupService } from "@/services/groups/subgroupService";
 
 const labelsStore = useLabelsStore();
 
@@ -20,12 +20,12 @@ const emit = defineEmits([
     "successfullyDeleted",
 ]);
 
+const subgroupService = useSubgroupService();
 const subgroups = ref<Item[] | undefined>();
 
 const subgroupToEditId = ref<number | undefined>();
 
 const isAddSubgroupPopupVisible = ref<boolean>(false);
-const isEditSubgroupPopupVisible = ref<boolean>(false);
 
 const errorMessage = ref<string>();
 
@@ -43,31 +43,24 @@ onMounted(() => labelsStore.fetchLabels());
 const showAddSubgroupPopup = () => (isAddSubgroupPopupVisible.value = true);
 const hideAddSubgroupPopup = () => (isAddSubgroupPopupVisible.value = false);
 
-const showEditSubgroupPopup = () => (isEditSubgroupPopupVisible.value = true);
-const hideEditSubgroupPopup = () => (isEditSubgroupPopupVisible.value = false);
+const showEditSubgroupPopup = (subgroupId: number) =>
+    (subgroupToEditId.value = subgroupId);
+const hideEditSubgroupPopup = () => (subgroupToEditId.value = undefined);
 
-const fetchSubgroups = async () => {
-    try {
-        const response = await axios.get(
-            `${API_ENDPOINTS.SUBGROUP}s/${props.groupId}`
-        );
-        subgroups.value = response.data;
-    } catch (error: unknown) {
-        if (error instanceof AxiosError && error.response?.data?.error) {
-            errorMessage.value = error.response.data.error;
-        } else {
-            errorMessage.value = MESSAGES.DEFAULT_ERROR_MESSAGE;
-        }
-    }
-};
+const showErrorPopup = (error: string) => (errorMessage.value = error);
+const resetErrorMessage = () => (errorMessage.value = undefined);
+
+const fetchSubgroups = () =>
+    subgroupService
+        .getSubgroups(props.groupId!)
+        .then(
+            (returnedSubgroups: Subgroup[]) =>
+                (subgroups.value = returnedSubgroups)
+        )
+        .catch(showErrorPopup);
 
 const handleSelect = (item: number) => {
     emit("select", item);
-};
-
-const handleEdit = (item: number) => {
-    subgroupToEditId.value = item;
-    showEditSubgroupPopup();
 };
 
 const handleAdd = () => {
@@ -101,7 +94,7 @@ const handleSuccessfullyDeleted = () => {
             :canAdd="!!groupId"
             :items="subgroups"
             @select="handleSelect"
-            @edit="handleEdit"
+            @edit="showEditSubgroupPopup"
             @add="handleAdd"
         />
         <AddSubgroupPopup
@@ -111,12 +104,16 @@ const handleSuccessfullyDeleted = () => {
             @cancel="hideAddSubgroupPopup"
         />
         <EditSubgroupPopup
-            v-if="isEditSubgroupPopupVisible"
+            v-if="subgroupToEditId"
             :subgroupId="subgroupToEditId"
             @successfullyEdited="handleSuccessfullyEdited"
             @successfullyDeleted="handleSuccessfullyDeleted"
             @cancel="hideEditSubgroupPopup"
         />
-        <ErrorPopup v-if="errorMessage" :message="errorMessage" />
+        <ErrorPopup
+            v-if="errorMessage"
+            :message="errorMessage"
+            @close="resetErrorMessage"
+        />
     </div>
 </template>

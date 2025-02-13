@@ -10,15 +10,16 @@
 import FormInput from "@/Components/FormInput.vue";
 import FormButton from "@/Components/FormButton.vue";
 import { Subgroup } from "@/types/models";
-import axios, { AxiosError } from "axios";
-import { API_ENDPOINTS, MESSAGES } from "@/constants";
+import { MESSAGES } from "@/constants";
 import { ref } from "vue";
 import ErrorPopup from "@/Features/Popup/ErrorPopup.vue";
+import { useSubgroupService } from "@/services/groups/subgroupService";
 
 const props = defineProps<{ groupId: number }>();
 
 const emit = defineEmits(["successfullyAdded", "edited"]);
 
+const subgroupService = useSubgroupService();
 const subgroup = ref<Subgroup>({ id: 0, name: "" });
 const nameError = ref<string | undefined>();
 
@@ -30,28 +31,19 @@ const updateName = (value: string) => {
     emit("edited");
 };
 
-const resetErrorMessage = () => {
-    errorMessage.value = undefined;
-};
+const showErrorPopup = (error: string) => (errorMessage.value = error);
 
-const handleAdd = async () => {
+const resetErrorMessage = () => (errorMessage.value = undefined);
+
+const handleAdd = () => {
     if (subgroup.value.name.trim() === "") {
         nameError.value = MESSAGES.EMPTY_SUBGROUP_NAME_ERROR_MESSAGE;
         return;
     }
-    try {
-        const response = await axios.post(
-            `${API_ENDPOINTS.SUBGROUP}/${props.groupId}`,
-            subgroup.value
-        );
-        emit("successfullyAdded", response.data.subgroup);
-    } catch (error: unknown) {
-        if (error instanceof AxiosError && error.response?.data?.error) {
-            errorMessage.value = error.response.data.error;
-        } else {
-            errorMessage.value = MESSAGES.DEFAULT_ERROR_MESSAGE;
-        }
-    }
+    subgroupService
+        .addSubgroup(props.groupId, subgroup.value)
+        .then((returnedSubgroup) => emit("successfullyAdded", returnedSubgroup))
+        .catch(showErrorPopup);
 };
 </script>
 
@@ -68,7 +60,7 @@ const handleAdd = async () => {
         >
         <ErrorPopup
             v-if="errorMessage"
-            :message="errorMessage!"
+            :message="errorMessage"
             @close="resetErrorMessage"
         />
     </div>

@@ -20,10 +20,10 @@ import EditPromotionForm from "@/Features/Forms/Groups/Promotion/EditPromotionFo
 import CloseWithoutSaveConfirmationPopup from "@/Features/Popup/CloseWithoutSaveConfirmationPopup.vue";
 import Popup from "@/Components/Popup/Popup.vue";
 import { Promotion } from "@/types/models";
-import { API_ENDPOINTS } from "@/constants";
-import axios from "axios";
+import { usePromotionService } from "@/services/groups/promotionService";
+import ErrorPopup from "../../ErrorPopup.vue";
 
-const props = defineProps<{ promotionId: number | undefined }>();
+const props = defineProps<{ promotionId: number }>();
 
 const emit = defineEmits([
     "cancel",
@@ -31,16 +31,20 @@ const emit = defineEmits([
     "successfullyDeleted",
 ]);
 
+const promotionService = usePromotionService();
+
 const promotion = ref<Promotion | undefined>();
+const errorMessage = ref<string | undefined>();
 const isCloseWithoutSaveConfirmationPopupVisible = ref<boolean>(false);
 const hasBeenEdited = ref<boolean>(false);
 
-onMounted(async () => {
-    const response = await axios.get(
-        `${API_ENDPOINTS.PROMOTION}/${props.promotionId}`
-    );
-    promotion.value = response.data;
-});
+const fetchPromotion = () =>
+    promotionService
+        .getPromotion(props.promotionId)
+        .then((returnedPromotion) => (promotion.value = returnedPromotion))
+        .catch((error) => (errorMessage.value = error));
+
+onMounted(fetchPromotion);
 
 const showCloseWithoutSaveConfirmationPopup = () =>
     (isCloseWithoutSaveConfirmationPopupVisible.value = true);
@@ -61,6 +65,8 @@ const handleCloseWithoutSaving = () => {
 const handleHasBeenEdited = () => {
     hasBeenEdited.value = true;
 };
+
+const resetErrorMessage = () => (errorMessage.value = undefined);
 </script>
 
 <template>
@@ -80,5 +86,10 @@ const handleHasBeenEdited = () => {
         v-if="isCloseWithoutSaveConfirmationPopupVisible"
         @close="handleCloseWithoutSaving"
         @cancel="hideCloseWithoutSaveConfirmationPopup"
+    />
+    <ErrorPopup
+        v-if="errorMessage"
+        :message="errorMessage"
+        @close="resetErrorMessage"
     />
 </template>

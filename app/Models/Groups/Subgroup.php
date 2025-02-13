@@ -1,20 +1,20 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Groups;
 
 use Illuminate\Database\Eloquent\Model;
 
-class AcademicSubgroup extends Model
+class Subgroup extends Model
 {
     protected $fillable = [
         'name',
-        'academic_group_id',
+        'group_id',
     ];
 
     protected $with = ['academicGroup.academicPromotion'];
 
     public function academicGroup()
     {
-        return $this->belongsTo(AcademicGroup::class);
+        return $this->belongsTo(Group::class);
     }
 }

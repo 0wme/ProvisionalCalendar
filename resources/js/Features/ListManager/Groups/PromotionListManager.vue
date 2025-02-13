@@ -3,11 +3,11 @@ import ListManager from "@/Components/ListManager/ListManager.vue";
 import { defineProps, defineEmits, onMounted, computed, ref } from "vue";
 import { useLabelsStore } from "@/stores/labelsStore";
 import { Item } from "@/types/models";
-import { API_ENDPOINTS, MESSAGES } from "@/constants";
-import axios, { AxiosError } from "axios";
 import AddPromotionPopup from "@/Features/Popup/Groups/Promotion/AddPromotionPopup.vue";
 import EditPromotionPopup from "@/Features/Popup/Groups/Promotion/EditPromotionPopup.vue";
 import ErrorPopup from "@/Features/Popup/ErrorPopup.vue";
+import type { Promotion } from "@/types/models";
+import { usePromotionService } from "@/services/groups/promotionService";
 
 const labelsStore = useLabelsStore();
 
@@ -20,12 +20,12 @@ const emit = defineEmits([
     "successfullyDeleted",
 ]);
 
+const promotionService = usePromotionService();
 const promotions = ref<Item[] | undefined>();
 
 const promotionToEditId = ref<number | undefined>();
 
 const isAddPromotionPopupVisible = ref<boolean>(false);
-const isEditPromotionPopupVisible = ref<boolean>(false);
 
 const errorMessage = ref<string>();
 
@@ -41,32 +41,24 @@ const title = computed(() => {
 const showAddPromotionPopup = () => (isAddPromotionPopupVisible.value = true);
 const hideAddPromotionPopup = () => (isAddPromotionPopupVisible.value = false);
 
-const showEditPromotionPopup = () => (isEditPromotionPopupVisible.value = true);
-const hideEditPromotionPopup = () =>
-    (isEditPromotionPopupVisible.value = false);
+const showEditPromotionPopup = (promotionId: number) =>
+    (promotionToEditId.value = promotionId);
+const hideEditPromotionPopup = () => (promotionToEditId.value = undefined);
 
-const fetchPromotions = async () => {
-    try {
-        const response = await axios.get(
-            `${API_ENDPOINTS.PROMOTION}s/${props.yearId}`
-        );
-        promotions.value = response.data;
-    } catch (error: unknown) {
-        if (error instanceof AxiosError && error.response?.data?.error) {
-            errorMessage.value = error.response.data.error;
-        } else {
-            errorMessage.value = MESSAGES.DEFAULT_ERROR_MESSAGE;
-        }
-    }
+const showError = (error: string) => (errorMessage.value = error);
+
+const fetchPromotions = () => {
+    promotionService
+        .getPromotions(props.yearId)
+        .then(
+            (returnedPromotions: Promotion[]) =>
+                (promotions.value = returnedPromotions)
+        )
+        .catch(showError);
 };
 
 const handleSelect = (item: number) => {
     emit("select", item);
-};
-
-const handleEdit = (item: number) => {
-    promotionToEditId.value = item;
-    showEditPromotionPopup();
 };
 
 const handleAdd = () => {
@@ -103,7 +95,7 @@ const handleSuccessfullyDeleted = () => {
                 selectedPromotionId ? [selectedPromotionId] : undefined
             "
             @select="handleSelect"
-            @edit="handleEdit"
+            @edit="showEditPromotionPopup"
             @add="handleAdd"
         />
         <AddPromotionPopup
@@ -113,7 +105,7 @@ const handleSuccessfullyDeleted = () => {
             @cancel="hideAddPromotionPopup"
         />
         <EditPromotionPopup
-            v-if="isEditPromotionPopupVisible"
+            v-if="promotionToEditId"
             :promotionId="promotionToEditId"
             @successfullyEdited="handleSuccessfullyEdited"
             @successfullyDeleted="handleSuccessfullyDeleted"

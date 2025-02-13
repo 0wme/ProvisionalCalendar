@@ -4,6 +4,9 @@ namespace Database\Seeders;
 
 use App\Models\Label;
 use Illuminate\Database\Seeder;
+use Database\Seeders\Groups\GroupSeeder;
+use Database\Seeders\Groups\PromotionSeeder;
+use Database\Seeders\Groups\SubgroupSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -22,9 +25,9 @@ class DatabaseSeeder extends Seeder
 
         // 3. Création de la hiérarchie académique
         $this->call([
-            AcademicPromotionSeeder::class,
-            AcademicGroupSeeder::class,
-            AcademicSubgroupSeeder::class,
+            PromotionSeeder::class,
+            GroupSeeder::class,
+            SubgroupSeeder::class,
         ]);
 
         // 4. Création des autres données

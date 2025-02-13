@@ -1,27 +1,26 @@
 <?php
 
-namespace Database\Seeders;
+namespace Database\Seeders\Groups;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\AcademicPromotion;
+use App\Models\Groups\Promotion;
 
-class AcademicPromotionSeeder extends Seeder
+class PromotionSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        AcademicPromotion::create([
+        Promotion::create([
             'name' => 'BUT1',
             'year_id' => 1,
         ]);
-        AcademicPromotion::create([
+        Promotion::create([
             'name' => 'BUT2',
             'year_id' => 1,
         ]);
-        AcademicPromotion::create([
+        Promotion::create([
             'name' => 'BUT3',
             'year_id' => 1,
         ]);

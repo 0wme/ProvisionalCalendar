@@ -15,11 +15,11 @@
 import FormInput from "@/Components/FormInput.vue";
 import FormButton from "@/Components/FormButton.vue";
 import { Subgroup } from "@/types/models";
-import axios, { AxiosError } from "axios";
-import { API_ENDPOINTS, MESSAGES } from "@/constants";
+import { MESSAGES } from "@/constants";
 import { ref } from "vue";
 import ErrorPopup from "@/Features/Popup/ErrorPopup.vue";
 import DeleteConfirmationPopup from "@/Features/Popup/DeleteConfirmationPopup.vue";
+import { useSubgroupService } from "@/services/groups/subgroupService";
 
 const props = defineProps<{ subgroup: Subgroup }>();
 
@@ -29,6 +29,7 @@ const emit = defineEmits([
     "edited",
 ]);
 
+const subgroupService = useSubgroupService();
 const editedSubgroup = ref<Subgroup>(props.subgroup);
 const nameError = ref<string | undefined>();
 
@@ -47,44 +48,32 @@ const updateName = (value: string) => {
     emit("edited");
 };
 
+const showErrorPopup = (error: string) => (errorMessage.value = error);
+
 const resetErrorMessage = () => {
     errorMessage.value = undefined;
 };
 
-const handleEdit = async () => {
+const handleEdit = () => {
     if (editedSubgroup.value.name.trim() === "") {
         nameError.value = MESSAGES.EMPTY_SUBGROUP_NAME_ERROR_MESSAGE;
         return;
     }
-    try {
-        const response = await axios.put(
-            `${API_ENDPOINTS.SUBGROUP}/${props.subgroup.id}`,
-            editedSubgroup.value
-        );
-        emit("successfullyEdited", response.data.subgroup);
-    } catch (error: unknown) {
-        if (error instanceof AxiosError && error.response?.data?.error) {
-            errorMessage.value = error.response.data.error;
-        } else {
-            errorMessage.value = MESSAGES.DEFAULT_ERROR_MESSAGE;
-        }
-    }
+    subgroupService
+        .updateSubgroup(editedSubgroup.value)
+        .then((returnedSubgroup) =>
+            emit("successfullyEdited", returnedSubgroup)
+        )
+        .catch(showErrorPopup);
 };
 
-const handleDelete = async () => {
-    try {
-        const response = await axios.delete(
-            `${API_ENDPOINTS.SUBGROUP}/${props.subgroup.id}`
-        );
-        hideDeleteConfirmationPopup();
-        emit("successfullyDeleted", response.data.subgroup);
-    } catch (error: unknown) {
-        if (error instanceof AxiosError && error.response?.data?.error) {
-            errorMessage.value = error.response.data.error;
-        } else {
-            errorMessage.value = MESSAGES.DEFAULT_ERROR_MESSAGE;
-        }
-    }
+const handleDelete = () => {
+    subgroupService
+        .deleteSubgroup(props.subgroup.id)
+        .then((returnedSubgroup) =>
+            emit("successfullyDeleted", returnedSubgroup)
+        )
+        .catch(showErrorPopup);
 };
 </script>
 
@@ -115,7 +104,7 @@ const handleDelete = async () => {
         />
         <ErrorPopup
             v-if="errorMessage"
-            :message="errorMessage!"
+            :message="errorMessage"
             @close="resetErrorMessage"
         />
     </div>

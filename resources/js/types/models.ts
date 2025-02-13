@@ -88,7 +88,15 @@ export interface Teacher extends Item {
  *
  * Représente un enseignement.
  */
-export interface Teaching extends Item {
+export interface Teaching {
+    /**
+     * L'identifiant de l'enseignement.
+     */
+    id: number;
+    /**
+     * Le nom de l'enseignement.
+     */
+    name: string;
     /**
      * Le code apogee de l'enseignement.
      */
@@ -98,15 +106,6 @@ export interface Teaching extends Item {
      * Les enseignants de l'enseignement.
      */
     period?: Period;
-}
-
-/**
- * @interface Class
- *
- * Représente une classe.
- */
-export interface Class extends Item {
-    groups: Group[];
 }
 
 export enum SlotType {

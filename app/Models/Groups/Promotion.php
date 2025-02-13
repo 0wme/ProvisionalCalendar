@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Groups;
 
+use App\Models\Year;
 use Illuminate\Database\Eloquent\Model;
 
-class AcademicPromotion extends Model
+class Promotion extends Model
 {
     protected $fillable = [
         'name',
@@ -13,7 +14,7 @@ class AcademicPromotion extends Model
 
     public function academicGroups()
     {
-        return $this->hasMany(AcademicGroup::class);
+        return $this->hasMany(Group::class);
     }
 
     public function year()

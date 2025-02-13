@@ -17,21 +17,21 @@ return new class extends Migration
             $table->foreignId('teacher_id')->constrained('teachers');
             $table->foreignId('teaching_id')->constrained('teachings');
             $table->foreignId('substitute_teacher_id')->nullable()->constrained('teachers');
-            $table->foreignId('academic_promotion_id')
+            $table->foreignId('promotion_id')
                 ->nullable()
                 ->default(null)
-                ->constrained('academic_promotions')
+                ->constrained('promotions')
                 ->onDelete('cascade');
-                
-            $table->foreignId('academic_group_id')
-                ->nullable()
-                ->default(null)
-                ->constrained('academic_groups');
 
-            $table->foreignId('academic_subgroup_id')
+            $table->foreignId('group_id')
                 ->nullable()
                 ->default(null)
-                ->constrained('academic_subgroups');
+                ->constrained('groups');
+
+            $table->foreignId('subgroup_id')
+                ->nullable()
+                ->default(null)
+                ->constrained('subgroups');
 
             $table->boolean('is_neutralized')->default(false);
             $table->foreignId('week_id')->constrained('weeks');
@@ -39,7 +39,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        
+
     }
 
     /**

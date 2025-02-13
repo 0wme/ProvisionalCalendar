@@ -20,10 +20,10 @@ import EditSubgroupForm from "@/Features/Forms/Groups/Subgroup/EditSubgroupForm.
 import CloseWithoutSaveConfirmationPopup from "@/Features/Popup/CloseWithoutSaveConfirmationPopup.vue";
 import Popup from "@/Components/Popup/Popup.vue";
 import { Subgroup } from "@/types/models";
-import { API_ENDPOINTS } from "@/constants";
-import axios from "axios";
+import { useSubgroupService } from "@/services/groups/subgroupService";
+import ErrorPopup from "../../ErrorPopup.vue";
 
-const props = defineProps<{ subgroupId: number | undefined }>();
+const props = defineProps<{ subgroupId: number }>();
 
 const emit = defineEmits([
     "cancel",
@@ -31,22 +31,31 @@ const emit = defineEmits([
     "successfullyDeleted",
 ]);
 
+const subgroupService = useSubgroupService();
 const subgroup = ref<Subgroup | undefined>();
 const isCloseWithoutSaveConfirmationPopupVisible = ref<boolean>(false);
 const hasBeenEdited = ref<boolean>(false);
+const errorMessage = ref<string | undefined>();
 
-onMounted(async () => {
-    const response = await axios.get(
-        `${API_ENDPOINTS.SUBGROUP}/${props.subgroupId}`
-    );
-    subgroup.value = response.data;
-});
+const fetchSubgroup = () =>
+    subgroupService
+        .getSubgroup(props.subgroupId)
+        .then(
+            (returnedSubgroup: Subgroup) => (subgroup.value = returnedSubgroup)
+        )
+        .catch(showErrorPopup);
+
+onMounted(fetchSubgroup);
+
+const showErrorPopup = (error: string) => (errorMessage.value = error);
 
 const showCloseWithoutSaveConfirmationPopup = () =>
     (isCloseWithoutSaveConfirmationPopupVisible.value = true);
 
 const hideCloseWithoutSaveConfirmationPopup = () =>
     (isCloseWithoutSaveConfirmationPopupVisible.value = false);
+
+const resetErrorMessage = () => (errorMessage.value = undefined);
 
 const handleCancel = () =>
     hasBeenEdited.value
@@ -80,5 +89,10 @@ const handleHasBeenEdited = () => {
         v-if="isCloseWithoutSaveConfirmationPopupVisible"
         @close="handleCloseWithoutSaving"
         @cancel="hideCloseWithoutSaveConfirmationPopup"
+    />
+    <ErrorPopup
+        v-if="errorMessage"
+        :message="errorMessage"
+        @close="resetErrorMessage"
     />
 </template>

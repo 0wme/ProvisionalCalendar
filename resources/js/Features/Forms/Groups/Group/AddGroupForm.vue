@@ -10,15 +10,16 @@
 import FormInput from "@/Components/FormInput.vue";
 import FormButton from "@/Components/FormButton.vue";
 import { Group } from "@/types/models";
-import axios, { AxiosError } from "axios";
-import { API_ENDPOINTS, MESSAGES } from "@/constants";
+import { MESSAGES } from "@/constants";
 import { ref } from "vue";
 import ErrorPopup from "@/Features/Popup/ErrorPopup.vue";
+import { useGroupService } from "@/services/groups/groupService";
 
 const props = defineProps<{ promotionId: number }>();
 
 const emit = defineEmits(["successfullyAdded", "edited"]);
 
+const groupService = useGroupService();
 const group = ref<Group>({ id: 0, name: "" });
 const nameError = ref<string | undefined>();
 
@@ -39,19 +40,10 @@ const handleAdd = async () => {
         nameError.value = MESSAGES.EMPTY_GROUP_NAME_ERROR_MESSAGE;
         return;
     }
-    try {
-        const response = await axios.post(
-            `${API_ENDPOINTS.GROUP}/${props.promotionId}`,
-            group.value
-        );
-        emit("successfullyAdded", response.data.group);
-    } catch (error: unknown) {
-        if (error instanceof AxiosError && error.response?.data?.error) {
-            errorMessage.value = error.response.data.error;
-        } else {
-            errorMessage.value = MESSAGES.DEFAULT_ERROR_MESSAGE;
-        }
-    }
+    groupService
+        .addGroup(props.promotionId, group.value)
+        .then((returnedGroup) => emit("successfullyAdded", returnedGroup))
+        .catch((error) => (errorMessage.value = error));
 };
 </script>
 

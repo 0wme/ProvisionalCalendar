@@ -15,11 +15,11 @@
 import FormInput from "@/Components/FormInput.vue";
 import FormButton from "@/Components/FormButton.vue";
 import { Group } from "@/types/models";
-import axios, { AxiosError } from "axios";
-import { API_ENDPOINTS, MESSAGES } from "@/constants";
+import { MESSAGES } from "@/constants";
 import { ref } from "vue";
 import ErrorPopup from "@/Features/Popup/ErrorPopup.vue";
 import DeleteConfirmationPopup from "@/Features/Popup/DeleteConfirmationPopup.vue";
+import { useGroupService } from "@/services/groups/groupService";
 
 const props = defineProps<{ group: Group }>();
 
@@ -28,6 +28,8 @@ const emit = defineEmits([
     "successfullyDeleted",
     "edited",
 ]);
+
+const groupService = useGroupService();
 
 const editedGroup = ref<Group>(props.group);
 const nameError = ref<string | undefined>();
@@ -56,35 +58,17 @@ const handleEdit = async () => {
         nameError.value = MESSAGES.EMPTY_GROUP_NAME_ERROR_MESSAGE;
         return;
     }
-    try {
-        const response = await axios.put(
-            `${API_ENDPOINTS.GROUP}/${props.group.id}`,
-            editedGroup.value
-        );
-        emit("successfullyEdited", response.data.group);
-    } catch (error: unknown) {
-        if (error instanceof AxiosError && error.response?.data?.error) {
-            errorMessage.value = error.response.data.error;
-        } else {
-            errorMessage.value = MESSAGES.DEFAULT_ERROR_MESSAGE;
-        }
-    }
+    groupService
+        .updateGroup(editedGroup.value)
+        .then((returnedGroup) => emit("successfullyEdited", returnedGroup))
+        .catch((error) => (errorMessage.value = error));
 };
 
 const handleDelete = async () => {
-    try {
-        const response = await axios.delete(
-            `${API_ENDPOINTS.GROUP}/${props.group.id}`
-        );
-        hideDeleteConfirmationPopup();
-        emit("successfullyDeleted", response.data.group);
-    } catch (error: unknown) {
-        if (error instanceof AxiosError && error.response?.data?.error) {
-            errorMessage.value = error.response.data.error;
-        } else {
-            errorMessage.value = MESSAGES.DEFAULT_ERROR_MESSAGE;
-        }
-    }
+    groupService
+        .deleteGroup(props.group.id)
+        .then((returnedGroup) => emit("successfullyDeleted", returnedGroup))
+        .catch((error) => (errorMessage.value = error));
 };
 </script>
 

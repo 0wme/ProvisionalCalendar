@@ -3,8 +3,7 @@ import ListManager from "@/Components/ListManager/ListManager.vue";
 import { defineProps, defineEmits, onMounted, computed, ref, watch } from "vue";
 import { useLabelsStore } from "@/stores/labelsStore";
 import { Item } from "@/types/models";
-import { API_ENDPOINTS, MESSAGES } from "@/constants";
-import axios, { AxiosError } from "axios";
+import { useGroupService } from "@/services/groups/groupService";
 import AddGroupPopup from "@/Features/Popup/Groups/Group/AddGroupPopup.vue";
 import EditGroupPopup from "@/Features/Popup/Groups/Group/EditGroupPopup.vue";
 import ErrorPopup from "@/Features/Popup/ErrorPopup.vue";
@@ -20,12 +19,13 @@ const emit = defineEmits([
     "successfullyDeleted",
 ]);
 
+const groupService = useGroupService();
+
 const groups = ref<Item[] | undefined>();
 
 const groupToEditId = ref<number | undefined>();
 
 const isAddGroupPopupVisible = ref<boolean>(false);
-const isEditGroupPopupVisible = ref<boolean>(false);
 
 const errorMessage = ref<string>();
 
@@ -43,31 +43,18 @@ onMounted(() => labelsStore.fetchLabels());
 const showAddGroupPopup = () => (isAddGroupPopupVisible.value = true);
 const hideAddGroupPopup = () => (isAddGroupPopupVisible.value = false);
 
-const showEditGroupPopup = () => (isEditGroupPopupVisible.value = true);
-const hideEditGroupPopup = () => (isEditGroupPopupVisible.value = false);
+const showEditGroupPopup = (groupId: number) => (groupToEditId.value = groupId);
+const hideEditGroupPopup = () => (groupToEditId.value = undefined);
 
-const fetchGroups = async () => {
-    try {
-        const response = await axios.get(
-            `${API_ENDPOINTS.GROUP}s/${props.promotionId}`
-        );
-        groups.value = response.data;
-    } catch (error: unknown) {
-        if (error instanceof AxiosError && error.response?.data?.error) {
-            errorMessage.value = error.response.data.error;
-        } else {
-            errorMessage.value = MESSAGES.DEFAULT_ERROR_MESSAGE;
-        }
-    }
+const fetchGroups = () => {
+    groupService
+        .getGroups(props.promotionId!)
+        .then((returnedGroups) => (groups.value = returnedGroups))
+        .catch((error) => (errorMessage.value = error));
 };
 
 const handleSelect = (item: number) => {
     emit("select", item);
-};
-
-const handleEdit = (item: number) => {
-    groupToEditId.value = item;
-    showEditGroupPopup();
 };
 
 const handleAdd = () => {
@@ -91,6 +78,8 @@ const handleSuccessfullyDeleted = () => {
     fetchGroups();
     emit("successfullyDeleted");
 };
+
+const resetErrorMessage = () => (errorMessage.value = undefined);
 </script>
 
 <template>
@@ -102,7 +91,7 @@ const handleSuccessfullyDeleted = () => {
             :items="groups"
             :selectedItemsId="selectedGroupId ? [selectedGroupId] : undefined"
             @select="handleSelect"
-            @edit="handleEdit"
+            @edit="showEditGroupPopup"
             @add="handleAdd"
         />
         <AddGroupPopup
@@ -112,12 +101,16 @@ const handleSuccessfullyDeleted = () => {
             @cancel="hideAddGroupPopup"
         />
         <EditGroupPopup
-            v-if="isEditGroupPopupVisible"
+            v-if="groupToEditId"
             :groupId="groupToEditId"
             @successfullyEdited="handleSuccessfullyEdited"
             @successfullyDeleted="handleSuccessfullyDeleted"
             @cancel="hideEditGroupPopup"
         />
-        <ErrorPopup v-if="errorMessage" :message="errorMessage" />
+        <ErrorPopup
+            v-if="errorMessage"
+            :message="errorMessage"
+            @close="resetErrorMessage"
+        />
     </div>
 </template>

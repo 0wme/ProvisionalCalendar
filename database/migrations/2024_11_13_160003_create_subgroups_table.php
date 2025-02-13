@@ -11,10 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('academic_promotions', function (Blueprint $table) {
+        Schema::create('subgroups', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->foreignId('year_id')->constrained('years');
+            $table->foreignId('group_id')
+                ->constrained('groups')
+                ->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -24,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('academic_promotions');
+        Schema::dropIfExists('subgroups');
     }
 };
