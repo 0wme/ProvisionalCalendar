@@ -3,12 +3,14 @@ import CalendarLeftSidebar from "./CalendarLeftSidebar.vue";
 import CalendarContent from "./CalendarContent.vue";
 import CalendarRightSidebar from "./CalendarRightSidebar.vue";
 import RightSidebarHeader from "./RightSidebarHeader.vue";
+import CalendarTopBar from "./CalendarTopBar.vue";
 import { computed, onMounted, ref } from "vue";
 import { Calendar } from "@/types/models";
 import axios from "axios";
 
 const weeksData = ref<Calendar>();
 const teachingId = ref(1);
+const year = ref(0);
 
 onMounted(async () => {
     weeksData.value = await axios
@@ -16,6 +18,7 @@ onMounted(async () => {
         .then((response) => {
             return response.data;
         });
+    year.value = weeksData.value[0].year;
 });
 
 const biggestCM = computed(() => {
@@ -80,10 +83,17 @@ const biggestTP = computed(() => {
     });
     return biggest;
 });
+
+function handleModuleChange() {
+    // TO DO: implement module change handling
+}
 </script>
 
 <template>
     <div class="h-full flex flex-col">
+        <!-- Top Bar -->
+        <CalendarTopBar class="mb-4 ml-12" />
+        
         <!-- Contenu défilant -->
         <div class="flex-1 relative overflow-y-auto">
             <CalendarLeftSidebar
@@ -129,12 +139,9 @@ const biggestTP = computed(() => {
                         </div>
                     </template>
                 </CalendarContent>
-                <div class="absolute right-0 top-0 bottom-0">
+                <div class="absolute right-0 top-0 bottom-0 w-36">
                     <RightSidebarHeader />
-                    <CalendarRightSidebar
-                        :weeks-data="weeksData"
-                        class="absolute right-0 top-0 bottom-0 pt-12"
-                    />
+                    <CalendarRightSidebar :weeks-data="weeksData" />
                 </div>
             </div>
         </div>
