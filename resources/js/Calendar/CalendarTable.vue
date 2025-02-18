@@ -13,12 +13,21 @@ const teachingId = ref(1);
 const year = ref(0);
 
 const loadCalendar = async (id: number) => {
-    weeksData.value = await axios
-        .get(`/api/calendrier/${id}`)
-        .then((response) => {
-            return response.data;
-        });
-    year.value = weeksData.value[0].year;
+    console.log('📅 Chargement du calendrier pour l\'enseignement:', id);
+    try {
+        weeksData.value = await axios
+            .get(`/api/calendrier/${id}`)
+            .then((response) => {
+                console.log('✅ Données du calendrier reçues:', {
+                    nombreSemaines: response.data.length,
+                    premiereSemaine: response.data[0],
+                });
+                return response.data;
+            });
+        year.value = weeksData.value[0].year;
+    } catch (error) {
+        console.error('❌ Erreur lors du chargement du calendrier:', error);
+    }
 };
 
 onMounted(async () => {
@@ -89,6 +98,7 @@ const biggestTP = computed(() => {
 });
 
 const handleTeachingSelected = async (id: number) => {
+    console.log('🔄 Changement d\'enseignement détecté:', id);
     teachingId.value = id;
     await loadCalendar(id);
 };

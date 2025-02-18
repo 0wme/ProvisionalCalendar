@@ -53,6 +53,11 @@ const handleNextPeriod = () => {
 };
 
 const selectTeaching = (teaching: any) => {
+    console.log(' Enseignement sélectionné:', {
+        id: teaching.id,
+        title: teaching.title,
+        apogee_code: teaching.apogee_code
+    });
     selectedTeaching.value = teaching;
     showTeachingsList.value = false;
     emit('teachingSelected', teaching.id);
