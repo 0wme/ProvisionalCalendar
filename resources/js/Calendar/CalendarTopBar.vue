@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, defineEmits } from "vue";
 import axios from "axios";
 import SearchBar from '@/Components/SearchBar.vue';
 import Filter from '@/Components/Filter.vue';
+
+const emit = defineEmits(['teachingSelected']);
 
 const selectedTeaching = ref(null);
 const teachings = ref([]);
@@ -53,6 +55,7 @@ const handleNextPeriod = () => {
 const selectTeaching = (teaching: any) => {
     selectedTeaching.value = teaching;
     showTeachingsList.value = false;
+    emit('teachingSelected', teaching.id);
 };
 
 const toggleTeachingsList = () => {

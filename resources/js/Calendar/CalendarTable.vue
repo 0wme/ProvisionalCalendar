@@ -12,13 +12,17 @@ const weeksData = ref<Calendar>();
 const teachingId = ref(1);
 const year = ref(0);
 
-onMounted(async () => {
+const loadCalendar = async (id: number) => {
     weeksData.value = await axios
-        .get(`/api/calendrier/${teachingId.value}`)
+        .get(`/api/calendrier/${id}`)
         .then((response) => {
             return response.data;
         });
     year.value = weeksData.value[0].year;
+};
+
+onMounted(async () => {
+    await loadCalendar(teachingId.value);
 });
 
 const biggestCM = computed(() => {
@@ -84,15 +88,16 @@ const biggestTP = computed(() => {
     return biggest;
 });
 
-function handleModuleChange() {
-    // TO DO: implement module change handling
-}
+const handleTeachingSelected = async (id: number) => {
+    teachingId.value = id;
+    await loadCalendar(id);
+};
 </script>
 
 <template>
     <div class="h-full flex flex-col">
         <!-- Top Bar -->
-        <CalendarTopBar class="mb-4 ml-12" />
+        <CalendarTopBar @teaching-selected="handleTeachingSelected" class="mb-4 ml-12" />
         
         <!-- Contenu défilant -->
         <div class="flex-1 relative overflow-y-auto">
