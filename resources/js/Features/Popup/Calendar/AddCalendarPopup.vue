@@ -70,20 +70,30 @@ const modifyCalendar = async () => {
     if (!popupData.value) return;
 
     try {
-        const payload = {
+        // Récupérer les données de l'enseignant
+        const teacherData = JSON.parse(localStorage.getItem('lastTeacherDrag') || '{}');
+        
+        // Générer les initiales (première lettre du prénom + première lettre du nom)
+        const nameParts = teacherData.name?.split(' ') || [];
+        const initials = nameParts.length >= 2 
+            ? `${nameParts[0][0]}${nameParts[1][0]}`
+            : teacherData.name?.substring(0, 2) || '';
+
+        const content = {
             teacherId: popupData.value.teacherId,
+            teacherCode: initials.toUpperCase(),
             hours: parseFloat(hours.value),
             isEvaluation: evaluation.value,
             isReplaced: replaced.value,
             isNeutralized: neutralized.value,
-            type: popupData.value.type,
-            promotionId: popupData.value.promotionId,
-            groupId: popupData.value.groupId,
-            subgroupId: popupData.value.subgroupId,
+            type: popupData.value.type
         };
 
-        // TODO: Implémenter l'appel API
-        // await axios.post('/api/calendar/add', payload);
+        // Ajouter le contenu au tableau contents du groupData
+        if (!popupData.value.groupData.contents) {
+            popupData.value.groupData.contents = [];
+        }
+        popupData.value.groupData.contents.push(content);
         
         calendarStore.hideAddCalendarPopup();
     } catch (error) {

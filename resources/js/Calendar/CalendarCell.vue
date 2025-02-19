@@ -61,9 +61,7 @@ const handleDrop = (e: DragEvent) => {
         const popupData = {
             teacherId: teacherData.id,
             type: slotType,
-            // Utiliser un ID temporaire pour les cellules vides
-            [slotType === SlotType.CM ? 'promotionId' : 
-             slotType === SlotType.TD ? 'groupId' : 'subgroupId']: props.groupData.id || Date.now()
+            groupData: props.groupData
         };
         
         console.log('Showing popup with data:', popupData);
