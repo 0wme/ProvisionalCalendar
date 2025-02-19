@@ -23,33 +23,49 @@ const getGroupType = (): SlotType | null => {
     return null;
 };
 
-const getId = () => {
-    if (props.groupData.contents && props.groupData.contents.length > 0) {
-        const content = props.groupData.contents[0];
-        if (content.promotionId) return { type: SlotType.CM, id: content.promotionId };
-        if (content.groupId) return { type: SlotType.TD, id: content.groupId };
-        if (content.subgroupId) return { type: SlotType.TP, id: content.subgroupId };
-    }
-    return null;
+const getSlotType = (element: HTMLElement): SlotType | null => {
+    // Vérifier si l'élément a une classe spécifique ou est dans une colonne spécifique
+    const rect = element.getBoundingClientRect();
+    const cells = document.querySelectorAll('.calendar-cell');
+    const index = Array.from(cells).indexOf(element);
+    
+    // Déterminer le type en fonction de la position
+    if (rect.left < window.innerWidth / 3) return SlotType.CM;
+    if (rect.left < (window.innerWidth * 2) / 3) return SlotType.TD;
+    return SlotType.TP;
 };
 
 const handleDrop = (e: DragEvent) => {
     console.log('Drop event:', e);
     const teacherData = JSON.parse(e.dataTransfer?.getData('teacher') || '{}');
     console.log('Teacher data:', teacherData);
-    const groupInfo = getId();
-    console.log('Group info:', groupInfo);
     
-    if (teacherData.id && groupInfo) {
+    // Obtenir l'élément sur lequel le drop a eu lieu
+    const dropTarget = e.target as HTMLElement;
+    const cellElement = dropTarget.closest('.calendar-cell');
+    
+    if (!cellElement) {
+        console.log('No calendar cell found');
+        return;
+    }
+    
+    // Déterminer le type de cellule et l'ID
+    const slotType = getSlotType(cellElement);
+    console.log('Detected slot type:', slotType);
+    
+    if (teacherData.id && slotType) {
         // Sauvegarder les données de l'enseignant pour la popup
         localStorage.setItem('lastTeacherDrag', JSON.stringify(teacherData));
         
+        // Créer les données pour la popup
         const popupData = {
             teacherId: teacherData.id,
-            type: groupInfo.type,
-            [groupInfo.type === SlotType.CM ? 'promotionId' : 
-             groupInfo.type === SlotType.TD ? 'groupId' : 'subgroupId']: groupInfo.id
+            type: slotType,
+            // Utiliser un ID temporaire pour les cellules vides
+            [slotType === SlotType.CM ? 'promotionId' : 
+             slotType === SlotType.TD ? 'groupId' : 'subgroupId']: props.groupData.id || Date.now()
         };
+        
         console.log('Showing popup with data:', popupData);
         calendarStore.showAddCalendarPopup(popupData);
     }
@@ -73,7 +89,10 @@ const cellWidth = computed(() => {
 </script>
 
 <template>
-    <div class="flex w-max h-full">
+    <div 
+        class="calendar-cell flex w-max h-full"
+        :data-cell-type="getGroupType()"
+    >
         <div
             :class="[
                 'relative min-w-96 flex items-center justify-start border-r-2 bg-white border-b-2 border-gray-200 after:absolute after:top-0 after:bottom-0 after:right-0 after:left-0',
