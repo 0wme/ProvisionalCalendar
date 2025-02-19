@@ -61,6 +61,7 @@ const openPopup = () => {
     <ListManager
         :title="title"
         hasAdd
+        canAdd
         :items="teachers"
         :selectedItemsId="selectedTeacherIds"
         @select="handleSelect"

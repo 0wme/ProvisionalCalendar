@@ -152,60 +152,6 @@ const handleCancel = () => {
             ?.teachings.map((teaching) => teaching.id) || [];
 };
 
-onMounted(async () => {
-    try {
-        const teachersResponse = await axios.get("/api/enseignants/1");
-        teachers.value = teachersResponse.data.map((teacher: any) => {
-            return {
-                id: teacher.id,
-                name: `${teacher.first_name} ${teacher.last_name}`,
-                acronym: teacher.acronym,
-                teachings: teacher.teachings.map((teaching: any) => ({
-                    id: teaching.id,
-                    name: teaching.title,
-                    apogee_code: teaching.apogee_code,
-                })),
-            };
-        });
-    } catch (error: any) {
-        if (error?.response?.data?.message) {
-            showErrorPopup(errorMessage.value);
-        } else {
-            showErrorPopup("Une erreur est survenue");
-        }
-    }
-
-    try {
-        const teachingsResponse = await axios.get("/api/enseignements/1");
-        teachings.value = teachingsResponse.data.map((teaching: any) => {
-            return {
-                id: teaching.id,
-                name: teaching.title,
-                period: periods.value.find(
-                    (period) =>
-                        period.id === teaching.semester || teaching.trimester
-                ),
-                year: teaching.year_id,
-                semester: teaching.semester,
-                trimester: teaching.trimester,
-                apogee_code: teaching.apogee_code,
-                initial_cm: teaching.tp_hours_initial,
-                initial_td: teaching.td_hours_intial,
-                initial_tp: teaching.tp_hours_initial,
-                continuing_cm: teaching.cm_hours_continued,
-                continuing_td: teaching.td_hours_continued,
-                continuing_tp: teaching.tp_hours_continued,
-            };
-        });
-    } catch (error: any) {
-        if (error?.response?.data?.message) {
-            showErrorPopup(errorMessage.value);
-        } else {
-            showErrorPopup("Une erreur est survenue");
-        }
-    }
-});
-
 const showErrorPopup = (message: string) => {
     errorMessage.value = message;
     isErrorPopupVisible.value = true;
