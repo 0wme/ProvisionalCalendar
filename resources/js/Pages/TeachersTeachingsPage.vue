@@ -1,50 +1,17 @@
 <script setup lang="ts">
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted } from "vue";
 import axios from "axios";
 import AdminLayout from "@/Layouts/AdminLayout.vue";
-import TeachersListManager from "../Features/ListManager/TeachersListManager.vue";
-import TeachingsListManager from "../Features/ListManager/TeachingsListManager.vue";
-import {
-    Teacher,
-    Teaching,
-    Period,
-    EditedItem,
-    EditedItemStatus,
-} from "@/types/models";
-import AddTeachingPopup from "@/Features/Popup/Teachings/AddTeachingPopup.vue";
-import EditTeachingPopup from "@/Features/Popup/Teachings/EditTeachingPopup.vue";
+import TeachersListManager from "../Features/ListManagers/TeachersListManager.vue";
+import TeachingsListManager from "../Features/ListManagers/TeachingsListManager.vue";
+import { Teacher } from "@/types/models/teachers";
+import { EditedItem, EditedItemStatus } from "@/types/models/utils";
 import Button from "@/Components/FormButton.vue";
-import ErrorPopup from "@/Features/Popup/ErrorPopup.vue";
-import SaveConfirmationPopup from "@/Features/Popup/SaveConfirmationPopup.vue";
+import ErrorPopup from "@/Features/Popups/ErrorPopup.vue";
+import SaveConfirmationPopup from "@/Features/Popups/SaveConfirmationPopup.vue";
 
 const teachers = ref<Teacher[]>([]);
-const teachings = ref<Teaching[]>([]);
-const periods = ref<Period[]>([
-    {
-        id: 1,
-        name: "Semestre 1",
-    },
-    {
-        id: 2,
-        name: "Semestre 2",
-    },
-    {
-        id: 3,
-        name: "Semestre 3",
-    },
-    {
-        id: 4,
-        name: "Semestre 4",
-    },
-    {
-        id: 5,
-        name: "Semestre 5",
-    },
-    {
-        id: 6,
-        name: "Semestre 6",
-    },
-]);
+const yearId = ref<number>(1);
 
 const selectedTeacherIds = ref<number[]>([]);
 const selectedTeachingIds = ref<number[]>([]);
@@ -252,22 +219,21 @@ const hideErrorPopup = () => {
 <template>
     <AdminLayout>
         <div class="flex flex-col h-full gap-8 items-end">
-            <div class="flex gap-8 flex-1 w-full min-h-0">
+            <div class="flex gap-8 flex-1 h-full w-full">
                 <TeachersListManager
-                    class="h-full w-1/3"
+                    class="h-[700px] w-1/3"
                     :teachers
                     :selectedTeacherIds
                     @select="handleTeacherSelect"
                 />
                 <TeachingsListManager
-                    class="h-full w-2/3"
-                    :teachings
-                    :periods
+                    class="h-[700px] w-2/3"
+                    :yearId
                     :selectedTeachingIds
                     @select="handleTeachingSelect"
                 />
             </div>
-            <div class="flex gap-4 min-h-0 h-min">
+            <div class="flex gap-4 h-min">
                 <Button class="text-gray-500 underline" @click="handleCancel"
                     >Réinitialiser les modifications</Button
                 >
@@ -277,10 +243,8 @@ const hideErrorPopup = () => {
             </div>
         </div>
     </AdminLayout>
-    <AddTeachingPopup :show="false" />
-    <EditTeachingPopup :show="false" />
     <SaveConfirmationPopup
-        :show="isSaveConfirmationPopupVisible"
+        v-if="isSaveConfirmationPopupVisible"
         :modifications="modifications"
         @save="handleSave"
         @quitWithoutSave="handleQuitWithoutSave"
@@ -288,7 +252,7 @@ const hideErrorPopup = () => {
     />
     <ErrorPopup
         :message="errorMessage"
-        :show="isErrorPopupVisible"
+        v-if="isErrorPopupVisible"
         @close="hideErrorPopup"
     />
 </template>

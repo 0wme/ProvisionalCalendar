@@ -8,9 +8,32 @@ import { useLabelsStore } from "@/stores/labelsStore";
 const labelsStore = useLabelsStore();
 
 defineProps<{
-    teachers: Teacher[];
     selectedTeacherIds: number[];
 }>();
+
+const teachers = ref<Teacher[]>([
+    {
+        id: 0,
+        name: "Laurent DUBREUIL",
+        firstname: "Laurent",
+        lastname: "DUBREUIL",
+        code: "LD",
+    },
+    {
+        id: 1,
+        name: "Anais POURSAT",
+        firstname: "Anaïs",
+        lastname: "POURSAT",
+        code: "PA",
+    },
+    {
+        id: 2,
+        name: "Cristina ONETE",
+        firstname: "Cristina",
+        lastname: "ONETE",
+        code: "CO",
+    },
+]);
 
 const emit = defineEmits(["select", "add", "edit"]);
 

@@ -100,7 +100,6 @@ const resetErrorMessage = () => (errorMessage.value = undefined);
             hasAdd
             hasImport
             canAdd
-            :periods
             :items="teachings"
             :selectedItemsId="selectedTeachingIds"
             @add="showAddTeachingPopup"
