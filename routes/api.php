@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\YearController;
 use App\Http\Controllers\Api\UserControllerApi;
 use App\Http\Controllers\Api\RoleControllerApi;
 use App\Http\Controllers\Api\PeriodController;
+use App\Http\Controllers\Api\TeachingController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['api.logger'])->group(function () {
@@ -56,15 +57,12 @@ Route::middleware(['api.logger'])->group(function () {
 
         //Récupération des données
 
-        Route::get('/enseignants/{year}', [TeacherTeachingController::class, 'getTeachers']);
-        Route::get('/enseignements/{year}', [TeacherTeachingController::class, 'getTeachings']);
-        Route::get('/enseignement/enseignants/{teaching}', [TeacherTeachingController::class, 'getTeachersByTeaching']);
-        Route::get('/enseignant/enseignements/{teacher}', [TeacherTeachingController::class, 'getTeachingsByTeacher']);
-        Route::get('/enseignant/{teacher}', [TeacherTeachingController::class, 'getTeacher']);
+        Route::get('/teachers/{year}', [TeacherTeachingController::class, 'getTeachers']);
+        Route::get('/teachings/{year}', [TeachingController::class, 'getTeachings']);
+        Route::get('/teacher/teachings/{teacher}', [TeacherTeachingController::class, 'getTeachingsByTeacher']);
+        Route::get('/teacher/{teacher}', [TeacherTeachingController::class, 'getTeacher']);
         Route::get('/teaching/{teaching}', [TeacherTeachingController::class, 'getTeaching']);
-        Route::get('/enseignement/{teaching}/check-hours', [TeacherTeachingController::class, 'checkTeachingHours']);
-
-        Route::get('/enseignant/enseignement/{teacher}/{teaching}', [TeacherTeachingController::class, 'getTeacherTeaching']);
+        Route::get('/teacher/teaching/{teacher}/{teaching}', [TeacherTeachingController::class, 'getTeacherTeaching']);
 
         //Création des données
 

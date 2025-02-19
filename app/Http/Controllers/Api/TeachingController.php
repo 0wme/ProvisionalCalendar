@@ -30,7 +30,7 @@ class TeachingController extends Controller
                 ->map(function ($teaching) {
                     return [
                         'id' => $teaching->id,
-                        'title' => $teaching->title,
+                        'name' => $teaching->title,
                         'apogee_code' => $teaching->apogee_code,
                         'tp_hours_initial' => $teaching->tp_hours_initial,
                         'tp_hours_continued' => $teaching->tp_hours_continued,
@@ -277,8 +277,8 @@ class TeachingController extends Controller
 
             // Vérifie si un autre enseignement avec le même code apogée existe déjà pour cette année
             $existingTeaching = Teaching::where('apogee_code', $request->apogee_code)
+            ->where('id', '!=', $teaching->id)
                 ->where('year_id', $teaching->year_id)
-                ->where('id', '!=', $teaching_id)
                 ->first();
 
             if ($existingTeaching) {

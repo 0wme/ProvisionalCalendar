@@ -15,6 +15,6 @@ const hideAddTeachingPopup = () => {
 
 <template>
     <div class="m-10">
-        <TeachingsListManager />
+        <TeachingsListManager :year-id="1" :selected-teaching-ids="[]" />
     </div>
 </template>

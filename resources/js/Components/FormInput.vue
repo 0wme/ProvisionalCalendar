@@ -12,7 +12,7 @@
  * @prop {boolean} [checked] - Whether the checkbox is checked
  * @prop {SelectOption[]} [options] - The options to display in the select
  */
-import { SelectOption, FormInputType } from "@/types/models";
+import { SelectOption, FormInputType } from "@/types/models/utils";
 import { defineProps } from "vue";
 
 defineProps<{

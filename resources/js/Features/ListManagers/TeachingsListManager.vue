@@ -1,16 +1,19 @@
 <script setup lang="ts">
 import ListManager from "@/Components/ListManager/ListManager.vue";
 import { Teaching } from "@/types/models/teachings";
-import { defineProps, computed } from "vue";
+import { defineProps, computed, onMounted } from "vue";
 import AddTeachingPopup from "@/Features/Popups/Teachings/AddTeachingPopup.vue";
 import EditTeachingPopup from "@/Features/Popups/Teachings/EditTeachingPopup.vue";
 import { ref } from "vue";
 import { useLabelsStore } from "@/stores/labelsStore";
 import { useTeachingService } from "@/services/teachingService";
+import { Period } from "@/types/models/periods";
+import ErrorPopup from "../Popups/ErrorPopup.vue";
+import { usePeriodService } from "@/services/periodsService";
 
 const labelsStore = useLabelsStore();
 
-defineProps<{
+const props = defineProps<{
     yearId: number;
     selectedTeachingIds: number[];
 }>();
@@ -27,12 +30,35 @@ const emit = defineEmits([
 ]);
 
 const teachingService = useTeachingService();
+const periodsService = usePeriodService();
 
 const teachings = ref<Teaching[] | undefined>();
+const periods = ref<Period[] | undefined>();
 
 const isAddTeachingPopupVisible = ref<boolean>(false);
 
 const teachingToEditId = ref<number | undefined>();
+
+const errorMessage = ref<string>();
+
+const fetchTeachings = () => {
+    teachingService
+        .getTeachings(props.yearId, periods.value!)
+        .then((response) => (teachings.value = response))
+        .catch((error) => (errorMessage.value = error));
+};
+
+const fetchPeriodsAndTeachings = () => {
+    periodsService
+        .getPeriods(props.yearId)
+        .then((response) => (periods.value = response))
+        .then(fetchTeachings)
+        .catch((error) => (errorMessage.value = error));
+};
+
+onMounted(() => {
+    fetchPeriodsAndTeachings();
+});
 
 const showAddTeachingPopup = () => (isAddTeachingPopupVisible.value = true);
 const hideAddTeachingPopup = () => (isAddTeachingPopupVisible.value = false);
@@ -48,6 +74,23 @@ const handleEdit = (id: number) => {
 const handleSelect = (teaching: Teaching) => {
     emit("select", teaching);
 };
+
+const handleSuccessfullyAdded = (teaching: Teaching) => {
+    hideAddTeachingPopup();
+    emit("successfullyAdded", teaching);
+};
+
+const handleSuccessfullyEdited = (teaching: Teaching) => {
+    hideEditTeachingPopup();
+    emit("successfullyEdited", teaching);
+};
+
+const handleSuccessfullyDeleted = (id: number) => {
+    hideEditTeachingPopup();
+    emit("successfullyDeleted", id);
+};
+
+const resetErrorMessage = () => (errorMessage.value = undefined);
 </script>
 
 <template>
@@ -56,6 +99,7 @@ const handleSelect = (teaching: Teaching) => {
             :title="title"
             hasAdd
             hasImport
+            canAdd
             :periods
             :items="teachings"
             :selectedItemsId="selectedTeachingIds"
@@ -66,130 +110,24 @@ const handleSelect = (teaching: Teaching) => {
 
         <AddTeachingPopup
             v-if="isAddTeachingPopupVisible"
+            :teachingId="undefined"
+            :yearId
+            @successfullyAdded="handleSuccessfullyAdded"
             @cancel="hideAddTeachingPopup"
         />
-
         <EditTeachingPopup
             v-if="teachingToEditId"
-            @cancel="hideEditTeachingPopup"
-        />
-    </div>
-</template>
-
-<!-- <script setup lang="ts">
-import ListManager from "@/Components/ListManager/ListManager.vue";
-import { defineProps, defineEmits, onMounted, computed, ref, watch } from "vue";
-import { useLabelsStore } from "@/stores/labelsStore";
-import { Item } from "@/types/models";
-import { useGroupService } from "@/services/groups/groupService";
-import AddGroupPopup from "@/Features/Popups/Groups/Groups/AddGroupPopup.vue";
-import EditGroupPopup from "@/Features/Popups/Groups/Groups/EditGroupPopup.vue";
-import ErrorPopup from "@/Features/Popups/ErrorPopup.vue";
-import { Group } from "@/types/models";
-
-const labelsStore = useLabelsStore();
-
-const props = defineProps<{ promotionId?: number; selectedGroupId?: number }>();
-
-const emit = defineEmits([
-    "select",
-    "successfullyAdded",
-    "successfullyEdited",
-    "successfullyDeleted",
-]);
-
-const groupService = useGroupService();
-
-const groups = ref<Item[] | undefined>();
-
-const groupToEditId = ref<number | undefined>();
-
-const isAddGroupPopupVisible = ref<boolean>(false);
-
-const errorMessage = ref<string>();
-
-watch(
-    () => props.promotionId,
-    () => fetchGroups()
-);
-
-const title = computed(() => {
-    return labelsStore.getLabel("Groupe");
-});
-
-onMounted(() => labelsStore.fetchLabels());
-
-const showAddGroupPopup = () => (isAddGroupPopupVisible.value = true);
-const hideAddGroupPopup = () => (isAddGroupPopupVisible.value = false);
-
-const showEditGroupPopup = (groupId: number) => (groupToEditId.value = groupId);
-const hideEditGroupPopup = () => (groupToEditId.value = undefined);
-
-const fetchGroups = () => {
-    groupService
-        .getGroups(props.promotionId!)
-        .then((returnedGroups) => (groups.value = returnedGroups))
-        .catch((error) => (errorMessage.value = error));
-};
-
-const handleSelect = (item: number) => {
-    emit("select", item);
-};
-
-const handleAdd = () => {
-    showAddGroupPopup();
-};
-
-const handleSuccessfullyAdded = () => {
-    hideAddGroupPopup();
-    fetchGroups();
-    emit("successfullyAdded");
-};
-
-const handleSuccessfullyEdited = (group: Group) => {
-    hideEditGroupPopup();
-    fetchGroups();
-    emit("successfullyEdited", group);
-};
-
-const handleSuccessfullyDeleted = (id: number) => {
-    hideEditGroupPopup();
-    fetchGroups();
-    emit("successfullyDeleted", id);
-};
-
-const resetErrorMessage = () => (errorMessage.value = undefined);
-</script>
-
-<template>
-    <div>
-        <ListManager
-            :title="title"
-            hasAdd
-            :canAdd="!!promotionId"
-            :items="groups"
-            :selectedItemsId="selectedGroupId ? [selectedGroupId] : undefined"
-            @select="handleSelect"
-            @edit="showEditGroupPopup"
-            @add="handleAdd"
-        />
-        <AddGroupPopup
-            v-if="isAddGroupPopupVisible"
-            :promotionId="promotionId!"
-            @successfullyAdded="handleSuccessfullyAdded"
-            @cancel="hideAddGroupPopup"
-        />
-        <EditGroupPopup
-            v-if="groupToEditId"
-            :groupId="groupToEditId"
+            :teachingId="teachingToEditId"
+            :yearId
             @successfullyEdited="handleSuccessfullyEdited"
             @successfullyDeleted="handleSuccessfullyDeleted"
-            @cancel="hideEditGroupPopup"
+            @cancel="hideEditTeachingPopup"
         />
+
         <ErrorPopup
             v-if="errorMessage"
-            :message="errorMessage"
+            :message="errorMessage!"
             @close="resetErrorMessage"
         />
     </div>
-</template> -->
+</template>
