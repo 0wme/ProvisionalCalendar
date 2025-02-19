@@ -66,10 +66,6 @@ const closePopup = () => {
     }
 };
 
-const isFormValid = computed(() => {
-    return hours.value && hours.value.trim() !== '';
-});
-
 const modifyCalendar = async () => {
     if (!popupData.value) return;
 
@@ -119,43 +115,43 @@ const modifyCalendar = async () => {
 
                 <!-- Heures -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Nombre d'heures</label>
+                    <label class="block text-base font-medium text-gray-700 mb-1">Heures</label>
                     <input 
                         type="text" 
                         v-model="hours"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 sm:text-sm"
-                        placeholder="Saisir le nombre d'heures"
+                        placeholder="ex : 10.5"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-primary-500 focus:border-primary-500"
                     />
                 </div>
 
                 <!-- Checkboxes -->
-                <div class="space-y-4 mt-4">
-                    <div class="flex items-center space-x-3">
-                        <input
-                            type="checkbox"
+                <div class="space-y-3">
+                    <label class="flex items-center space-x-3">
+                        <input 
+                            type="checkbox" 
                             v-model="evaluation"
-                            class="w-5 h-5 rounded border-gray-300 text-emerald-500 focus:ring-emerald-500"
+                            class="w-5 h-5 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
                         />
-                        <label class="text-lg font-medium text-gray-700">Évaluation</label>
-                    </div>
+                        <span class="text-base text-gray-700">Évaluation</span>
+                    </label>
 
-                    <div class="flex items-center space-x-3">
-                        <input
-                            type="checkbox"
+                    <label class="flex items-center space-x-3">
+                        <input 
+                            type="checkbox" 
                             v-model="replaced"
-                            class="w-5 h-5 rounded border-gray-300 text-emerald-500 focus:ring-emerald-500"
+                            class="w-5 h-5 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
                         />
-                        <label class="text-lg font-medium text-gray-700">Remplacé</label>
-                    </div>
+                        <span class="text-base text-gray-700">Remplacé</span>
+                    </label>
 
-                    <div class="flex items-center space-x-3">
-                        <input
-                            type="checkbox"
+                    <label class="flex items-center space-x-3">
+                        <input 
+                            type="checkbox" 
                             v-model="neutralized"
-                            class="w-5 h-5 rounded border-gray-300 text-emerald-500 focus:ring-emerald-500"
+                            class="w-5 h-5 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
                         />
-                        <label class="text-lg font-medium text-gray-700">Neutralisé</label>
-                    </div>
+                        <span class="text-base text-gray-700">Neutralisé</span>
+                    </label>
                 </div>
             </div>
         </template>
@@ -163,11 +159,11 @@ const modifyCalendar = async () => {
         <template v-slot:footer>
             <button 
                 @click="modifyCalendar"
-                :disabled="!isFormValid"
+                :disabled="!hours"
                 :class="[
                     'w-full py-3 px-4 rounded-lg transition-colors',
-                    isFormValid 
-                        ? 'bg-emerald-500 hover:bg-emerald-600 text-white cursor-pointer' 
+                    hours 
+                        ? 'bg-emerald-500 text-white hover:bg-emerald-600' 
                         : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                 ]"
             >
