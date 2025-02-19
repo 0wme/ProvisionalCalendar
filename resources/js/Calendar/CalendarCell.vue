@@ -41,6 +41,9 @@ const handleDrop = (e: DragEvent) => {
     console.log('Group info:', groupInfo);
     
     if (teacherData.id && groupInfo) {
+        // Sauvegarder les données de l'enseignant pour la popup
+        localStorage.setItem('lastTeacherDrag', JSON.stringify(teacherData));
+        
         const popupData = {
             teacherId: teacherData.id,
             type: groupInfo.type,

@@ -4,6 +4,7 @@ import CalendarContent from "./CalendarContent.vue";
 import CalendarRightSidebar from "./CalendarRightSidebar.vue";
 import RightSidebarHeader from "./RightSidebarHeader.vue";
 import CalendarTopBar from "./CalendarTopBar.vue";
+import AddCalendarPopup from "@/Features/Popup/Calendar/AddCalendarPopup.vue";
 import { computed, onMounted, ref } from "vue";
 import { Calendar } from "@/types/models";
 import axios from "axios";
@@ -106,6 +107,7 @@ const handleTeachingSelected = async (id: number) => {
 
 <template>
     <div class="h-full flex flex-col">
+        <AddCalendarPopup />
         <!-- Top Bar -->
         <CalendarTopBar @teaching-selected="handleTeachingSelected" class="mb-4 ml-12" />
         

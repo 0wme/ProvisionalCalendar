@@ -20,8 +20,13 @@ const handleSelect = () => {
 
 const handleDrag = (event: DragEvent) => {
     if (event.dataTransfer) {
-        event.dataTransfer.setData("text/plain", JSON.stringify(props.item));
-        event.dataTransfer.dropEffect = "move";
+        // Format attendu par CalendarCell
+        const teacherData = {
+            id: props.item.id,
+            name: props.item.name
+        };
+        event.dataTransfer.setData('teacher', JSON.stringify(teacherData));
+        event.dataTransfer.effectAllowed = 'move';
     }
 };
 </script>

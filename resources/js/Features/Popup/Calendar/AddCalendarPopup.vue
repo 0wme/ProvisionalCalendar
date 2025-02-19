@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import Popup from "@/Components/Popup/Popup.vue";
 import CloseWithoutSaveConfirmationPopup from "@/Components/CloseWithoutSaveConfirmationPopup.vue";
+import { useCalendarStore } from '@/stores/calendar';
 
-defineProps<{
-    show?: boolean;
-}>();
+const calendarStore = useCalendarStore();
+const showPopup = computed(() => calendarStore.showingAddCalendarPopup);
+const popupData = computed(() => calendarStore.addCalendarPopupData);
 
 const professors = ref([
     { label: "POURSAT Anaïs", value: "poursat" },
@@ -29,6 +30,14 @@ const replaced = ref(initialState.replaced);
 const neutralized = ref(initialState.neutralized);
 const showConfirmation = ref(false);
 
+// Mettre à jour les données quand un enseignant est déposé
+watch(popupData, (newData) => {
+    if (newData?.teacherId) {
+        const teacherData = JSON.parse(localStorage.getItem('lastTeacherDrag') || '{}');
+        selectedProfessor.value = teacherData.name || '';
+    }
+}, { immediate: true });
+
 const hasChanges = computed(() => {
     return (
         selectedProfessor.value !== initialState.selectedProfessor ||
@@ -42,112 +51,142 @@ const hasChanges = computed(() => {
 
 const confirmClose = () => {
     showConfirmation.value = false;
+    calendarStore.hideAddCalendarPopup();
 };
 
 const cancelClose = () => {
     showConfirmation.value = false;
 };
 
-const modifyCalendar = () => {
-    // Logic to modify the calendar
+const closePopup = () => {
+    if (hasChanges.value) {
+        showConfirmation.value = true;
+    } else {
+        calendarStore.hideAddCalendarPopup();
+    }
+};
+
+const modifyCalendar = async () => {
+    if (!popupData.value) return;
+
+    try {
+        const payload = {
+            teacherId: popupData.value.teacherId,
+            hours: parseFloat(hours.value),
+            isEvaluation: evaluation.value,
+            isReplaced: replaced.value,
+            isNeutralized: neutralized.value,
+            type: popupData.value.type,
+            promotionId: popupData.value.promotionId,
+            groupId: popupData.value.groupId,
+            subgroupId: popupData.value.subgroupId,
+        };
+
+        // TODO: Implémenter l'appel API
+        // await axios.post('/api/calendar/add', payload);
+        
+        calendarStore.hideAddCalendarPopup();
+    } catch (error) {
+        console.error('Erreur lors de la sauvegarde:', error);
+    }
 };
 </script>
 
 <template>
     <Popup
         title="Ajouter calendrier prévisionnel"
-        :show
-        @close="$emit('cancel')"
+        :show="showPopup"
+        @close="closePopup"
     >
-        <div class="space-y-6">
-            <div>
-                <label class="block text-lg mb-2">Professeur</label>
-                <select
-                    v-model="selectedProfessor"
-                    class="w-full p-3 border rounded-lg bg-white appearance-none pr-10 relative"
-                >
-                    <option
-                        v-for="prof in professors"
-                        :key="prof.value"
-                        :value="prof.value"
-                    >
-                        {{ prof.label }}
-                    </option>
-                </select>
-            </div>
-
-            <div>
-                <label class="block text-lg mb-2">Heures</label>
-                <input
-                    type="text"
-                    v-model="hours"
-                    placeholder="ex : 10.5"
-                    class="w-full p-3 border rounded-lg"
-                />
-            </div>
-
-            <div class="space-y-3">
-                <div class="flex items-center">
-                    <input
-                        type="checkbox"
-                        id="evaluation"
-                        v-model="evaluation"
-                        class="w-5 h-5 mr-3"
-                    />
-                    <label for="evaluation" class="text-lg">Évaluation</label>
-                </div>
-                <div class="space-y-3">
-                    <div class="flex items-center">
-                        <input
-                            type="checkbox"
-                            id="replaced"
-                            v-model="replaced"
-                            class="w-5 h-5 mr-3"
+        <template v-slot:content>
+            <div class="space-y-4">
+                <!-- Professeur -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Professeur</label>
+                    <div class="relative">
+                        <input 
+                            type="text" 
+                            v-model="selectedProfessor" 
+                            disabled
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100"
                         />
-                        <label for="replaced" class="text-lg">Remplacé</label>
-                    </div>
-                    <div v-if="replaced" class="ml-8">
-                        <label class="block text-lg mb-2"
-                            >Professeur remplaçant</label
-                        >
-                        <select
-                            v-model="replacementProfessor"
-                            class="w-full p-3 border rounded-lg bg-white appearance-none pr-10 relative"
-                        >
-                            <option
-                                v-for="prof in professors"
-                                :key="prof.value"
-                                :value="prof.value"
-                                :disabled="prof.value === selectedProfessor"
-                            >
-                                {{ prof.label }}
-                            </option>
-                        </select>
                     </div>
                 </div>
-                <div class="flex items-center">
-                    <input
-                        type="checkbox"
-                        id="neutralized"
-                        v-model="neutralized"
-                        class="w-5 h-5 mr-3"
+
+                <!-- Heures -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Heures</label>
+                    <input 
+                        type="text" 
+                        v-model="hours"
+                        placeholder="ex : 10.5"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-primary-500 focus:border-primary-500"
                     />
-                    <label for="neutralized" class="text-lg">Neutralisé</label>
+                </div>
+
+                <!-- Checkboxes -->
+                <div class="space-y-2">
+                    <label class="flex items-center space-x-2">
+                        <input 
+                            type="checkbox" 
+                            v-model="evaluation"
+                            class="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                        />
+                        <span class="text-sm text-gray-700">Évaluation</span>
+                    </label>
+
+                    <label class="flex items-center space-x-2">
+                        <input 
+                            type="checkbox" 
+                            v-model="replaced"
+                            class="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                        />
+                        <span class="text-sm text-gray-700">Remplacé</span>
+                    </label>
+
+                    <label class="flex items-center space-x-2">
+                        <input 
+                            type="checkbox" 
+                            v-model="neutralized"
+                            class="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                        />
+                        <span class="text-sm text-gray-700">Neutralisé</span>
+                    </label>
                 </div>
             </div>
+        </template>
 
-            <button
+        <template v-slot:footer>
+            <button 
                 @click="modifyCalendar"
-                class="w-full bg-[#72C489] hover:bg-[#5A8B6F] text-white font-semibold py-4 px-6 rounded-full text-lg"
+                class="w-full bg-emerald-500 text-white py-3 px-4 rounded-lg hover:bg-emerald-600 transition-colors"
             >
-                Ajouter
+                Modifier
             </button>
-        </div>
+        </template>
     </Popup>
 
     <CloseWithoutSaveConfirmationPopup
         :show="showConfirmation"
-        @close="confirmClose"
+        @confirm="confirmClose"
         @cancel="cancelClose"
     />
 </template>
+
+<style scoped>
+.bg-primary-600 {
+    @apply bg-emerald-600;
+}
+
+.text-primary-600 {
+    @apply text-emerald-600;
+}
+
+.focus\:ring-primary-500:focus {
+    @apply ring-emerald-500;
+}
+
+.focus\:border-primary-500:focus {
+    @apply border-emerald-500;
+}
+</style>

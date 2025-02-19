@@ -3,6 +3,8 @@ defineProps<{
     name: string;
     selected?: boolean;
 }>();
+
+defineEmits(['dragstart']);
 </script>
 
 <template>
@@ -14,6 +16,7 @@ defineProps<{
                 : 'bg-gray-100 border-transparent',
         ]"
         draggable="true"
+        @dragstart="$emit('dragstart', $event)"
     >
         <p>{{ name }}</p>
     </button>
