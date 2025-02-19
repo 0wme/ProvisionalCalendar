@@ -94,7 +94,7 @@ const modifyCalendar = async () => {
 
 <template>
     <Popup
-        title="Ajouter calendrier prévisionnel"
+        title="Ajout d'un horaire"
         :show="showPopup"
         @close="closePopup"
     >
@@ -125,33 +125,33 @@ const modifyCalendar = async () => {
                 </div>
 
                 <!-- Checkboxes -->
-                <div class="space-y-2">
-                    <label class="flex items-center space-x-2">
-                        <input 
-                            type="checkbox" 
+                <div class="space-y-4 mt-4">
+                    <div class="flex items-center space-x-3">
+                        <input
+                            type="checkbox"
                             v-model="evaluation"
-                            class="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                            class="w-5 h-5 rounded border-gray-300 text-emerald-500 focus:ring-emerald-500"
                         />
-                        <span class="text-sm text-gray-700">Évaluation</span>
-                    </label>
+                        <label class="text-lg font-medium text-gray-700">Évaluation</label>
+                    </div>
 
-                    <label class="flex items-center space-x-2">
-                        <input 
-                            type="checkbox" 
+                    <div class="flex items-center space-x-3">
+                        <input
+                            type="checkbox"
                             v-model="replaced"
-                            class="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                            class="w-5 h-5 rounded border-gray-300 text-emerald-500 focus:ring-emerald-500"
                         />
-                        <span class="text-sm text-gray-700">Remplacé</span>
-                    </label>
+                        <label class="text-lg font-medium text-gray-700">Remplacé</label>
+                    </div>
 
-                    <label class="flex items-center space-x-2">
-                        <input 
-                            type="checkbox" 
+                    <div class="flex items-center space-x-3">
+                        <input
+                            type="checkbox"
                             v-model="neutralized"
-                            class="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                            class="w-5 h-5 rounded border-gray-300 text-emerald-500 focus:ring-emerald-500"
                         />
-                        <span class="text-sm text-gray-700">Neutralisé</span>
-                    </label>
+                        <label class="text-lg font-medium text-gray-700">Neutralisé</label>
+                    </div>
                 </div>
             </div>
         </template>
@@ -161,7 +161,7 @@ const modifyCalendar = async () => {
                 @click="modifyCalendar"
                 class="w-full bg-emerald-500 text-white py-3 px-4 rounded-lg hover:bg-emerald-600 transition-colors"
             >
-                Modifier
+                Valider
             </button>
         </template>
     </Popup>
