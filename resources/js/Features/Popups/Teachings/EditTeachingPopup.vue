@@ -82,7 +82,7 @@ const fetchPeriods = async () => {
 </script>
 
 <template>
-    <Popup title="Ajouter un enseignement" @close="handleCancel">
+    <Popup title="Modifier un enseignement" @close="handleCancel">
         <EditTeachingForm
             v-if="teaching && periods && periodsType !== undefined"
             :periods
