@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('slots', function (Blueprint $table) {
             $table->id();
             $table->decimal('duration', 3, 1);
-            $table->foreignId('teacher_id')->constrained('teachers');
-            $table->foreignId('teaching_id')->constrained('teachings');
+            $table->foreignId('teacher_id')->constrained('teachers')->onDelete('cascade');
+            $table->foreignId('teaching_id')->constrained('teachings')->onDelete('cascade');
             $table->foreignId('substitute_teacher_id')->nullable()->constrained('teachers');
             $table->foreignId('promotion_id')
                 ->nullable()

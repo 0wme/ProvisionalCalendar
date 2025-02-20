@@ -10,6 +10,7 @@ use App\Models\Semester;
 use App\Models\Trimester;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class TeachingController extends Controller
 {
@@ -364,8 +365,28 @@ class TeachingController extends Controller
 
         } catch (\Exception $e) {
             return response()->json([
-                'error' => 'Une erreur est survenue',
-                'message' => $e->getMessage()
+                'error' => 'Une erreur est survenue'
+            ], 500);
+        }
+    }
+
+    public function deleteTeaching($teaching_id): JsonResponse
+    {
+        try {
+            // Vérifie si l'enseignement existe
+            $teaching = Teaching::with(['teachers', 'year'])->find($teaching_id);
+            if (!$teaching) {
+                return response()->json([
+                    'error' => 'Enseignement non trouvé'
+                ], 404);
+            }
+
+            $teaching->delete();
+            return response()->json([]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Une erreur est survenue'
             ], 500);
         }
     }

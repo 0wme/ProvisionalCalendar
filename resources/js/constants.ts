@@ -8,6 +8,7 @@ export const API_ENDPOINTS = {
     TEACHING: "/api/teaching",
     TEACHINGS: "/api/teachings",
     TEACHER: "/api/teacher",
+    TEACHERS: "/api/teachers",
     PERIODS: "/api/periods",
     PERIOD: "/api/period",
 };

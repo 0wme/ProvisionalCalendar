@@ -76,16 +76,19 @@ const handleSelect = (teaching: Teaching) => {
 };
 
 const handleSuccessfullyAdded = (teaching: Teaching) => {
+    fetchTeachings();
     hideAddTeachingPopup();
     emit("successfullyAdded", teaching);
 };
 
 const handleSuccessfullyEdited = (teaching: Teaching) => {
+    fetchTeachings();
     hideEditTeachingPopup();
     emit("successfullyEdited", teaching);
 };
 
 const handleSuccessfullyDeleted = (id: number) => {
+    fetchTeachings();
     hideEditTeachingPopup();
     emit("successfullyDeleted", id);
 };
@@ -100,6 +103,7 @@ const resetErrorMessage = () => (errorMessage.value = undefined);
             hasAdd
             hasImport
             canAdd
+            :periods
             :items="teachings"
             :selectedItemsId="selectedTeachingIds"
             @add="showAddTeachingPopup"

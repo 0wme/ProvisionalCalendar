@@ -168,7 +168,7 @@ const hideErrorPopup = () => {
             <div class="flex gap-8 flex-1 h-full w-full">
                 <TeachersListManager
                     class="h-[700px] w-1/3"
-                    :teachers
+                    :yearId
                     :selectedTeacherIds
                     @select="handleTeacherSelect"
                 />

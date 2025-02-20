@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\UserControllerApi;
 use App\Http\Controllers\Api\RoleControllerApi;
 use App\Http\Controllers\Api\PeriodController;
 use App\Http\Controllers\Api\TeachingController;
+use App\Http\Controllers\Api\TeacherController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['api.logger'])->group(function () {
@@ -57,32 +58,32 @@ Route::middleware(['api.logger'])->group(function () {
 
         //Récupération des données
 
-        Route::get('/teachers/{year}', [TeacherTeachingController::class, 'getTeachers']);
+        Route::get('/teachers/{year}', [TeacherController::class, 'getTeachers']);
         Route::get('/teachings/{year}', [TeachingController::class, 'getTeachings']);
         Route::get('/teacher/teachings/{teacher}', [TeacherTeachingController::class, 'getTeachingsByTeacher']);
-        Route::get('/teacher/{teacher}', [TeacherTeachingController::class, 'getTeacher']);
+        Route::get('/teacher/{teacher}', [TeacherController::class, 'getTeacher']);
         Route::get('/teaching/{teaching}', [TeacherTeachingController::class, 'getTeaching']);
         Route::get('/teacher/teaching/{teacher}/{teaching}', [TeacherTeachingController::class, 'getTeacherTeaching']);
 
         //Création des données
 
-        Route::post('/enseignant/{year}', [TeacherTeachingController::class, 'storeTeacher']);
-        Route::post('/teaching/{year}', [TeacherTeachingController::class, 'storeTeaching']);
+        Route::post('/teacher/{year}', [TeacherController::class, 'storeTeacher']);
+        Route::post('/teaching/{year}', [TeachingController::class, 'storeTeaching']);
 
-        Route::post('/enseignant/enseignement/{teacher_id}/{teaching_id}', [TeacherTeachingController::class, 'storeTeacherTeaching']);
+        Route::post('/teacher/teaching/{teacher_id}/{teaching_id}', [TeacherTeachingController::class, 'storeTeacherTeaching']);
 
 
         //Modification des données
 
-        Route::put('/enseignant/{teacher}', [TeacherTeachingController::class, 'updateTeacher']);
-        Route::put('/teaching/{teaching}', [TeacherTeachingController::class, 'updateTeaching']);
+        Route::put('/teacher/{teacher}', [TeacherController::class, 'updateTeacher']);
+        Route::put('/teaching/{teaching}', [TeachingController::class, 'updateTeaching']);
 
         //Suppression des données
 
-        Route::delete('/enseignant/{teacher}', [TeacherTeachingController::class, 'deleteTeacher']);
-        Route::delete('/teaching/{teaching}', [TeacherTeachingController::class, 'deleteTeaching']);
+        Route::delete('/teacher/{teacher}', [TeacherController::class, 'deleteTeacher']);
+        Route::delete('/teaching/{teaching}', [TeachingController::class, 'deleteTeaching']);
 
-        Route::delete('/enseignant/enseignement/{teacher}/{teaching}', [TeacherTeachingController::class, 'deleteTeacherTeaching']);
+        Route::delete('/teacher/teaching/{teacher}/{teaching}', [TeacherTeachingController::class, 'deleteTeacherTeaching']);
 
     //Labels
 
