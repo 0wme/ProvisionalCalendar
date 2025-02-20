@@ -1,43 +1,67 @@
 <script setup lang="ts">
-import ListManager from '@/Components/ListManager/ListManager.vue';
-import { Teacher } from '@/types/models';
-import { defineProps, defineEmits, computed } from 'vue';
-import { ref } from 'vue';
-import { useLabelsStore } from '@/Stores/labelsStore';
+import ListManager from "@/Components/ListManager/ListManager.vue";
+import { Teacher } from "@/types/models/teachers";
+import { defineProps, defineEmits, computed } from "vue";
+import { ref } from "vue";
+import { useLabelsStore } from "@/stores/labelsStore";
 
 const labelsStore = useLabelsStore();
 
 defineProps<{
-  teachers: Teacher[];
-  selectedTeacherIds: number[];
+    selectedTeacherIds: number[];
 }>();
 
-const emit = defineEmits(['select', 'add', 'edit']);
+const teachers = ref<Teacher[]>([
+    {
+        id: 0,
+        name: "Laurent DUBREUIL",
+        firstname: "Laurent",
+        lastname: "DUBREUIL",
+        code: "LD",
+    },
+    {
+        id: 1,
+        name: "Anais POURSAT",
+        firstname: "Anaïs",
+        lastname: "POURSAT",
+        code: "PA",
+    },
+    {
+        id: 2,
+        name: "Cristina ONETE",
+        firstname: "Cristina",
+        lastname: "ONETE",
+        code: "CO",
+    },
+]);
+
+const emit = defineEmits(["select", "add", "edit"]);
 
 const title = computed(() => {
-    return labelsStore.getLabel('Enseignants');
+    return labelsStore.getLabel("Enseignants");
 });
 
 const handleSelect = (teacher: Teacher) => {
-    emit('select', teacher);
-}
+    emit("select", teacher);
+};
 
 const handleEdit = (teacher: Teacher) => {
     showPopupEdit.value = true;
-}
+};
 
 const showPopup = ref(false);
 const showPopupEdit = ref(false);
 
 const openPopup = () => {
     showPopup.value = true;
-}
+};
 </script>
 
 <template>
     <ListManager
         :title="title"
-         hasAdd
+        hasAdd
+        canAdd
         :items="teachers"
         :selectedItemsId="selectedTeacherIds"
         @select="handleSelect"

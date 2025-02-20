@@ -19,7 +19,7 @@ import { ref, onMounted } from "vue";
 import EditPromotionForm from "@/Features/Forms/Groups/Promotions/EditPromotionForm.vue";
 import CloseWithoutSaveConfirmationPopup from "@/Features/Popups/CloseWithoutSaveConfirmationPopup.vue";
 import Popup from "@/Components/Popup/PopupComponent.vue";
-import { Promotion } from "@/types/models";
+import { Promotion } from "@/types/models/groups";
 import { usePromotionService } from "@/services/groups/promotionService";
 import ErrorPopup from "../../ErrorPopup.vue";
 

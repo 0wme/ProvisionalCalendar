@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { ref, defineProps } from 'vue';
-import IconButton from '../IconButton.vue';
-import MenuItem from './MenuItem.vue';
-import { MenuItem as MenuItemType } from '@/types/models';
+import { ref, defineProps } from "vue";
+import IconButton from "../IconButton.vue";
+import MenuItem from "./MenuItem.vue";
+import { MenuItem as MenuItemType } from "@/types/models/utils";
 
 defineProps<{
-    items: MenuItemType[]
+    items: MenuItemType[];
 }>();
 
 const closed = ref(false);
@@ -14,15 +14,21 @@ function toggleMenu() {
     closed.value = !closed.value;
 }
 
-const currentRoute = ref(window.location.pathname.split('/')[1]);
-const currentPath = ref(window.location.pathname.split('/')[2]);
+const currentRoute = ref(window.location.pathname.split("/")[1]);
+const currentPath = ref(window.location.pathname.split("/")[2]);
 </script>
 
 <template>
-    <div :class="['header-menu bg-white rounded-xl shadow-lg p-5 mt-4 relative w-max mx-auto transition-all duration-300', { closed }]">
+    <div
+        :class="[
+            'header-menu bg-white rounded-xl shadow-lg p-5 mt-4 relative w-max mx-auto transition-all duration-300',
+            { closed },
+        ]"
+    >
         <ul class="flex justify-center gap-8">
             <MenuItem
                 v-for="item in items"
+                :key="item.route"
                 :item="item"
                 :active="currentPath === item.route"
                 @click="$inertia.visit('/' + currentRoute + '/' + item.route)"
@@ -35,7 +41,7 @@ const currentPath = ref(window.location.pathname.split('/')[2]);
             @click="toggleMenu"
         />
     </div>
-  </template>
+</template>
 
 <style scoped>
 .header-menu.closed {

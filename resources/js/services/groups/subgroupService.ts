@@ -1,6 +1,6 @@
 import axios from "axios";
 import { API_ENDPOINTS, MESSAGES } from "@/constants";
-import { Subgroup } from "@/types/models";
+import { Subgroup } from "@/types/models/groups";
 
 export const useSubgroupService = () => {
     const getSubgroups = (yearId: number): Promise<Subgroup[]> => {

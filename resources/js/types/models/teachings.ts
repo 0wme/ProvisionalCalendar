@@ -1,3 +1,7 @@
+import { Item } from "./utils";
+import { Period } from "./periods";
+import { Teacher } from "./teachers";
+
 /**
  * @interface Teaching
  *
@@ -13,6 +17,7 @@ export type Teaching = Item & {
      * Les enseignants de l'enseignement.
      */
     period?: Period;
+    teachers?: Teacher[];
 };
 
 export interface MCCCFormInput {

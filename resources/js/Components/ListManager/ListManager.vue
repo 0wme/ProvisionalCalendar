@@ -1,14 +1,15 @@
 <script setup lang="ts">
-import { ref, computed, defineEmits, onMounted, onUnmounted, watch } from "vue";
+import { ref, defineEmits, onMounted, onUnmounted, computed } from "vue";
 import Filter from "@/Components/Filter.vue";
 import SearchBar from "@/Components/SearchBar.vue";
 import SelectionnableEditableButtonList from "./SelectionnableEditableButtonList.vue";
-import { Period, Item } from "@/types/models";
+import { Item } from "@/types/models/utils";
+import { Period } from "@/types/models/periods";
 
 const props = defineProps<{
     title: string;
     periods?: Period[];
-    items: Item[] | undefined;
+    items?: Item[];
     selectedItemsId?: number[];
     hasFilter?: boolean;
     hasAdd?: boolean;
@@ -26,23 +27,43 @@ const listManagerItemsHeight = ref("0px");
 const visibleItems = computed(() => {
     if (!props.items) return [];
 
+    console.log(
+        props.items.filter(
+            (item) =>
+                item.period?.id != null &&
+                item.period.id - 1 === selectedPeriodId.value
+        )
+    );
+
+    console.log(props.items);
+
+    console.log(props.periods);
+
     if (props.periods)
         return props.items
-            .filter((item) => item.period?.id! - 1 === selectedPeriodId.value)
-            .filter((item) =>
-                item.name
-                    .toLowerCase()
-                    .includes(searchValue.value.toLowerCase())
+            .filter(
+                (item) =>
+                    item.period?.id != null &&
+                    item.period.id - 1 === selectedPeriodId.value
+            )
+            .filter(
+                (item) =>
+                    item?.name
+                        ?.toLowerCase()
+                        ?.includes(searchValue.value.toLowerCase()) ?? false
             );
     else
-        return props.items.filter((item) =>
-            item.name.toLowerCase().includes(searchValue.value.toLowerCase())
+        return props.items.filter(
+            (item) =>
+                item?.name
+                    ?.toLowerCase()
+                    ?.includes(searchValue.value.toLowerCase()) ?? false
         );
 });
 
 const handleNextPeriod = () => {
     selectedPeriodId.value =
-        selectedPeriodId.value < props.periods?.length! - 1
+        selectedPeriodId.value < props.periods!.length! - 1
             ? selectedPeriodId.value + 1
             : 0;
 };
@@ -50,7 +71,7 @@ const handleNextPeriod = () => {
 const handlePreviousPeriod = () => {
     selectedPeriodId.value =
         selectedPeriodId.value === 0
-            ? props.periods?.length! - 1
+            ? props.periods!.length - 1
             : selectedPeriodId.value - 1;
 };
 
@@ -72,7 +93,7 @@ const updateHeight = () => {
             0
         );
         listManagerItemsHeight.value = `${
-            listManager.value?.clientHeight! -
+            listManager.value!.clientHeight! -
             elementsHeight -
             (props.periods ? 96 : 80)
         }px`;

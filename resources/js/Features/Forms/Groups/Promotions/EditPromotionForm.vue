@@ -14,7 +14,7 @@
  */
 import FormInput from "@/Components/FormInput.vue";
 import FormButton from "@/Components/FormButton.vue";
-import { Promotion } from "@/types/models";
+import { Promotion } from "@/types/models/groups";
 import { MESSAGES } from "@/constants";
 import { ref } from "vue";
 import ErrorPopup from "@/Features/Popups/ErrorPopup.vue";
@@ -67,7 +67,7 @@ const handleEdit = () => {
 
 const handleDelete = () => {
     promotionService
-        .deletePromotion(props.promotion.id)
+        .deletePromotion(props.promotion.id!)
         .then(() => emit("successfullyDeleted", props.promotion.id))
         .catch((error) => (errorMessage.value = error));
 };

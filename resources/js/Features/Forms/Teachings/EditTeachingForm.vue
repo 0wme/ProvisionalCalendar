@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import FormInput from "@/Components/FormInput.vue";
 import ErrorPopup from "@/Features/Popups/ErrorPopup.vue";
-import { FormInputType, MCCCFormInput } from "@/types/models";
+import { FormInputType } from "@/types/models/utils";
 import FormMCCCTable from "@/Features/FormMCCCTable.vue";
 import FormButton from "@/Components/FormButton.vue";
-import { Teaching, Period, SelectOption, PeriodType } from "@/types/models";
+import { Teaching } from "@/types/models/teachings";
+import { Period, PeriodType } from "@/types/models/periods";
+import { MCCCFormInput } from "@/types/models/teachings";
+import { SelectOption } from "@/types/models/utils";
 import { ref, onMounted } from "vue";
 import axios, { AxiosError } from "axios";
 import { API_ENDPOINTS, MESSAGES } from "@/constants";

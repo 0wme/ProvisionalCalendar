@@ -2,12 +2,12 @@
 import ListManager from "@/Components/ListManager/ListManager.vue";
 import { defineProps, defineEmits, onMounted, computed, ref, watch } from "vue";
 import { useLabelsStore } from "@/stores/labelsStore";
-import { Item } from "@/types/models";
+import { Item } from "@/types/models/utils";
 import { useGroupService } from "@/services/groups/groupService";
 import AddGroupPopup from "@/Features/Popups/Groups/Groups/AddGroupPopup.vue";
 import EditGroupPopup from "@/Features/Popups/Groups/Groups/EditGroupPopup.vue";
 import ErrorPopup from "@/Features/Popups/ErrorPopup.vue";
-import { Group } from "@/types/models";
+import { Group } from "@/types/models/groups";
 
 const labelsStore = useLabelsStore();
 

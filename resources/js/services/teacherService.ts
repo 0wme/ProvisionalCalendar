@@ -1,16 +1,16 @@
 import axios from "axios";
 import { API_ENDPOINTS, MESSAGES } from "@/constants";
-import { Teaching } from "@/types/models/teachings";
+import { Teacher } from "@/types/models/teachers";
 import { Period } from "@/types/models/periods";
 
-export const useTeachingService = () => {
-    const getTeachings = (
+export const useTeacherService = () => {
+    const getTeachers = (
         promotionId: number,
         periods: Period[]
-    ): Promise<Teaching[]> => {
+    ): Promise<Teacher[]> => {
         return new Promise((resolve, reject) =>
             axios
-                .get(`${API_ENDPOINTS.TEACHINGS}/${promotionId}`)
+                .get(`${API_ENDPOINTS.TEACHERS}/${promotionId}`)
                 .then((response) => {
                     const teachings: Teaching[] = [];
                     for (const teaching of response.data) {
@@ -45,10 +45,10 @@ export const useTeachingService = () => {
         );
     };
 
-    const getTeaching = (teachingId: number): Promise<Teaching> => {
+    const getTeacher = (teacherId: number): Promise<Teacher> => {
         return new Promise((resolve, reject) =>
             axios
-                .get(`${API_ENDPOINTS.TEACHING}/${teachingId}`)
+                .get(`${API_ENDPOINTS.TEACHER}/${teacherId}`)
                 .then((response) => resolve(response.data))
                 .catch((error) => {
                     if (error.response?.data?.error) {
@@ -60,13 +60,13 @@ export const useTeachingService = () => {
         );
     };
 
-    const addTeaching = (
+    const addTeacher = (
         promotionId: number,
-        teaching: Teaching
-    ): Promise<Teaching> => {
+        teacher: Teacher
+    ): Promise<Teacher> => {
         return new Promise((resolve, reject) =>
             axios
-                .post(`${API_ENDPOINTS.TEACHING}/${promotionId}`, teaching)
+                .post(`${API_ENDPOINTS.TEACHER}/${promotionId}`, teacher)
                 .then((response) => resolve(response.data))
                 .catch((error) => {
                     if (error.response?.data?.error) {
@@ -78,10 +78,10 @@ export const useTeachingService = () => {
         );
     };
 
-    const updateTeaching = (teaching: Teaching): Promise<Teaching> => {
+    const updateTeacher = (teacher: Teacher): Promise<Teacher> => {
         return new Promise((resolve, reject) =>
             axios
-                .put(`${API_ENDPOINTS.TEACHING}/${teaching.id}`, teaching)
+                .put(`${API_ENDPOINTS.TEACHER}/${teacher.id}`, teacher)
                 .then((response) => resolve(response.data))
                 .catch((error) => {
                     if (error.response?.data?.error) {
@@ -93,7 +93,7 @@ export const useTeachingService = () => {
         );
     };
 
-    const deleteTeaching = (teachingId: number): Promise<Teaching> => {
+    const deleteTeaching = (teachingId: number): Promise<Teacher> => {
         return new Promise((resolve, reject) =>
             axios
                 .delete(`${API_ENDPOINTS.TEACHING}/${teachingId}`)
@@ -109,9 +109,9 @@ export const useTeachingService = () => {
     };
 
     return {
-        getTeachings,
-        getTeaching,
-        addTeaching,
+        getTeachers,
+        getTeacher,
+        addTeacher,
         updateTeaching,
         deleteTeaching,
     };

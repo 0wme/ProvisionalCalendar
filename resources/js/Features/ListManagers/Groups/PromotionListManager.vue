@@ -2,11 +2,11 @@
 import ListManager from "@/Components/ListManager/ListManager.vue";
 import { defineProps, defineEmits, onMounted, computed, ref } from "vue";
 import { useLabelsStore } from "@/stores/labelsStore";
-import { Item } from "@/types/models";
+import { Item } from "@/types/models/utils";
 import AddPromotionPopup from "@/Features/Popups/Groups/Promotions/AddPromotionPopup.vue";
 import EditPromotionPopup from "@/Features/Popups/Groups/Promotions/EditPromotionPopup.vue";
 import ErrorPopup from "@/Features/Popups/ErrorPopup.vue";
-import type { Promotion } from "@/types/models";
+import type { Promotion } from "@/types/models/groups";
 import { usePromotionService } from "@/services/groups/promotionService";
 
 const labelsStore = useLabelsStore();
