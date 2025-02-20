@@ -5,8 +5,8 @@ import { defineProps, defineEmits, computed, onMounted } from "vue";
 import { ref } from "vue";
 import { useLabelsStore } from "@/stores/labelsStore";
 import { useTeacherService } from "@/services/teacherService";
-// import AddTeacherPopup from "@/Features/Popups/Teachers/AddTeacherPopup.vue";
-// import EditTeacherPopup from "@/Features/Popups/Teachers/EditTeacherPopup.vue";
+import AddTeacherPopup from "@/Features/Popups/Teachers/AddTeacherPopup.vue";
+import EditTeacherPopup from "@/Features/Popups/Teachers/EditTeacherPopup.vue";
 import ErrorPopup from "@/Features/Popups/ErrorPopup.vue";
 
 const labelsStore = useLabelsStore();
@@ -20,6 +20,15 @@ const teacherService = useTeacherService();
 
 const teachers = ref<Teacher[] | undefined>();
 const errorMessage = ref<string>();
+const teacherToEditId = ref<number | undefined>();
+
+const isAddTeacherPopupVisible = ref<boolean>(false);
+
+const showAddTeacherPopup = () => (isAddTeacherPopupVisible.value = true);
+const hideAddTeacherPopup = () => (isAddTeacherPopupVisible.value = false);
+
+const showEditTeacherPopup = (id: number) => (teacherToEditId.value = id);
+const hideEditTeacherPopup = () => (teacherToEditId.value = undefined);
 
 const emit = defineEmits([
     "select",
@@ -47,12 +56,22 @@ const handleSelect = (teacher: Teacher) => {
     emit("select", teacher);
 };
 
-const handleAdd = (teacher: Teacher) => {
+const handleSuccessfullyAdded = (teacher: Teacher) => {
+    hideAddTeacherPopup();
     emit("successfullyAdded", teacher);
+    fetchTeachers();
 };
 
-const handleEdit = (teacher: Teacher) => {
+const handleSuccessfullyEdited = (teacher: Teacher) => {
+    hideEditTeacherPopup();
     emit("successfullyEdited", teacher);
+    fetchTeachers();
+};
+
+const handleSuccessfullyDeleted = (teacher: Teacher) => {
+    hideEditTeacherPopup();
+    emit("successfullyDeleted", teacher);
+    fetchTeachers();
 };
 
 const resetErrorMessage = () => (errorMessage.value = undefined);
@@ -66,24 +85,24 @@ const resetErrorMessage = () => (errorMessage.value = undefined);
         :items="teachers"
         :selectedItemsId="selectedTeacherIds"
         @select="handleSelect"
-        @add="handleAdd"
-        @edit="handleEdit"
+        @add="showAddTeacherPopup"
+        @edit="showEditTeacherPopup"
     />
-    <!-- <AddTeacherPopup
-        v-if="showPopup"
+    <AddTeacherPopup
+        v-if="isAddTeacherPopupVisible"
         :teacherId="undefined"
         :yearId
         @successfullyAdded="handleSuccessfullyAdded"
         @cancel="hideAddTeacherPopup"
     />
     <EditTeacherPopup
-        v-if="teacherToEditId"
+        v-if="teacherToEditId != undefined"
         :teacherId="teacherToEditId"
         :yearId
         @successfullyEdited="handleSuccessfullyEdited"
         @successfullyDeleted="handleSuccessfullyDeleted"
         @cancel="hideEditTeacherPopup"
-    /> -->
+    />
 
     <ErrorPopup
         v-if="errorMessage"

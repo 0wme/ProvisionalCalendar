@@ -8,19 +8,20 @@ import { Teaching } from "./teachings";
  */
 export type Teacher = Item & {
     /**
-     * Le prénom de l'enseignant.
-     */
-    firstname: string;
-    /**
-     * Le nom de l'enseignant.
-     */
-    lastname: string;
-    /**
      * Le code de l'enseignant.
      */
     code: string;
+    user?: User;
     /**
      * Les enseignements de l'enseignant.
      */
     teachings?: Teaching[];
+};
+
+export type User = Item & {
+    username: string;
+    firstname: string;
+    lastname: string;
+    email: string;
+    roleId: number;
 };

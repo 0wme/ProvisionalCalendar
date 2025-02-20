@@ -11,6 +11,8 @@ export const API_ENDPOINTS = {
     TEACHERS: "/api/teachers",
     PERIODS: "/api/periods",
     PERIOD: "/api/period",
+    USER: "/api/user",
+    USERS: "/api/users",
 };
 
 export const MESSAGES = {

@@ -5,29 +5,31 @@ namespace App\Services;
 use App\Models\Teacher;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\TeacherNotificationMail;
+use Illuminate\Support\Facades\Cache;
 
 class TeacherNotificationService
 {
-    protected $timers = [];
+    const NOTIFICATION_DELAY = 300; // 5 minutes in seconds
 
     public function handleModification(Teacher $teacher)
     {
         $teacherId = $teacher->id;
+        $cacheKey = "teacher_notification_{$teacherId}";
 
-        if (isset($this->timers[$teacherId])) {
-            // Réinitialiser le timer
-            clearTimeout($this->timers[$teacherId]);
-        }
+        // If we already have a pending notification, update its timestamp
+        Cache::put($cacheKey, $teacher, self::NOTIFICATION_DELAY);
 
-        // Définir un nouveau timer
-        $this->timers[$teacherId] = setTimeout(function() use ($teacher) {
+        // Schedule the notification
+        if (!Cache::has("notification_scheduled_{$teacherId}")) {
+            Cache::put("notification_scheduled_{$teacherId}", true, self::NOTIFICATION_DELAY);
             $this->sendNotification($teacher);
-            unset($this->timers[$teacher->id]);
-        }, 300000); // 5 minutes
+        }
     }
 
     protected function sendNotification(Teacher $teacher)
     {
-        Mail::to($teacher->email)->send(new TeacherNotificationMail($teacher));
+        if ($teacher->user && $teacher->user->email) {
+            Mail::to($teacher->user->email)->send(new TeacherNotificationMail($teacher));
+        }
     }
 }

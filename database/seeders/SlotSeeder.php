@@ -54,7 +54,7 @@ class SlotSeeder extends Seeder
         // Autre enseignement - Semaine 3
         Slot::create([
             'duration' => 2,
-            'teacher_id' => 4,
+            'teacher_id' => 2,
             'teaching_id' => 2,
             'promotion_id' => 1,
             'week_id' => 3,
@@ -65,7 +65,7 @@ class SlotSeeder extends Seeder
         foreach ($groups as $groupId) {
             Slot::create([
                 'duration' => 1.5,
-                'teacher_id' => 4,
+                'teacher_id' => 3,
                 'teaching_id' => 2,
                 'promotion_id' => 1,
                 'group_id' => $groupId,

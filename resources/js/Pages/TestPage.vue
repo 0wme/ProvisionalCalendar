@@ -1,20 +1,9 @@
 <script setup lang="ts">
-import TeachingsListManager from "@/Features/ListManagers/TeachingsListManager.vue";
-import { ref } from "vue";
-
-const isAddTeachingPopupVisible = ref(false);
-
-const showAddTeachingPopup = () => {
-    isAddTeachingPopupVisible.value = true;
-};
-
-const hideAddTeachingPopup = () => {
-    isAddTeachingPopupVisible.value = false;
-};
+import AddTeacherForm from "@/Features/Forms/Teachers/AddTeacherForm.vue";
 </script>
 
 <template>
     <div class="m-10">
-        <TeachingsListManager :year-id="1" :selected-teaching-ids="[]" />
+        <AddTeacherForm :year-id="1" :users="[]" />
     </div>
 </template>

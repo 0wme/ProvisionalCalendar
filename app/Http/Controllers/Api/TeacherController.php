@@ -8,6 +8,7 @@ use App\Models\Year;
 use App\Models\Teaching;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class TeacherController extends Controller
 {
@@ -23,22 +24,15 @@ class TeacherController extends Controller
             }
 
             // Récupère les enseignants avec leurs enseignements pour l'année spécifiée
-            $teachers = Teacher::with(['teachings'])
+            $teachers = Teacher::with(['user'])
                 ->where('year_id', $year)
                 ->get()
                 ->map(function ($teacher) {
                     return [
                         'id' => $teacher->id,
-                        'acronym' => $teacher->acronym,
-                        'first_name' => $teacher->first_name,
-                        'last_name' => $teacher->last_name,
-                        'teachings' => $teacher->teachings->map(function ($teaching) {
-                            return [
-                                'id' => $teaching->id,
-                                'title' => $teaching->title,
-                                'apogee_code' => $teaching->apogee_code
-                            ];
-                        })
+                        'code' => $teacher->acronym,
+                        'firstname' => $teacher->user->firstname,
+                        'lastname' => $teacher->user->lastname
                     ];
                 });
 
@@ -100,19 +94,7 @@ class TeacherController extends Controller
             $response = [
                 'id' => $teacher->id,
                 'acronym' => $teacher->acronym,
-                'first_name' => $teacher->first_name,
-                'last_name' => $teacher->last_name,
-                'year' => [
-                    'id' => $teacher->year->id,
-                    'name' => $teacher->year->name
-                ],
-                'teachings' => $teacher->teachings->map(function ($teaching) {
-                    return [
-                        'id' => $teaching->id,
-                        'title' => $teaching->title,
-                        'apogee_code' => $teaching->apogee_code
-                    ];
-                })
+                'user_id' => $teacher->user_id
             ];
 
             return response()->json($response);
@@ -130,8 +112,6 @@ class TeacherController extends Controller
         try {
             $request->validate([
                 'acronym' => 'required|string|max:10',
-                'first_name' => 'required|string|max:255',
-                'last_name' => 'required|string|max:255',
                 'user_id' => 'required|exists:users,id'
             ]);
 
@@ -156,8 +136,6 @@ class TeacherController extends Controller
 
             $teacher = Teacher::create([
                 'acronym' => $request->acronym,
-                'first_name' => $request->first_name,
-                'last_name' => $request->last_name,
                 'user_id' => $request->user_id,
                 'year_id' => $year
             ]);
@@ -187,8 +165,6 @@ class TeacherController extends Controller
         try {
             $request->validate([
                 'acronym' => 'required|string|max:10',
-                'first_name' => 'required|string|max:255',
-                'last_name' => 'required|string|max:255',
                 'user_id' => 'required|exists:users,id'
             ]);
 
@@ -214,35 +190,36 @@ class TeacherController extends Controller
 
             $teacher->update([
                 'acronym' => $request->acronym,
-                'first_name' => $request->first_name,
-                'last_name' => $request->last_name,
                 'user_id' => $request->user_id
             ]);
 
-            // Charge les relations pour la réponse
-            $teacher->load(['teachings', 'year']);
-
             return response()->json([
-                'message' => 'Enseignant modifié avec succès',
-                'teacher' => [
-                    'id' => $teacher->id,
-                    'acronym' => $teacher->acronym,
-                    'first_name' => $teacher->first_name,
-                    'last_name' => $teacher->last_name,
-                    'year' => [
-                        'id' => $teacher->year->id,
-                        'name' => $teacher->year->name
-                    ],
-                    'teachings' => $teacher->teachings->map(function ($teaching) {
-                        return [
-                            'id' => $teaching->id,
-                            'title' => $teaching->title,
-                            'apogee_code' => $teaching->apogee_code
-                        ];
-                    })
-                ]
+                'id' => $teacher->id,
+                'acronym' => $teacher->acronym,
+                'user_id' => $teacher->user_id,
             ]);
 
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Une erreur est survenue',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function deleteTeacher($teacher_id): JsonResponse
+    {
+        try {
+            $teacher = Teacher::find($teacher_id);
+            if (!$teacher) {
+                return response()->json([
+                    'error' => 'Enseignant non trouvé'
+                ], 404);
+            }
+            $teacher->delete();
+            return response()->json([
+                'message' => 'Enseignant supprimé avec succès'
+            ], 200);
         } catch (\Exception $e) {
             return response()->json([
                 'error' => 'Une erreur est survenue',

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 import axios from "axios";
 import AdminLayout from "@/Layouts/AdminLayout.vue";
 import TeachersListManager from "../Features/ListManagers/TeachersListManager.vue";

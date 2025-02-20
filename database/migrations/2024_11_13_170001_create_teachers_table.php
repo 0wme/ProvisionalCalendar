@@ -16,8 +16,6 @@ return new class extends Migration
             $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('cascade');
             $table->foreignId('year_id')->constrained('years')->onDelete('cascade');
             $table->string('acronym', 3);
-            $table->string('first_name');
-            $table->string('last_name');
             $table->timestamps();
         });
     }
